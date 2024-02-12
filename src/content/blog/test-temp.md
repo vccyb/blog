@@ -22,3 +22,7 @@ function add(a: number, b: number): number {
   return a + b;
 }
 ```
+
+### 3.3
+
+![something](@assets/images/example.png)
