@@ -48,13 +48,13 @@ export default function Datetime({
 const FormattedDatetime = ({ pubDatetime, modDatetime }: DatetimesProps) => {
   const myDatetime = new Date(modDatetime ? modDatetime : pubDatetime);
 
-  const date = myDatetime.toLocaleDateString(LOCALE.langTag, {
+  const date = myDatetime.toLocaleDateString("zh-CN", {
     year: "numeric",
     month: "short",
     day: "numeric",
   });
 
-  const time = myDatetime.toLocaleTimeString(LOCALE.langTag, {
+  const time = myDatetime.toLocaleTimeString("zh-CN", {
     hour: "2-digit",
     minute: "2-digit",
   });
