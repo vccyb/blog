@@ -32,3 +32,22 @@ input.oninput = async () => {
   createList(list);
 };
 ```
+
+axios取消请求
+
+关于 axios，axios其实有两种取消请求的方式，一种是`cancelToken`，一种是`abort`。
+不过现在官网也推荐我们使用abort这种方式了，代码也是很类似的
+
+```js
+const controller = new AbortController();
+
+axios
+  .get("/foo/bar", {
+    signal: controller.signal,
+  })
+  .then(function (response) {
+    //...
+  });
+// 取消请求
+controller.abort();
+```
