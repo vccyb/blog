@@ -6,7 +6,7 @@ featured: false
 draft: false
 description: "js相关技巧集合"
 tags:
-  - sql
+  - JS
 ---
 
 ## 1 请求的取消
