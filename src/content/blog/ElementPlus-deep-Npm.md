@@ -135,3 +135,73 @@ console.log("这是测试命令");
 ```
 
 所以只要在终端输入 npm-link-test 然后能打印：'这是测试命令' 即可。
+
+## npm link
+
+### 全局安装调试
+
+我们开发了一个库包或者一个 Node CLI 工具，是不适合发布到线上进行调试的。所以我们可以利用 npm link 高效地进行本地调试。
+
+进行全局虚拟安装，在项目根目录下执行以下命令：
+
+```shell
+npm link
+```
+
+其实我们执行 npm link 命令相当于执行了全局安装
+
+当然别忘了，调试结束后执行 npm unlink 命令取消安装关联。
+
+### 局部安装调试
+
+我们上面是通过全局安装进行调试，但我们有可能需要进行具体项目的局部安装，也就是安装到具体的项目中。我们可以进入具体项目的根目录下执行：
+
+```
+npm link npm-link-test
+```
+
+但此种方式有可能会报错，我们还可以通过以下方式安装：
+
+```
+npx link L:\work2022\t\npm-link-test
+```
+
+也就是 `npx link <package-path>` 方式。这样就可以在具体的项目中的 node_modules/bin 目录中安装了相关命令文件。
+
+## 小结
+
+Node CLI 命令就是通过在 JavaScript 文件头部添加 Shell 脚本声明，然后通过 package.json 文件的 bin 选项定义 Node CLI 命令名称及 Shell 脚本文件的位置。然后安装的时候就会根据 package.json 文件的 bin 选项声明的 Node CLI 命令名称生成不同平台的命令文件，命令文件的主要内容就执行 Node CLI 命令文件的内容。通常安装的时候随着项目安装到对应的 node_modules 目录下，局部安装的时候 Node CLI 命令文件是在 node_modules/bin 目录中，全局安装的时候 Node CLI 命令文件则在系统环境变量 PATH 设置的 node 命令所在的目录中。
+
+## npm install
+
+npm run 主要是执行 package.json 中 scripts 选项定义的脚本，而 npm install 则是用来安装项目依赖。
+
+执行 npm install 命令之后，当前项目如果定义了 preinstall 钩子此时会被执行。之后会获取 npm 配置，即 .npmrc 文件。
+
+优先级：
+
+1. 项目级的 .npmrc 文件
+2. 用户级的 .npmrc 文件
+3. 全局级的 .npmrc 文件
+4. npm 内置的 .npmrc 文件
+
+然后检查项目根目录中有没有 package-lock.json 文件，如果有 package-lock.json 文件，则检查 package-lock.json 文件和 package.json 文件中声明的版本是否一致。
+
+一致，直接使用 package-lock.json 文件中的信息，从缓存或从网络仓库中加载依赖。
+不一致，则根据 npm 版本进行处理。
+
+- npm v5.0x：根据 package-lock.json 下载。
+- npm v5.10 - v5.4.2：当 package.json 声明的依赖版本规范有符合的更新版本时，忽略 package-lock.json，按照 package.json 安装，并更新 package-lock.json
+- npm v5.4.2 以上： 当 package.json 声明的依赖版本规范与 package-lock.json 安装版本兼容时，则根据 package-lock.json 安装；如果 package.json 声明的依赖版本规范与 package-lock.json 安装版本不兼容，则按照 package.json 安装，并更新 package-lock.json。
+
+如果没有 package-lock.json 文件，则根据 package.json 文件递归构建依赖树，然后按照构建好的依赖树下载完整的依赖资源，在下载时会检查是否有相关缓存。
+
+有，则将缓存内容解压到 node_modules 目录中。
+
+没有，则先从 npm 远程仓库下载包资源，检查包的完整性，并将其添加到缓存，同时解压到 node_modules 目录中。
+
+最后生成 package-lock.json 文件。
+
+## 幽灵依赖
+
+幽灵依赖可以看原文
