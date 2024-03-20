@@ -57,3 +57,42 @@ app.directive("size-ob", sizeDirect);
 ```vue
 <div v-size-ob="handleSizeChange">...</div>
 ```
+
+## 2 vue2 中 default中没有this
+
+在开发过程中，碰到过props默认值的问题，由尝试使用this.xxx 作为默认值，发现都不行
+
+```js
+// 1
+default: () => {
+  console.log("default", this); // undefined
+  return this.getChildMSg();
+},
+// 2.
+default() {
+  console.log("default", this); // undefined
+  return this.getChildMSg();
+},
+
+// 3.
+default: function () {
+  return function (vm) {
+    console.log("default", vm); // 会报类型的问题
+    return vm.getChildMSg();
+  };
+},
+
+```
+
+这几种写法的问题：
+
+1. 第一种写法，箭头函数，没有this，也就是使用当前的this，但是当前的this不是组件示例
+2. 第二种写法的问题，这可能是因为此时 props 的默认值在组件实例化之前计算，导致 this 指向为 undefined。
+3. 直接就是类型错误了
+
+怎么解决，就是默认值不要去使用this这种, 简单在别的地方使用即可
+
+```js
+default: ''
+{{ msg ? msg : '你想要的默认值' }}
+```
