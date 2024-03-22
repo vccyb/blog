@@ -158,11 +158,13 @@ export const withInstall = <T>(comp: T) => {
 ### 组件使用install导出一个插件
 
 ```ts
-import { withInstall } from "../../../utils/vue/install";
-import Icon from "./icon.vue";
-
+import { withInstall } from "@cobyte-ui/utils";
+import Icon from "./src/icon.vue";
+// 通过 withInstall 方法给 Icon 添加了一个 install 方法
 const ElIcon = withInstall(Icon);
 export default ElIcon;
+// 导出 Icon 组件的 props
+export * from "./src/icon";
 ```
 
 ### main.ts 注册全局组件
@@ -189,4 +191,59 @@ const ElementPlus = {
 const app = createApp(App);
 app.use(ElementPlus);
 app.mount("#app");
+```
+
+## `<script setup>` 中可使用 defineOptions 宏
+
+```shell
+pnpm install unplugin-vue-define-options -D -w
+```
+
+配置
+
+```ts
+// ts
+{
+  "compilerOptions": {
+    // ...
+    "types": ["unplugin-vue-define-options/macros-global" /* ... */]
+  }
+}
+
+// vite
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import DefineOptions from 'unplugin-vue-define-options/vite'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [vue(), DefineOptions()],
+})
+
+```
+
+使用
+
+```vue
+<script setup lang="ts">
+defineOptions({
+  name: "ElIcon",
+});
+</script>
+```
+
+动态设置组件名
+
+```js
+import type { Plugin } from 'vue'
+// 通过 Vue 提供的 Plugin 类型和传进来的组件类型 T 的集合进行确定我们的组件类型具有 Plugin 类型方法，如 install 方法
+export type SFCWithInstall<T> = T & Plugin
+export const withInstall = <T>(comp: T) => {
+  ;(comp as SFCWithInstall<T>).install = function (app) {
+    // 动态设置组件的名称
+    const { name } = comp as unknown as { name: string }
+    app.component(name, comp as SFCWithInstall<T>)
+  }
+  return comp as SFCWithInstall<T>
+}
 ```
