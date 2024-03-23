@@ -51,3 +51,44 @@ axios
 // 取消请求
 controller.abort();
 ```
+
+## 2 max-height效果
+
+https://www.bilibili.com/video/BV1ay421B7Sh/?spm_id_from=333.1007.tianma.1-3-3.click&vd_source=ff519b14c2f26ffed121e75322acc97e
+
+1. height
+
+```
+height: 0;
+height: auto
+```
+
+2. max-height
+   会有transition的问题
+
+3. scale
+   导致内容压缩的问题
+
+4. 网格布局
+   0fr -> 1fr
+   兼容性问题
+
+推荐的写法：Flip
+
+```js
+const btn = document.querySelector(".btn");
+const detail = document.querySelector(".detail");
+
+btn.onmouseenter = function () {
+  detail.style.height = "auto";
+  const { height } = detail.getBoundingClientRect();
+  detail.style.height = 0;
+  detail.style.transition = "height 0.5s";
+  detail.offsetHeight; // reflow
+  detail.style.height = height + "px";
+};
+
+btn.onmouseleave = function () {
+  detail.style.height = "0";
+};
+```
