@@ -38,3 +38,12 @@ const root = ReactDOM.createRoot(appEL);
 
 root.render(<MyApp />);
 ```
+
+## 第二章 介绍React课程
+
+重点：
+
+- 一定要上手，跟着做
+- 不要跳过，找到自己的速度
+- 拒绝精神内耗
+- 复习
