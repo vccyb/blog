@@ -92,3 +92,25 @@ btn.onmouseleave = function () {
   detail.style.height = "0";
 };
 ```
+
+## 3 ESModule 浏览器环境下怎么工作的
+
+```html
+<script src="./main.js" type="module">
+```
+
+浏览器怎么做的
+
+1. 模块解析 url地址补全 `***/main.js`, 下载对应的模块，解析
+2. 所有main.js 顶级静态的导入语句, 提到代码最上方
+
+```js
+import a from "./a.js";
+import b from "./b.js";
+```
+
+3. 继续顺序解析，如果有重复的（正在下载的），不会重复下载的
+
+4. 下载完成，执行代码 （解析完毕，真正的执行
+
+动态导入是在运行时，进行处理的

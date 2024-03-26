@@ -58,7 +58,7 @@ app.directive("size-ob", sizeDirect);
 <div v-size-ob="handleSizeChange">...</div>
 ```
 
-## 2 vue2 中 default中没有this
+## 2 vue2 中props中的default中没有this
 
 在开发过程中，碰到过props默认值的问题，由尝试使用this.xxx 作为默认值，发现都不行
 
