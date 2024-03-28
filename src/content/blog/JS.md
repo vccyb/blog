@@ -114,3 +114,36 @@ import b from "./b.js";
 4. 下载完成，执行代码 （解析完毕，真正的执行
 
 动态导入是在运行时，进行处理的
+
+## 4 base64编码
+
+```html
+<img src="data:image/pmg;base64,xxxxxx" ></img>
+<script src="data:application/javascript;base64,xxxxxx"></script>
+<script src="data:application/javascript;alert(123)"></script>
+```
+
+dataurl的格式，参考wiki百科
+
+js的base64编码api
+
+```js
+const res = atob("YMxlxx..."); // 解码
+const res = btoa("alert(123)"); // 编码64
+```
+
+选择文件，编码为base64
+
+```js
+const inp = document.querySelector("input");
+
+inp.onchange = function (e) {
+  const file = e.target.files[0];
+  const reader = new FileReader();
+  reader.onload = e => {
+    console.log(e.target.result); //dataurl
+    preview.src = e.target.result; // 使用base64编码的图片
+  };
+  reader.readAsDataURL(file);
+};
+```
