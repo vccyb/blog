@@ -176,3 +176,78 @@ const root = ReactDOM.createRoot(appEl);
 
 root.render(<MyApp />);
 ```
+
+## 第七章 列表渲染和条件渲染
+
+```jsx
+function MyApp() {
+  return (
+    <main>
+      {
+        // 遍历cities数组，生成每个城市的列表项
+        cities.map(city => (
+          <section className="city">
+            <h2>{city.country}</h2>
+            <h3>{city.name}</h3>
+            {
+              // 判断city.forecast数组是否为空，如果为空则显示"No forecast data available"
+              city.forecast && city.forecast.length > 0 ? (
+                <ul>
+                  {city.forecast.map(day => (
+                    <li>
+                      {day.date}
+                      <span>
+                        {" "}
+                        temperature: {day.temperature}℃({day.weather})
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div>No Data</div>
+              )
+            }
+          </section>
+        ))
+      }
+      <section className="city">
+        <h2>UK</h2>
+        <h3>London</h3>
+
+        <ul>
+          <li>
+            {new Date().toLocaleDateString()}
+            <span> temperature: 20℃(Sunny)</span>
+          </li>
+          <li>
+            {new Date().toLocaleDateString()}
+            <span> temperature: 19℃(Cloudy)</span>
+          </li>
+          <li>
+            {new Date().toLocaleDateString()}
+            <span> temperature: 12℃(Rain)</span>
+          </li>
+        </ul>
+      </section>
+    </main>
+  );
+}
+```
+
+列表渲染 主要就是 map
+
+```jsx
+{
+  cities.map(city => (
+    ...
+  ))
+}
+```
+
+条件渲染
+
+```jsx
+{
+  city.forecast && city.forecast.length > 0 ? (...) : (...)
+}
+```
