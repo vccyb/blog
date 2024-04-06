@@ -147,3 +147,70 @@ inp.onchange = function (e) {
   reader.readAsDataURL(file);
 };
 ```
+
+## 5 节流防抖
+
+### 防抖 debounce
+
+电梯关门，触发事件，让你触发，如果一段时间内又触发，等待不算数，只有最后一次触发，一段时间后，我再执行
+
+#### 基本写法
+
+```js
+function debounce(fn, delay) {
+  let timeId;
+  return function () {
+    clearTimeout(timeId);
+    timeId = setTimeout(fn, delay);
+  };
+}
+```
+
+例子
+
+```js
+function layout() {
+  console.log("layout");
+}
+
+let func = debounce(layout, 1000);
+
+function debounce(func, wait) {
+  let timerId;
+  return function () {
+    clearTimeout(timerId);
+    timerId = setTimeout(() => {
+      func();
+    }, wait);
+  };
+}
+
+window.onresize = () => {
+  // console.log("resize");
+  func();
+};
+```
+
+#### 支持函数参数和this
+
+```js
+function debounce(fn, delay) {
+  let timeId;
+  return function (...args) {
+    clearTimeout(timeId);
+    timeId = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  };
+}
+
+const xxx = debounce(layout, 1000);
+```
+
+this的问题：
+
+1. 保障xxx和返回的是同一个this
+2. 函数使用箭头函数
+3. 函数调用用apply
+
+### 节流
