@@ -152,6 +152,8 @@ inp.onchange = function (e) {
 
 ### 防抖 debounce
 
+多少s后，执行，有重新计时的功能
+
 电梯关门，触发事件，让你触发，如果一段时间内又触发，等待不算数，只有最后一次触发，一段时间后，我再执行
 
 #### 基本写法
@@ -194,13 +196,13 @@ window.onresize = () => {
 #### 支持函数参数和this
 
 ```js
-function debounce(fn, delay) {
+function debounce(fn, wait) {
   let timeId;
   return function (...args) {
     clearTimeout(timeId);
     timeId = setTimeout(() => {
       func.apply(this, args);
-    }, delay);
+    }, wait);
   };
 }
 
@@ -214,3 +216,37 @@ this的问题：
 3. 函数调用用apply
 
 ### 节流
+
+与防抖很类似
+
+节流的定义：某一段时间，函数只执行一次
+
+实现1，利用防抖，就是等待xs后，注意区别（如果有计时，防抖会清空）
+
+```js
+function throttle(func, wait) {
+  let timerId;
+  return function () {
+    if (timerId) return;
+    timerId = setTimeout(() => {
+      func.apply(this, arguments);
+      timerId = null;
+    }, wait);
+  };
+}
+```
+
+实现2，立刻执行一次
+
+```js
+function throttle(func, wait) {
+  let time;
+  return function () {
+    // 立刻执行和 距离上一次执行的时间拆过wait
+    if (!time || Date.now() - time >= wait) {
+      func.apply(this, arguments);
+      time = Date.now();
+    }
+  };
+}
+```
