@@ -251,3 +251,166 @@ function MyApp() {
   city.forecast && city.forecast.length > 0 ? (...) : (...)
 }
 ```
+
+## 补充：userState的细节
+
+### 组件会重新执行，避免死循环
+
+1. 正常使用
+
+```jsx
+function MyApp() {
+  console.log("组件-执行了");
+  const [count, setCount] = React.useState(0);
+  const handleClick = () => {
+    setCount(count + 1);
+    console.log("点击了");
+  };
+  return <h1 onClick={handleClick}>Hello, CYB! {count}</h1>;
+}
+```
+
+2. 放到setTimeout中
+
+```jsx
+function MyApp() {
+  console.log("组件-执行了");
+  const [count, setCount] = React.useState(0);
+  setTimeout(() => {
+    setCount(count + 1); // 加1 -> 更新组件
+  }, 1000);
+  const handleClick = () => {
+    setCount(count + 1);
+    console.log("点击了");
+  };
+  return <h1 onClick={handleClick}>Hello, CYB! {count}</h1>;
+}
+```
+
+更新组件-> 执行setTimeout -> 更新组件 -> 执行setTimeout -> 更新组件 -> ...
+
+3. 直接使用，无限循环报错
+
+```jsx
+function MyApp() {
+  console.log("组件-执行了");
+  const [count, setCount] = React.useState(0);
+  setCount(count + 1);
+  const handleClick = () => {
+    setCount(count + 1);
+    console.log("点击了");
+  };
+  return <h1 onClick={handleClick}>Hello, CYB! {count}</h1>;
+}
+```
+
+上述代码会无限循环，直接报错
+
+### 异步执行
+
+```jsx
+const [count, setCount] = React.useState(0);
+const handleClick = () => {
+  setCount(count + 1);
+  console.log("点击了", count); // count 还是 0, 因为异步
+};
+```
+
+```jsx
+const handleClick = () => {
+  setCount(count + 1); // 0 + 1
+  setCount(count + 1); // 0 + 1
+  setCount(count + 1); // 0 + 1
+  setCount(count + 1); // 0 + 1
+  console.log("点击了", count);
+};
+```
+
+页面上还是1，我们执行的时候，count还没变，还是拿到原来的值去加1
+
+问题：
+
+1. 设置数据，后面的代码没法立刻获取新值
+2. 多次设置无效
+
+解决：
+使用函数形式 - 解决多次设置问题
+
+```jsx
+const handleClick = () => {
+  setCount(count => count + 1);
+  setCount(count => count + 1);
+  setCount(count => count + 1);
+  setCount(count => count + 1);
+  console.log("点击了", count);
+};
+```
+
+注意：多次修改数据，合并到一起一次更新
+
+获取新值
+
+```jsx
+const handleClick = () => {
+  setCount(count => count + 1);
+  setCount(count => count + 1);
+  setCount(count => count + 1);
+  setCount(count => count + 1);
+  setCount(count => {
+    console.log(count);
+    return count;
+  });
+};
+
+// 或者这样也可以
+// let tmp = count + 1;
+// setCount(tmp);
+// tmp = tmp + 1;
+// setCount(tmp);
+// console.log(tmp);
+```
+
+### 缓存效果
+
+```jsx
+let x = 100;
+const [count, setCount] = React.useState(0);
+const handleClick = () => {
+  setCount(count => {
+    x += 1;
+    count += 1;
+    console.log(`count ${count}, x ${x}`);
+    return count;
+  });
+};
+```
+
+```
+count 2, x 101
+Inline Babel script:33 组件-执行了
+Inline Babel script:40 count 3, x 101
+Inline Babel script:33 组件-执行了
+Inline Babel script:40 count 4, x 101
+Inline Babel script:33 组件-执行了
+Inline Babel script:40 count 5, x 101
+Inline Babel script:33 组件-执行了
+Inline Babel script:40 count 6, x 101
+Inline Babel script:33 组件-执行了
+Inline Babel script:40 count 7, x 101
+Inline Babel script:33 组件-执行了
+Inline Babel script:40 count 8, x 101
+```
+
+就是useState有缓存，它的实现不在这个组件内，有缓存能力，可以读取上一次的值
+而普通变量没有，每次都是100开始
+
+当然你也可以，不让组件刷新即可，不写setCount就ok了，组件就不会重新执行
+
+什么时候用：
+
+1. 响应式变化
+2. 需要缓存能力
+
+### 写在函数内部;
+
+只能写在函数组件内部
