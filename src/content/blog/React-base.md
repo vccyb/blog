@@ -506,3 +506,114 @@ const appEl = document.querySelector("#app");
 const root = ReactDOM.createRoot(appEl);
 root.render(<MyApp />);
 ```
+
+## 第九章 useEffect
+
+1. 获取外部数据（服务接口） => 往往是异步的 （不要阻塞渲染）
+2. 等接口返回，对已经渲染的结果进行更新渲染
+3. react提供了 useEffect hook （针对已经渲染的更新操作）
+
+知识点1: 执行时机是异步的, 每一次渲染完成之后
+
+```jsx
+function MyApp() {
+  const [count, setCount] = React.useState(0);
+  // 异步
+  React.useEffect(() => {
+    console.log("useEffect");
+  });
+  console.log("组件中");
+  return <h1 onClick={() => setCount(count + 1)}>Hello, CYB! {count}</h1>;
+}
+```
+
+知识点2: 可以拿到渲染的结果
+
+可以拿到渲染的结果，比如dom，还有最新的数据
+
+```jsx
+React.useEffect(() => {
+  console.log(document.querySelector("h1"));
+  console.log("当前的count是:", count);
+  console.log(name);
+});
+console.log("组件中");
+let name = "qqq";
+return <h1 onClick={() => setCount(count + 1)}>Hello, CYB! {count}</h1>;
+```
+
+知识点3: 通过useEffect获取接口数据, 第二个参数依赖性，只有依赖性采取执行
+
+1. 没有写，那么每一次渲染都执行`useEffect(() => {...})`
+2. 如果是空数组，第一次渲染完后执行`useEffect(() => {...}, [])`
+3. 依赖项，比如分页，只有渲染后，并且依赖更改(page)才执行 `useEffect(() => {...}, [page])`
+
+```jsx
+const [count, setCount] = React.useState(0);
+const [page, setPage] = React.useState(1);
+// 异步
+React.useEffect(() => {
+  console.log(document.querySelector("h1"));
+  console.log("当前的count是:", count);
+}, [page]);
+return (
+  <>
+    <h1 onClick={() => setCount(count + 1)}>Hello, CYB! {count}</h1>
+    <button onClick={() => setPage(page + 1)}>下一页</button>
+  </>
+);
+```
+
+知识点4: useEffect的返回值
+
+这个分返回的函数，可以看作一些副作用的清理工作，比如取消订阅，取消定时器等
+
+比如
+
+1. 连接数据库，断开数据库
+2. 添加监听，移除监听
+3. 定时器，结束定时器
+
+特点：
+
+1. 如果有返回值，那就需要是一个函数
+2. 执行时机，组件被销毁的时候
+3. 第二次回掉执行，会先执行上一次回掉的返回值函数
+
+```jsx
+React.useEffect(() => {
+  console.log("--回掉中--");
+  return () => {
+    console.log("回掉中的返回函数", count);
+  };
+});
+console.log("--组件中--");
+```
+
+```
+--组件中--
+--回掉中--
+--组件中--
+回掉中的返回函数 0
+--回掉中--
+```
+
+知识点5： async await 与 useEffect
+
+当回掉函数用async修饰时，会返回promise对象，所以也会报错（和上面说的需要返回一个函数，如果有的话）
+
+```jsx
+useEffect(() => {
+  async function fetchData() {
+    // You can await here
+    const response = await MyAPI.getData(someId);
+    // ...
+  }
+  fetchData();
+}, [someId]);
+```
+
+知识点6: 副作用理解 （外部作用）
+外部影响内部：从外部获取数据，对内部渲染的结果产生了作用
+
+## 第十章 cli脚手架
