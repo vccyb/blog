@@ -616,4 +616,109 @@ useEffect(() => {
 知识点6: 副作用理解 （外部作用）
 外部影响内部：从外部获取数据，对内部渲染的结果产生了作用
 
-## 第十章 cli脚手架
+## 第十章 useContext
+
+```jsx
+function Child(props) {
+  const { count, setCount } = props;
+  return (
+    <>
+      <h3>子组件 - {count}</h3>
+      <button onClick={() => setCount(count + 1)}>+1</button>
+    </>
+  );
+}
+function Parent(props) {
+  const { count, setCount } = props;
+  return (
+    <>
+      <h2>父组件 - {count}</h2>
+      <Child count={count} setCount={setCount} />
+    </>
+  );
+}
+
+function MyApp() {
+  const [count, setCount] = React.useState(0);
+  return (
+    <>
+      <h1>根组件 - {count}</h1>
+      <Parent count={count} setCount={setCount} />
+    </>
+  );
+}
+```
+
+确实共享了数据，但是一直要传递很麻烦，尤其是结构比较深的，要逐层传递
+
+useContext，实现
+
+```jsx
+const { useState, createContext, useContext } = React;
+
+// 1. 创建一个环境对象
+const MyContext = createContext();
+
+function Child() {
+  const { count, setCount } = useContext(MyContext);
+  return (
+    <>
+      <h3>子组件 - {count}</h3>
+      <button onClick={() => setCount(count + 1)}>+1</button>
+    </>
+  );
+}
+function Parent() {
+  const { count } = useContext(MyContext);
+  return (
+    <>
+      <h2>父组件 - {count}</h2>
+      <Child />
+    </>
+  );
+}
+
+function MyApp() {
+  const [count, setCount] = React.useState(0);
+  return (
+    <>
+      {/* 2. 配置环境对象，并传递值 */}
+      <MyContext.Provider value={{ count, setCount }}>
+        <h1>根组件 - {count}</h1>
+        <Parent />
+      </MyContext.Provider>
+    </>
+  );
+}
+```
+
+```jsx
+const { useState, createContext, useContext } = React;
+
+// 1. 创建一个环境对象
+const MyContext = createContext();
+
+function MyApp() {
+  const [count, setCount] = React.useState(0);
+  return (
+    <>
+      {/* 2. 配置环境对象，并传递值 */}
+      <MyContext.Provider value={{ count, setCount }}>
+        <h1>根组件 - {count}</h1>
+        <Parent />
+      </MyContext.Provider>
+    </>
+  );
+}
+
+// 使用
+function Child() {
+  const { count, setCount } = useContext(MyContext);
+  return (
+    <>
+      <h3>子组件 - {count}</h3>
+      <button onClick={() => setCount(count + 1)}>+1</button>
+    </>
+  );
+}
+```
