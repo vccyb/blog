@@ -96,3 +96,50 @@ default: function () {
 default: ''
 {{ msg ? msg : '你想要的默认值' }}
 ```
+
+## 3 vue 中读取文件的原始值
+
+这里要分vue2和vue3两种来看
+
+1. vue2 他是使用vue-cli 基于的是webpack，文件需要 loader
+   所以需要告诉webpack 给对应的loader 处理，原始内容，可以使用 `raw-loader`
+
+```js
+const { defineConfig } = require("@vue/cli-service");
+module.exports = defineConfig({
+  transpileDependencies: true,
+  configureWebpack: {
+    module: {
+      rules: [
+        {
+          test: /\.dataurl$/,
+          loader: "raw-loader",
+        },
+      ],
+    },
+  },
+});
+```
+
+当然你记得安装一下这个loader
+
+使用的时候 引用即可，假设文件中是base64
+
+```ts
+import dataurl from "./img.dataurl";
+```
+
+2. vite呢？vue3如果使用的是vite
+
+```ts
+import dataurl from "./img.dataurl?raw";
+```
+
+使用raw后缀即可,获取就是文件内容string
+
+3. 其他的思路
+   其他的思路就不是读取原始文件了，可以将放到js文件中，然后到处
+
+```ts
+export default "xxxx base64";
+```
