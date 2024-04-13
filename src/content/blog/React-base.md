@@ -722,3 +722,69 @@ function Child() {
   );
 }
 ```
+
+## 第十一章 useReducer
+
+```jsx
+function useCount() {
+  function reducer(state, action) {
+    switch (action.type) {
+      case "increment":
+        return state + action.payload;
+      case "decrement":
+        return state - action.payload;
+      default:
+        return state;
+    }
+  }
+  return useReducer(reducer, 100);
+}
+function MyApp() {
+  const [count, dispatch] = useCount();
+  // const [count, setCount] = useState(0);
+  return (
+    <>
+      <h1>Count: {count}</h1>
+      <button onClick={() => dispatch({ type: "increment", payload: 1 })}>
+        Increment
+      </button>
+      <button onClick={() => dispatch({ type: "decrement", payload: 1 })}>
+        Decrement
+      </button>
+    </>
+  );
+}
+```
+
+useReducer 组织了
+
+1. 状态数据
+2. 操作状态数据的方法
+
+如果是状态数据是对象呢？
+
+```jsx
+function useCount() {
+  function reducer(state, action) {
+    switch (action.type) {
+      case "increment":
+        return { ...state, age: state.age + action.payload };
+      case "decrement":
+        return { ...state, age: state.age - action.payload };
+      case "rename":
+        return { ...state, name: action.payload };
+      default:
+        return state;
+    }
+  }
+  return useReducer(reducer, { name: "张三", age: 18 });
+}
+
+// MyApp
+const [user, dispatch] = useCount();
+
+<h1>user.name: {user.name}</h1>
+<h1>user.age: {user.age}</h1>
+<button onClick={() => dispatch({ type: "decrement", payload: 1 })}>
+<button onClick={() => dispatch({ type: "rename", payload: "李四" })}>
+```
