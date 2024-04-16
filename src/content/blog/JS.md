@@ -250,3 +250,9 @@ function throttle(func, wait) {
   };
 }
 ```
+
+## 6 jwt 理解
+
+https://www.bilibili.com/video/BV1q64y1w7sr/?spm_id_from=333.337.search-card.all.click&vd_source=ff519b14c2f26ffed121e75322acc97e
+
+## 7 iframe
