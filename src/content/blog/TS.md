@@ -2,8 +2,8 @@
 title: Typescript 知识小集合
 author: Chen YuBo
 pubDatetime: 2024-03-09T16:38:03.129Z
-featured: false
 draft: false
+featured: true
 description: "ts的一些知识点和收集"
 tags:
   - typescript

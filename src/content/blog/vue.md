@@ -2,12 +2,14 @@
 title: vue相关集合
 author: Chen YuBo
 pubDatetime: 2024-03-11T16:04:05.712Z
-featured: false
 draft: false
+featured: true
 description: "vue相关集合"
 tags:
   - vue
 ---
+
+## 目录
 
 ## 1 `v-size-ob` 指令
 
@@ -143,3 +145,85 @@ import dataurl from "./img.dataurl?raw";
 ```ts
 export default "xxxx base64";
 ```
+
+## 4 vue 中写样式的方式
+
+1. 直接在style中写
+
+```css
+<style>
+.red {
+  color: red;
+}
+</style>
+```
+
+缺陷：类名冲突
+
+2. scoped
+
+```css
+<style scoped>
+.red {
+  color: red;
+}
+</style>
+```
+
+vue会给每一个元素加一个特殊属性 data-v-xxxx
+
+你写的 选择器会带上这个属性选择器
+
+```css
+.red[data-v-xxxx] {
+  color: red;
+}
+```
+
+3. 使用一些css预编译器
+
+```vue
+<style lang="scss" scoped>
+.red {
+  color: red;
+}
+</style>
+```
+
+4. 组件样式提出去
+
+```vue
+<style src="./xxx.css" scoped></style>
+```
+
+## 5 组件命名
+
+主要有两种：
+
+1. 大驼峰 PascalCase StarRate （只能在脚手架情况下使用，工程化是交给构建工具的）
+
+- 模板使用： `<StarRate/>` `<StarRate></StarRate>`
+- 模板还支持：`<star-rate/>` `<star-rate></star-rate>`
+
+2. 短横线 kebab-case StarRate
+
+- 模板使用： `<star-rate/>` `<star-rate></star-rate>`
+
+大驼峰是更加灵活的
+
+```js
+import StarRate from "./StarRate.vue";
+export default {
+  components: {
+    StarRate,
+  },
+  // ...
+};
+```
+
+几个推荐：
+
+1. 命名大驼峰
+2. 模板书写-大驼峰 区别html
+3. 如果使用短横线， 加前缀，方便识别和区分html
+4. 统一使用一种风格

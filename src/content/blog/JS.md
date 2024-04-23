@@ -2,12 +2,14 @@
 title: js相关技巧集合
 author: Chen YuBo
 pubDatetime: 2024-03-11T16:04:05.712Z
-featured: false
+featured: true
 draft: false
 description: "js相关技巧集合"
 tags:
   - JS
 ---
+
+## 目录
 
 ## 1 请求的取消
 
