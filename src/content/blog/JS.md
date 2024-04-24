@@ -1,5 +1,5 @@
 ---
-title: js相关技巧集合
+title: js相关技巧集合，也包含html和css
 author: Chen YuBo
 pubDatetime: 2024-03-11T16:04:05.712Z
 featured: true
@@ -257,4 +257,111 @@ function throttle(func, wait) {
 
 https://www.bilibili.com/video/BV1q64y1w7sr/?spm_id_from=333.337.search-card.all.click&vd_source=ff519b14c2f26ffed121e75322acc97e
 
-## 7 iframe
+## 7 给fetch添加超时功能
+
+几种思路方向：
+
+1. 直接修改window.fetch 影响太大不好，第三方库容易出问题
+2. 自定义一个函数request，也不好，不会影响第三方库，但是调用不方便
+
+高阶函数！
+
+```js
+function createRequestWithTimeout(timeout = 5000) {
+  return function (url, options) {
+    return new Promise((resolve, reject) => {
+      const controller = new AbortController();
+      options = options || {};
+      // 处理参数有信号的情况
+      if (options.signal) {
+        const signal = options.signal;
+        signal.addEventListener("abort", () => {
+          controller.abort();
+        });
+      }
+      options.signal = controller.signal;
+      fetch(url, options).then(resolve, reject);
+      setTimeout(() => {
+        reject(new Error("timeout"));
+        // 终止请求
+        controller.abort();
+      }, timeout);
+    });
+  };
+}
+```
+
+调用
+
+```js
+const request = createRequestWithTimeout(5000);
+const request2 = createRequestWithTimeout(3000);
+```
+
+## 8 Reflect 的本质
+
+Reflect 就是调用对象的基本操作（内部方法）
+
+```js
+const obj = {};
+obj.a = 1; // [[SET]]
+Reflect.set(obj, "a", 2); // [[SET]] 这个就是直接调用内部方法
+obj.a; // [[GET]]
+```
+
+直接和间接调用的区别
+
+1. 没有使用Reflect，还有额外的步骤，只是其中的一个是调用基本方法
+
+```js
+const obj = {
+  a: 1,
+  b: 2,
+  get c() {
+    return this.a + this.b;
+  },
+};
+
+console.log(obj.c); // 3
+console.log(Reflect.get(obj, "c", { a: 3, b: 4 })); // 7
+// 定义this obj
+// 再调用基本方法 [[GET]](obj,'c', obj)
+```
+
+最常使用的场景就是代理对象的时候
+
+```js
+const obj = {
+  a: 1,
+  b: 2,
+  get c() {
+    return this.a + this.b;
+  },
+};
+
+const proxy = new Proxy(obj, {
+  get(target, key, receiver) {
+    console.log("get");
+    // return target[key]; // 返回的原始对象
+    return Reflect.get(target, key, receiver); // 使用Reflect指定this指向的对象
+  },
+});
+```
+
+## 9 参数的默认值
+
+```js
+function foo(a, b = 2, c = 3)
+```
+
+注意：
+
+1. undefined才会触发默认值
+2. 参数的顺序是不能跳跃式传递
+3. 函数的.length，参数默认值之前
+4. 默认值放一个表达式，只有触发默认值的时候，才触发
+
+```js
+function foo(a, b = 2, c) {}
+console.log(foo.length); // 1
+```
