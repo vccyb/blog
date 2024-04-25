@@ -366,3 +366,106 @@ function foo(a, b = 2, c = 3)
 function foo(a, b = 2, c) {}
 console.log(foo.length); // 1
 ```
+
+## 10 消除异步的传染性
+
+问题
+
+```js
+async function getUser() {
+  return await fetch("url").then(resp => resp.json());
+}
+
+async function m1() {
+  return await getUser();
+}
+
+async function m2() {
+  return await m1();
+}
+
+async function m3() {
+  return await m2();
+}
+
+async function main() {
+  const user = await m3();
+  console.log(user);
+}
+```
+
+解答：
+
+```js
+function getUser() {
+  return fetch("url").then(resp => resp.json());
+}
+
+function m1() {
+  return getUser();
+}
+
+function m2() {
+  return m1();
+}
+
+function m3() {
+  return m2();
+}
+
+function main() {
+  const user = m3();
+  console.log(user);
+}
+
+function run(func) {
+  let cache = [];
+  let i = 0;
+  const _originFetch = window.fetch;
+  window.fetch = (...args) => {
+    //
+    if (cache[i]) {
+      if (cache[i].status === "fulfilled") {
+        return cache[i].data;
+      } else if (cache[i].status === "rejected") {
+        throw cache[i].err;
+      }
+    }
+    const result = {
+      status: "pending",
+      data: null,
+      err: null,
+    };
+    cache[i++] = result;
+    const prom = _originFetch(...args)
+      .then(resp => resp.json())
+      .then(
+        resp => {
+          result.status = "fulfilled";
+          result.data = resp;
+        },
+        err => {
+          result.status = "rejected";
+          result.err = err;
+        }
+      );
+    //报错
+    throw prom;
+  };
+  try {
+    func();
+  } catch (err) {
+    if (err instanceof Promise) {
+      const reRun = () => {
+        i = 0;
+        func();
+      };
+      err.then(reRun, reRun);
+    }
+  } finally {
+    window.fetch = _originFetch;
+  }
+}
+
+run(main);
+```

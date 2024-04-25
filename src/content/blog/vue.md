@@ -227,3 +227,43 @@ export default {
 2. 模板书写-大驼峰 区别html
 3. 如果使用短横线， 加前缀，方便识别和区分html
 4. 统一使用一种风格
+
+## 6 vue中缓存方法
+
+如果你不能使用computed, 解决计算属性没有参数传递的问题
+
+```js
+export function useComputed(fn) {
+  const cache = new Map();
+  function compare(args1, args2) {
+    return (
+      args1.length === args2.length &&
+      args1.every((item, index) => Object.is(item, args2[index]))
+    );
+  }
+  function getCache(args) {
+    const keys = [...cache.keys()];
+    const key = keys.find(key => compare(key, args));
+    if (key) {
+      return cache.get(key);
+    }
+  }
+  return function (...args) {
+    const cachedResult = getCache(args);
+    if (cachedResult) {
+      return cachedResult.value;
+    }
+    const result = computed(() => fn(...args));
+    cache.set(args, result);
+    return result.value;
+  };
+}
+```
+
+使用
+
+```js
+function fn() {...}
+
+const computedPrice = useComputed(fn);
+```
