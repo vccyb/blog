@@ -267,3 +267,8 @@ function fn() {...}
 
 const computedPrice = useComputed(fn);
 ```
+
+## 7 展示组件和容器组件的分离
+
+容器组件搞定逻辑
+展示组件搞定界面
