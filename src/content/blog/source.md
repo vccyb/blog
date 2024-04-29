@@ -19,3 +19,11 @@ Async await wrapper for easy error handling
 
 一个处理promise的库，可以方便的在一个数组内获取成功和失败的promise信息
 如果成功，返回`[null, result]`, 否者 `[error, undefined]`
+
+## 2 omit.js
+
+[omit.js](/posts/omit-js/)
+
+omit.js is a utility library for omitting keys from an object.
+
+一个用于从对象中删除指定key的库
