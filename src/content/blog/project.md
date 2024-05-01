@@ -29,7 +29,7 @@ project 主项目
 npm i --legacy-peer-deps // 只是忽略安装的报错，运行是咋样还咋样
 ```
 
-## 浏览器性能指标 Web Performance Metrics
+## 2 浏览器性能指标 Web Performance Metrics
 
 https://www.bilibili.com/video/BV1Ep421R7TY/?spm_id_from=333.337.search-card.all.click&vd_source=ff519b14c2f26ffed121e75322acc97e
 
@@ -50,3 +50,49 @@ RAIL 模型
 上面的都是实验室指标 只能参考
 
 用户数据 服务监控/数据埋点
+
+## 3 CORS 跨域
+
+1. 同源策略
+
+CORS是一套机制，用于浏览器校验跨域请求
+
+服务器表示通过，校验通过
+服务器拒绝或者没有表示，则校验不通过
+
+2. 使用的前提
+
+   服务器上自己人
+
+3. CORS请求分类
+
+简单请求：
+
+- 请求方法是以下三种之一：HEAD, GET, POST
+- HTTP头部满足CORS安全规范 （简单理解，没有改动头就是简单）
+- 请求头的Content-Type是以下三种之一：text/plain, multipart/form-data, application/x-www-form-urlencoded
+
+非简单请求，会带一个预检请求
+
+4. 两种请求的做法
+
+- 简单请求
+
+  - 浏览器直接发出CORS请求
+    - 请求头中包含Origin字段，表示请求的源
+  - 服务器返回响应，
+    - 响应头中包含Access-Control-Allow-Origin字段，表示允许的源
+    - 浏览器发现响应头中包含Access-Control-Allow-Origin字段，则浏览器认为跨域请求成功，否则失败
+
+- 非简单请求
+
+  - 浏览器先发出预检请求，询问服务器是否允许（options）
+    - 带上 origin
+    - Access-Control-Request-Method: 请求方法
+    - Access-Control-Request-Headers: 请求头
+  - 服务器返回响应，
+    - 响应头中包含Access-Control-Allow-Origin字段，表示允许的源
+    - Access-Control-Allow-Methods: 允许的请求方法
+    - Access-Control-Allow-Headers: 允许的请求头
+    - Access-Control-Max-Age: 预检请求的有效期，单位是秒
+  - 通过，再发送真实请求
