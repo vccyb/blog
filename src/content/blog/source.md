@@ -27,3 +27,9 @@ Async await wrapper for easy error handling
 omit.js is a utility library for omitting keys from an object.
 
 一个用于从对象中删除指定key的库
+
+## 3 lodash-get
+
+[lodash-get](/posts/lodash-get/)
+
+lodash 中get函数，可以方便的获取对象的属性值
