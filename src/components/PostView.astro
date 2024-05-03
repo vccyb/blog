@@ -5,7 +5,7 @@ const {blog} = Astro.props;
 const {data, slug} = blog
 ---
 
-<div class="border border-solid border-1 p-[1rem] rounded-md   transition ease-in-out duration-300 blog-box" >
+<div class="border border-groove border-1 p-[1rem] rounded-md   transition ease-in-out duration-300 blog-box" >
   <PostViewTitle
     slug={`/blog/${slug}`}
     {...data}
