@@ -95,3 +95,10 @@ CORS 是一套机制，用于浏览器校验跨域请求
     - Access-Control-Allow-Headers: 允许的请求头
     - Access-Control-Max-Age: 预检请求的有效期，单位是秒
   - 通过，再发送真实请求
+
+图解：
+
+<div class="image-cols-2">
+  <img src="/spinner.gif" data-src="/assets/images/project/cors-1.png">
+  <img src="/spinner.gif" data-src="/assets/images/project/cors-3.png">
+</div>
