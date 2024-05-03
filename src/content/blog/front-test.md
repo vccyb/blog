@@ -62,3 +62,77 @@ const obj3 = obj1;
 expect(obj1).toBe(obj3); // 通过，因为它们引用了同一个对象
 expect(obj1).not.toBe(obj2); // 通过，因为它们引用了不同的对象
 ```
+
+## 3 vitest 添加 globals
+
+我们在写单元测试的时候，每一个单元测试文件都需要引入测试框架 vitest，会很繁琐,例如
+
+```js
+import { describe, it, expect } from "vitest";
+```
+
+可以有几个操作添加globals，避免每次重复操作
+
+1. vitest.config.ts 配置
+
+可以在 vitest.config.ts 添加 global配置，这样就相当于全局引入了 Vitest，不需要每一个文件都引入
+
+```js
+import { fileURLToPath } from "node:url";
+import { mergeConfig, defineConfig, configDefaults } from "vitest/config";
+import viteConfig from "./vite.config";
+
+export default mergeConfig(
+  viteConfig,
+  defineConfig({
+    test: {
+      environment: "jsdom",
+      exclude: [...configDefaults.exclude, "e2e/**"],
+      root: fileURLToPath(new URL("./", import.meta.url)),
+      //...
+      globals: true,
+    },
+  })
+);
+```
+
+2. eslint 配置
+
+但发现去掉之后，编辑器会提示 describe 和 it 未定义的错误，是因为错误是 eslint 提示的，我们需要再安装一个插件
+
+```js
+pnpm i  eslint-plugin-vitest-globals -D
+```
+
+在eslint.js里面添加
+
+```js
+module.exports = {
+  extends: ["plugin:vitest-globals/recommended"],
+  overrides: [
+    {
+      files: [
+        "**/__tests__/*.{j,t}s?(x)",
+        "**/tests/unit/**/*.spec.{j,t}s?(x)",
+        "**/*.test.{j,t}s?(x)",
+      ],
+      env: {
+        "vitest-globals/env": true,
+      },
+    },
+  ],
+};
+```
+
+3. ts添加相关配置
+
+在 tsconfig.vitest.json 添加
+
+```js
+ "types": [
+      "node",
+      "jsdom",
+      "vitest/globals"
+    ]
+
+```
