@@ -12,7 +12,7 @@ tags:
 
 ## 1 await-to-js
 
-[await-to-js](/posts/await-to-js/)
+[await-to-js](/blog/await-to-js/)
 
 Async await wrapper for easy error handling
 
@@ -21,7 +21,7 @@ Async await wrapper for easy error handling
 
 ## 2 omit.js
 
-[omit.js](/posts/omit-js/)
+[omit.js](/blog/omit-js/)
 
 omit.js is a utility library for omitting keys from an object.
 
@@ -29,6 +29,12 @@ omit.js is a utility library for omitting keys from an object.
 
 ## 3 lodash-get
 
-[lodash-get](/posts/lodash-get/)
+[lodash-get](/blog/lodash-get/)
 
 lodash 中 get 函数，可以方便的获取对象的属性值
+
+## 4 arrify
+
+一个很迷你的库，是将传入的值，转化为数组
+
+[arrify](/blog/arrify/)
