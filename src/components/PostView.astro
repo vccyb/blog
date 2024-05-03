@@ -5,7 +5,7 @@ const {blog} = Astro.props;
 const {data, slug} = blog
 ---
 
-<div class="border border-groove border-1 p-[1rem] rounded-md   transition ease-in-out duration-300 blog-box" >
+<div class=" p-[1rem] rounded-md   transition ease-in-out duration-300 blog-box" >
   <PostViewTitle
     slug={`/blog/${slug}`}
     {...data}
@@ -30,6 +30,7 @@ const {data, slug} = blog
 
 .blog-box {
   transition: all 0.4s ease-in-out;
+  border: 1px groove #ddd;
 }
 
 .blog-box:hover {
