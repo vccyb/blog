@@ -1,19 +1,18 @@
 ---
 title: mini-vue-01-工程搭建
 author: Chen YuBo
-pubDatetime: 2024-03-08T16:27:16.027Z
+date: 2024-03-08T16:27:16.027Z
 featured: false
+category: 源码分析
 draft: false
 description: "mini-vue这个工程搭建"
 tags:
   - mini-vue
 ---
 
-## 目录
-
 ## 工程初始化
 
-我们使用pnpm+monorepo方式组织我们的mini-vue
+我们使用 pnpm+monorepo 方式组织我们的 mini-vue
 
 ```shell
 mkdir cyb-mini-vue
@@ -106,7 +105,7 @@ tsconfig.json
 }
 ```
 
-## vitest设置
+## vitest 设置
 
 ```ts
 import { defineConfig } from "vitest/config";

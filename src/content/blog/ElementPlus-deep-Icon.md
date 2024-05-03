@@ -2,7 +2,9 @@
 title: Element-Plus技术揭秘专栏的知识学习笔记-组件库工程化实战之 组件实现的基本流程及 Icon 组件的实现
 author: Chen YuBo
 pubDatetime: 2024-03-18T13:46:10.211Z
+date: 2024-03-18T13:46:10.211Z
 featured: false
+category: 源码分析
 draft: false
 description: "学习笔记"
 tags:
@@ -11,9 +13,7 @@ tags:
 
 原文地址：https://juejin.cn/post/7168835045984043022
 
-## 目录
-
-## 目录结构
+结构
 
 ```
 ├── packages
@@ -31,7 +31,7 @@ tags:
 
 ## 组件定义
 
-### 1 组件的props定义
+### 1 组件的 props 定义
 
 - color: `Pick<CSSProperties, 'color'>`
 - size: number 、 string
@@ -54,7 +54,7 @@ export type iconProps = ExtractPropTypes<typeof iconProps>;
 
 ```
 
-### 2 编写SFC组件
+### 2 编写 SFC 组件
 
 packages/components/icon/src/icon.vue
 
@@ -84,7 +84,7 @@ const style = computed<CSSProperties>(() => {
 <style scoped></style>
 ```
 
-## vue 中的css变量
+## vue 中的 css 变量
 
 ```vue
 <template>
@@ -106,9 +106,9 @@ const color = ref("green");
 
 ## 组件的注册
 
-使用的时候一般有两种，setup方式和defineComponent方式
+使用的时候一般有两种，setup 方式和 defineComponent 方式
 
-setup引入就可以直接模板使用了
+setup 引入就可以直接模板使用了
 
 ```vue
 <script setup lang="ts">
@@ -117,7 +117,7 @@ import "@cobyte-ui/theme-chalk/src/index.scss";
 </script>
 ```
 
-defineComponent方式需要使用`components`进行注册
+defineComponent 方式需要使用`components`进行注册
 
 ```vue
 <script lang="ts">
@@ -155,7 +155,7 @@ export const withInstall = <T>(comp: T) => {
 };
 ```
 
-### 组件使用install导出一个插件
+### 组件使用 install 导出一个插件
 
 ```ts
 import { withInstall } from "@cobyte-ui/utils";
@@ -184,7 +184,7 @@ const ElementPlus = {
     // 将标识值设置为 true，表示已经安装了
     app[INSTALLED_KEY] = true;
     // 循环组件库中的每个组件进行安装
-    components.forEach(c => app.use(c));
+    components.forEach((c) => app.use(c));
   },
 };
 

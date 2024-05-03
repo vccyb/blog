@@ -1,7 +1,7 @@
 ---
 title: nodejs-orm
 author: Chen YuBo
-pubDatetime: 2024-03-14T15:09:35.738Z
+date: 2024-03-14T15:09:35.738Z
 featured: false
 draft: false
 description: "sql学习"
@@ -10,15 +10,13 @@ tags:
   - orm
 ---
 
-## 目录
-
 ## 1 knex
 
-> Knex是一个基于JavaScript的查询生成器，它允许你使用JavaScript代码来生成和执行SQL查询语句。它提供了一种简单和直观的方式来与关系型数据库进行交互，而无需直接编写SQL语句。你可以使用Knex定义表结构、执行查询、插入、更新和删除数据等操作。
+> Knex 是一个基于 JavaScript 的查询生成器，它允许你使用 JavaScript 代码来生成和执行 SQL 查询语句。它提供了一种简单和直观的方式来与关系型数据库进行交互，而无需直接编写 SQL 语句。你可以使用 Knex 定义表结构、执行查询、插入、更新和删除数据等操作。
 
 https://knexjs.org/
 
-### Knex的安装和设置
+### Knex 的安装和设置
 
 用什么数据库安装对应的数据库就行了
 
@@ -66,7 +64,7 @@ db:
 ```js
 // knex 所有代码直接编写没有效果 需要.then
 db.schema
-  .createTable("list", table => {
+  .createTable("list", (table) => {
     table.increments("id"); //id自增
     table.integer("age"); //age 整数
     table.string("name"); //name 字符串
@@ -155,7 +153,7 @@ app.listen(port, () => {
 
 ```js
 //伪代码
-db.transaction(async trx => {
+db.transaction(async (trx) => {
   try {
     await trx("list").update({ money: -100 }).where({ id: 1 }); //A
     await trx("list").update({ money: +100 }).where({ id: 2 }); //B
@@ -166,12 +164,12 @@ db.transaction(async trx => {
 });
 ```
 
-### 反编译sql语句
+### 反编译 sql 语句
 
 ```js
 db("list").select().toSQL().sql; // 调试knex
 
-db.raw("SELECT * FROM user").then(data => {
+db.raw("SELECT * FROM user").then((data) => {
   console.log(data);
 });
 ```
@@ -181,7 +179,7 @@ db.raw("SELECT * FROM user").then(data => {
 Prisma 的主要特点包括：
 
 - 类型安全的查询构建器：Prisma 使用强类型语言（如 TypeScript）生成查询构建器，从而提供了在编译时捕获错误和类型检查的能力。这有助于减少错误，并提供更好的开发人员体验。
-- 强大的 ORM 层：Prisma 提供了一个功能强大的 ORM 层，使开发人员能够以面向对象的方式操作数据库。它自动生成了数据库模型的CRUD（创建、读取、更新、删除）方法，简化了与数据库的交互。
+- 强大的 ORM 层：Prisma 提供了一个功能强大的 ORM 层，使开发人员能够以面向对象的方式操作数据库。它自动生成了数据库模型的 CRUD（创建、读取、更新、删除）方法，简化了与数据库的交互。
 - 数据库迁移：Prisma 提供了数据库迁移工具，可帮助开发人员管理数据库模式的变更。它可以自动创建和应用迁移脚本，使数据库的演进过程更加简单和可控。
 - 性能优化：Prisma 使用先进的查询引擎和数据加载技术，以提高数据库访问的性能。它支持高级查询功能，如关联查询和聚合查询，并自动优化查询以提供最佳的性能
 
@@ -204,7 +202,7 @@ prisma init --datasource-provider mysql
 
 连接数据库
 
-- 修改.env文件 `[DATABASE_URL="mysql://账号:密码@主机:端口/库名"]`
+- 修改.env 文件 `[DATABASE_URL="mysql://账号:密码@主机:端口/库名"]`
 - eg: `DATABASE_URL="mysql://root:123456@localhost:3306/xiaoman"`
 
 ### 创建表

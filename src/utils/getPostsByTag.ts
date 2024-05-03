@@ -1,10 +1,6 @@
-import type { CollectionEntry } from "astro:content";
-import getSortedPosts from "./getSortedPosts";
-import { slugifyAll } from "./slugify";
+import _ from 'lodash'
+import { dealLabel } from './dealLabel';
 
-const getPostsByTag = (posts: CollectionEntry<"blog">[], tag: string) =>
-  getSortedPosts(
-    posts.filter(post => slugifyAll(post.data.tags).includes(tag))
-  );
-
+const getPostsByTag = (posts, tag: string) =>
+  posts.filter(post => _.flattenDeep(dealLabel(post.data.tags)).includes(tag))
 export default getPostsByTag;

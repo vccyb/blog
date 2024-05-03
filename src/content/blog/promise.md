@@ -1,16 +1,15 @@
 ---
 title: 手写promise
 author: Chen YuBo
-pubDatetime: 2024-03-03T09:32:43.593Z
+date: 2024-03-03T09:32:43.593Z
 featured: false
+category: HTML-CSS-JS
 draft: false
 description: "手写promise"
 tags:
   - promise
   - 手写源码
 ---
-
-## 目录
 
 ## 基本实现
 
@@ -35,7 +34,7 @@ class APromise {
       this.PromiseResult = value;
       // 先把本次同步的执行完，resolve的之后在执
       queueMicrotask(() => {
-        this.callbacks.map(callback => {
+        this.callbacks.map((callback) => {
           callback.onFulfilled(value);
         });
       });
@@ -46,7 +45,7 @@ class APromise {
       this.PromiseState = APromise.REJECTED;
       this.PromiseResult = reason;
       queueMicrotask(() => {
-        this.callbacks.map(callback => {
+        this.callbacks.map((callback) => {
           callback.onRejected(reason);
         });
       });
@@ -55,21 +54,21 @@ class APromise {
 
   then(onFulfilled, onRejected) {
     onFulfilled =
-      typeof onFulfilled === "function" ? onFulfilled : value => value;
+      typeof onFulfilled === "function" ? onFulfilled : (value) => value;
     onRejected =
       typeof onRejected === "function"
         ? onRejected
-        : reason => {
+        : (reason) => {
             throw reason;
           };
 
     const promise2 = new APromise((resolve, reject) => {
       if (this.PromiseState === APromise.PENDING) {
         this.callbacks.push({
-          onFulfilled: value => {
+          onFulfilled: (value) => {
             this.parse(promise2, onFulfilled(value), resolve, reject);
           },
-          onRejected: value => {
+          onRejected: (value) => {
             this.parse(promise2, onRejected(value), resolve, reject);
           },
         });

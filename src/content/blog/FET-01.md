@@ -1,8 +1,9 @@
 ---
 title: 动手学前端测试 - 基础概念篇
 author: Chen YuBo
-pubDatetime: 2024-02-18T14:08:58.680Z
+date: 2024-02-18T14:08:58.680Z
 featured: false
+category: 前端测试
 draft: false
 description: "前端测试是什么？什么是单元测试，继承测试又是啥"
 tags:
@@ -11,8 +12,6 @@ tags:
   - 集成测试
   - E2E测试
 ---
-
-## 目录
 
 ## 什么是前端测试
 
@@ -31,7 +30,7 @@ tags:
 
 让我们看下[Kent C. Dodds](https://kentcdodds.com/)的定义，也就是下图
 
-![测试模型](@assets/images/FET/01-01.png)
+![测试模型](/assets/images/FET/01-01.png)
 
 在他这个测试的模型里面认为测试主要分为三类
 
@@ -40,7 +39,7 @@ tags:
 - 单元测试：验证单独隔离的部分是否正常工作。
 - 静态测试：捕获写代码时的错别字和类型错误
 
-> 关于静态测试：静态测试这里其实更多是指用TypeScript以及ESLint等静态检查工具来找出代码问题
+> 关于静态测试：静态测试这里其实更多是指用 TypeScript 以及 ESLint 等静态检查工具来找出代码问题
 
 下面会对其他三类测试做简单的介绍
 
@@ -72,11 +71,11 @@ tags:
 - 系统级别测试
 - 更多的测试数据与环境，更长的测试时间
 
-测试工具：一些自动化测试工具，如Jest、Mocha、vitest、Cypress等
+测试工具：一些自动化测试工具，如 Jest、Mocha、vitest、Cypress 等
 
 ## 单元测试
 
-单元测试就是对没有依赖或依赖都被mock掉了的测试单元的测试，一个模块进行测试
+单元测试就是对没有依赖或依赖都被 mock 掉了的测试单元的测试，一个模块进行测试
 
 特点：
 
@@ -84,7 +83,7 @@ tags:
 - 存函数，或工具函数集合的测试选择
 - 辅助组件等公共组件的测试选择
 
-测试工具：一些自动化测试工具，如Jest、Mocha、vitest、Cypress等
+测试工具：一些自动化测试工具，如 Jest、Mocha、vitest、Cypress 等
 
 ## 测试工具
 
@@ -96,7 +95,7 @@ tags:
 - vitest
 - cypress
 
-e2e测试工具
+e2e 测试工具
 
 - cypress
 
@@ -104,15 +103,15 @@ e2e测试工具
 
 有时候，我们测试更多的是组件，组件的测试，需要使用到框架的测试库，这里会列出一些比较流行的测试库
 
-- React: React官方的Test Utils / Testing Library - React（推荐） / Enzyme （基于上面的测试策略，更推荐React Testing Library，Enzyme暴露了太多内部元素用来测试，虽然一时方便，但远离了用户行为，之后带来的修改频率也比较高，性价比低）
+- React: React 官方的 Test Utils / Testing Library - React（推荐） / Enzyme （基于上面的测试策略，更推荐 React Testing Library，Enzyme 暴露了太多内部元素用来测试，虽然一时方便，但远离了用户行为，之后带来的修改频率也比较高，性价比低）
 
-- Vue: Vue官方的Test Utils / Testing Library - Vue
+- Vue: Vue 官方的 Test Utils / Testing Library - Vue
 
-- Angular: Angular内置的测试框架(Jasmine) / Testing Library - Angular
+- Angular: Angular 内置的测试框架(Jasmine) / Testing Library - Angular
 
 ## 总结
 
-本文介绍了一些前端测试的基本概念，基于大佬的测试模型，介绍了下E2E测试，集成测试，单元测试的概念，以及一些常用的测试工具。
+本文介绍了一些前端测试的基本概念，基于大佬的测试模型，介绍了下 E2E 测试，集成测试，单元测试的概念，以及一些常用的测试工具。
 
 ## 参考
 

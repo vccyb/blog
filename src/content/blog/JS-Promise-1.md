@@ -1,15 +1,16 @@
 ---
 title: Parallel, Sequence, Race Promises
 author: Chen YuBo
-pubDatetime: 2024-02-27T15:00:02.813Z
+date: 2024-02-27T15:00:02.813Z
 featured: false
+category: HTML-CSS-JS
 draft: false
 description: "Parallel, Sequence, Race Promises"
 tags:
   - promise
 ---
 
-有时有，对于一组Promise，我们有着不同的处理方法
+有时有，对于一组 Promise，我们有着不同的处理方法
 
 可能是，并行处理，可能是，串行处理，也可能是，竞争处理
 
@@ -19,7 +20,7 @@ tags:
 
 ```js
 const promisify = (item, delay) => {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(() => {
       resolve(item);
     }, delay);
@@ -30,8 +31,6 @@ const a = () => promisify("a", 1000);
 const b = () => promisify("b", 5000);
 const c = () => promisify("c", 3000);
 ```
-
-## 目录
 
 ## Parallel
 

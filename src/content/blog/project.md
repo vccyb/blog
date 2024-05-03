@@ -1,15 +1,14 @@
 ---
 title: 工程化相关集合
 author: Chen YuBo
-pubDatetime: 2024-03-11T16:04:05.712Z
+date: 2024-03-11T16:04:05.712Z
 draft: false
+category: 前端工程化
 featured: true
 description: "工程化一些"
 tags:
   - vue
 ---
-
-## 目录
 
 ## 1 对等依赖报错处理
 
@@ -55,7 +54,7 @@ RAIL 模型
 
 1. 同源策略
 
-CORS是一套机制，用于浏览器校验跨域请求
+CORS 是一套机制，用于浏览器校验跨域请求
 
 服务器表示通过，校验通过
 服务器拒绝或者没有表示，则校验不通过
@@ -64,13 +63,13 @@ CORS是一套机制，用于浏览器校验跨域请求
 
    服务器上自己人
 
-3. CORS请求分类
+3. CORS 请求分类
 
 简单请求：
 
 - 请求方法是以下三种之一：HEAD, GET, POST
-- HTTP头部满足CORS安全规范 （简单理解，没有改动头就是简单）
-- 请求头的Content-Type是以下三种之一：text/plain, multipart/form-data, application/x-www-form-urlencoded
+- HTTP 头部满足 CORS 安全规范 （简单理解，没有改动头就是简单）
+- 请求头的 Content-Type 是以下三种之一：text/plain, multipart/form-data, application/x-www-form-urlencoded
 
 非简单请求，会带一个预检请求
 
@@ -78,11 +77,11 @@ CORS是一套机制，用于浏览器校验跨域请求
 
 - 简单请求
 
-  - 浏览器直接发出CORS请求
-    - 请求头中包含Origin字段，表示请求的源
+  - 浏览器直接发出 CORS 请求
+    - 请求头中包含 Origin 字段，表示请求的源
   - 服务器返回响应，
-    - 响应头中包含Access-Control-Allow-Origin字段，表示允许的源
-    - 浏览器发现响应头中包含Access-Control-Allow-Origin字段，则浏览器认为跨域请求成功，否则失败
+    - 响应头中包含 Access-Control-Allow-Origin 字段，表示允许的源
+    - 浏览器发现响应头中包含 Access-Control-Allow-Origin 字段，则浏览器认为跨域请求成功，否则失败
 
 - 非简单请求
 
@@ -91,7 +90,7 @@ CORS是一套机制，用于浏览器校验跨域请求
     - Access-Control-Request-Method: 请求方法
     - Access-Control-Request-Headers: 请求头
   - 服务器返回响应，
-    - 响应头中包含Access-Control-Allow-Origin字段，表示允许的源
+    - 响应头中包含 Access-Control-Allow-Origin 字段，表示允许的源
     - Access-Control-Allow-Methods: 允许的请求方法
     - Access-Control-Allow-Headers: 允许的请求头
     - Access-Control-Max-Age: 预检请求的有效期，单位是秒

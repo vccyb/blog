@@ -1,15 +1,16 @@
 ---
 title: 前端测试合集
 author: Chen YuBo
-pubDatetime: 2024-04-27T16:04:05.712Z
+date: 2024-04-27T16:04:05.712Z
 draft: false
+category: 前端测试
 featured: true
 description: "前端测试合集"
 tags:
   - vue
 ---
 
-## 目录
+
 
 ## 1 给jest 添加 babel 支持 ESModule的import导入
 

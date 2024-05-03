@@ -1,15 +1,14 @@
 ---
 title: js相关技巧集合，也包含html和css
 author: Chen YuBo
-pubDatetime: 2024-03-11T16:04:05.712Z
+date: 2024-03-11T16:04:05.712Z
 featured: true
 draft: false
+category: HTML-CSS-JS
 description: "js相关技巧集合"
 tags:
   - JS
 ---
-
-## 目录
 
 ## 1 请求的取消
 
@@ -27,7 +26,7 @@ input.oninput = async () => {
   try {
     const list = await fetchData("xxx" + input.value, {
       signal: controller.signal, // 控制器的信号
-    }).then(resp => resp.json());
+    }).then((resp) => resp.json());
   } catch (e) {
     console.log("请求被取消");
   }
@@ -35,10 +34,10 @@ input.oninput = async () => {
 };
 ```
 
-axios取消请求
+axios 取消请求
 
-关于 axios，axios其实有两种取消请求的方式，一种是`cancelToken`，一种是`abort`。
-不过现在官网也推荐我们使用abort这种方式了，代码也是很类似的
+关于 axios，axios 其实有两种取消请求的方式，一种是`cancelToken`，一种是`abort`。
+不过现在官网也推荐我们使用 abort 这种方式了，代码也是很类似的
 
 ```js
 const controller = new AbortController();
@@ -54,7 +53,7 @@ axios
 controller.abort();
 ```
 
-## 2 max-height效果
+## 2 max-height 效果
 
 https://www.bilibili.com/video/BV1ay421B7Sh/?spm_id_from=333.1007.tianma.1-3-3.click&vd_source=ff519b14c2f26ffed121e75322acc97e
 
@@ -66,7 +65,7 @@ height: auto
 ```
 
 2. max-height
-   会有transition的问题
+   会有 transition 的问题
 
 3. scale
    导致内容压缩的问题
@@ -103,8 +102,8 @@ btn.onmouseleave = function () {
 
 浏览器怎么做的
 
-1. 模块解析 url地址补全 `***/main.js`, 下载对应的模块，解析
-2. 所有main.js 顶级静态的导入语句, 提到代码最上方
+1. 模块解析 url 地址补全 `***/main.js`, 下载对应的模块，解析
+2. 所有 main.js 顶级静态的导入语句, 提到代码最上方
 
 ```js
 import a from "./a.js";
@@ -117,7 +116,7 @@ import b from "./b.js";
 
 动态导入是在运行时，进行处理的
 
-## 4 base64编码
+## 4 base64 编码
 
 ```html
 <img src="data:image/pmg;base64,xxxxxx" ></img>
@@ -125,16 +124,16 @@ import b from "./b.js";
 <script src="data:application/javascript;alert(123)"></script>
 ```
 
-dataurl的格式，参考wiki百科
+dataurl 的格式，参考 wiki 百科
 
-js的base64编码api
+js 的 base64 编码 api
 
 ```js
 const res = atob("YMxlxx..."); // 解码
 const res = btoa("alert(123)"); // 编码64
 ```
 
-选择文件，编码为base64
+选择文件，编码为 base64
 
 ```js
 const inp = document.querySelector("input");
@@ -142,7 +141,7 @@ const inp = document.querySelector("input");
 inp.onchange = function (e) {
   const file = e.target.files[0];
   const reader = new FileReader();
-  reader.onload = e => {
+  reader.onload = (e) => {
     console.log(e.target.result); //dataurl
     preview.src = e.target.result; // 使用base64编码的图片
   };
@@ -154,7 +153,7 @@ inp.onchange = function (e) {
 
 ### 防抖 debounce
 
-多少s后，执行，有重新计时的功能
+多少 s 后，执行，有重新计时的功能
 
 电梯关门，触发事件，让你触发，如果一段时间内又触发，等待不算数，只有最后一次触发，一段时间后，我再执行
 
@@ -195,7 +194,7 @@ window.onresize = () => {
 };
 ```
 
-#### 支持函数参数和this
+#### 支持函数参数和 this
 
 ```js
 function debounce(fn, wait) {
@@ -211,11 +210,11 @@ function debounce(fn, wait) {
 const xxx = debounce(layout, 1000);
 ```
 
-this的问题：
+this 的问题：
 
-1. 保障xxx和返回的是同一个this
+1. 保障 xxx 和返回的是同一个 this
 2. 函数使用箭头函数
-3. 函数调用用apply
+3. 函数调用用 apply
 
 ### 节流
 
@@ -223,7 +222,7 @@ this的问题：
 
 节流的定义：某一段时间，函数只执行一次
 
-实现1，利用防抖，就是等待xs后，注意区别（如果有计时，防抖会清空）
+实现 1，利用防抖，就是等待 xs 后，注意区别（如果有计时，防抖会清空）
 
 ```js
 function throttle(func, wait) {
@@ -238,7 +237,7 @@ function throttle(func, wait) {
 }
 ```
 
-实现2，立刻执行一次
+实现 2，立刻执行一次
 
 ```js
 function throttle(func, wait) {
@@ -257,12 +256,12 @@ function throttle(func, wait) {
 
 https://www.bilibili.com/video/BV1q64y1w7sr/?spm_id_from=333.337.search-card.all.click&vd_source=ff519b14c2f26ffed121e75322acc97e
 
-## 7 给fetch添加超时功能
+## 7 给 fetch 添加超时功能
 
 几种思路方向：
 
-1. 直接修改window.fetch 影响太大不好，第三方库容易出问题
-2. 自定义一个函数request，也不好，不会影响第三方库，但是调用不方便
+1. 直接修改 window.fetch 影响太大不好，第三方库容易出问题
+2. 自定义一个函数 request，也不好，不会影响第三方库，但是调用不方便
 
 高阶函数！
 
@@ -311,7 +310,7 @@ obj.a; // [[GET]]
 
 直接和间接调用的区别
 
-1. 没有使用Reflect，还有额外的步骤，只是其中的一个是调用基本方法
+1. 没有使用 Reflect，还有额外的步骤，只是其中的一个是调用基本方法
 
 ```js
 const obj = {
@@ -356,7 +355,7 @@ function foo(a, b = 2, c = 3)
 
 注意：
 
-1. undefined才会触发默认值
+1. undefined 才会触发默认值
 2. 参数的顺序是不能跳跃式传递
 3. 函数的.length，参数默认值之前
 4. 默认值放一个表达式，只有触发默认值的时候，才触发
@@ -373,7 +372,7 @@ console.log(foo.length); // 1
 
 ```js
 async function getUser() {
-  return await fetch("url").then(resp => resp.json());
+  return await fetch("url").then((resp) => resp.json());
 }
 
 async function m1() {
@@ -398,7 +397,7 @@ async function main() {
 
 ```js
 function getUser() {
-  return fetch("url").then(resp => resp.json());
+  return fetch("url").then((resp) => resp.json());
 }
 
 function m1() {
@@ -438,13 +437,13 @@ function run(func) {
     };
     cache[i++] = result;
     const prom = _originFetch(...args)
-      .then(resp => resp.json())
+      .then((resp) => resp.json())
       .then(
-        resp => {
+        (resp) => {
           result.status = "fulfilled";
           result.data = resp;
         },
-        err => {
+        (err) => {
           result.status = "rejected";
           result.err = err;
         }

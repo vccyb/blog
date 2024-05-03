@@ -1,7 +1,7 @@
 ---
 title: react基础
 author: Chen YuBo
-pubDatetime: 2024-03-21T15:36:51.717Z
+date: 2024-03-21T15:36:51.717Z
 featured: false
 draft: false
 description: "react 基础"
@@ -10,9 +10,7 @@ tags:
   - 手写源码
 ---
 
-## 目录
-
-## 第一章，体验react
+## 第一章，体验 react
 
 ```html
 <div id="app"></div>
@@ -30,7 +28,7 @@ function MyApp() {
       <h1>Title</h1>
       <input
         type="text"
-        onChange={event => setTextInput(event.target.value)}
+        onChange={(event) => setTextInput(event.target.value)}
       ></input>
       <p>{textInput}</p>
     </main>
@@ -43,7 +41,7 @@ const root = ReactDOM.createRoot(appEL);
 root.render(<MyApp />);
 ```
 
-## 第二章 介绍React课程
+## 第二章 介绍 React 课程
 
 重点：
 
@@ -56,7 +54,7 @@ root.render(<MyApp />);
 
 略
 
-## 第四章 vscode上react配置
+## 第四章 vscode 上 react 配置
 
 略，还是上面的内容
 
@@ -82,18 +80,18 @@ style 写法
 
 注意： `style={}` 中的属性名，必须使用驼峰命名法
 
-class写法
+class 写法
 
 ```jsx
 <input
   type="text"
   className="input"
   value={username}
-  onChange={event => setUsername(event.target.value)}
+  onChange={(event) => setUsername(event.target.value)}
 />
 ```
 
-注意：className中的值，会自动加到class上
+注意：className 中的值，会自动加到 class 上
 
 derived state
 
@@ -102,7 +100,7 @@ const [username, setUsername] = React.useState("");
 const usernameError = username.length < 5 ? "用户名长度不能小于5" : "";
 ```
 
-动态变化，把它理解为vue中的computed
+动态变化，把它理解为 vue 中的 computed
 
 ## 第六章 动态圆圈
 
@@ -135,7 +133,10 @@ function MyApp() {
 
       <label>
         text color
-        <select onChange={e => setTextColor(e.target.value)} value={textColor}>
+        <select
+          onChange={(e) => setTextColor(e.target.value)}
+          value={textColor}
+        >
           <option value="" selected>
             White
           </option>
@@ -149,7 +150,7 @@ function MyApp() {
         <input
           type="number"
           value={size}
-          onChange={e => setSize(e.target.value)}
+          onChange={(e) => setSize(e.target.value)}
         />
       </label>
 
@@ -158,7 +159,7 @@ function MyApp() {
         <input
           type="number"
           value={rotate}
-          onChange={e => setRotate(e.target.value)}
+          onChange={(e) => setRotate(e.target.value)}
         />
       </label>
       <div
@@ -185,7 +186,7 @@ function MyApp() {
     <main>
       {
         // 遍历cities数组，生成每个城市的列表项
-        cities.map(city => (
+        cities.map((city) => (
           <section className="city">
             <h2>{city.country}</h2>
             <h3>{city.name}</h3>
@@ -193,7 +194,7 @@ function MyApp() {
               // 判断city.forecast数组是否为空，如果为空则显示"No forecast data available"
               city.forecast && city.forecast.length > 0 ? (
                 <ul>
-                  {city.forecast.map(day => (
+                  {city.forecast.map((day) => (
                     <li>
                       {day.date}
                       <span>
@@ -252,7 +253,7 @@ function MyApp() {
 }
 ```
 
-## 补充：userState的细节
+## 补充：userState 的细节
 
 ### 组件会重新执行，避免死循环
 
@@ -270,7 +271,7 @@ function MyApp() {
 }
 ```
 
-2. 放到setTimeout中
+2. 放到 setTimeout 中
 
 ```jsx
 function MyApp() {
@@ -287,7 +288,7 @@ function MyApp() {
 }
 ```
 
-更新组件-> 执行setTimeout -> 更新组件 -> 执行setTimeout -> 更新组件 -> ...
+更新组件-> 执行 setTimeout -> 更新组件 -> 执行 setTimeout -> 更新组件 -> ...
 
 3. 直接使用，无限循环报错
 
@@ -326,7 +327,7 @@ const handleClick = () => {
 };
 ```
 
-页面上还是1，我们执行的时候，count还没变，还是拿到原来的值去加1
+页面上还是 1，我们执行的时候，count 还没变，还是拿到原来的值去加 1
 
 问题：
 
@@ -338,10 +339,10 @@ const handleClick = () => {
 
 ```jsx
 const handleClick = () => {
-  setCount(count => count + 1);
-  setCount(count => count + 1);
-  setCount(count => count + 1);
-  setCount(count => count + 1);
+  setCount((count) => count + 1);
+  setCount((count) => count + 1);
+  setCount((count) => count + 1);
+  setCount((count) => count + 1);
   console.log("点击了", count);
 };
 ```
@@ -352,11 +353,11 @@ const handleClick = () => {
 
 ```jsx
 const handleClick = () => {
-  setCount(count => count + 1);
-  setCount(count => count + 1);
-  setCount(count => count + 1);
-  setCount(count => count + 1);
-  setCount(count => {
+  setCount((count) => count + 1);
+  setCount((count) => count + 1);
+  setCount((count) => count + 1);
+  setCount((count) => count + 1);
+  setCount((count) => {
     console.log(count);
     return count;
   });
@@ -376,7 +377,7 @@ const handleClick = () => {
 let x = 100;
 const [count, setCount] = React.useState(0);
 const handleClick = () => {
-  setCount(count => {
+  setCount((count) => {
     x += 1;
     count += 1;
     console.log(`count ${count}, x ${x}`);
@@ -401,10 +402,10 @@ Inline Babel script:33 组件-执行了
 Inline Babel script:40 count 8, x 101
 ```
 
-就是useState有缓存，它的实现不在这个组件内，有缓存能力，可以读取上一次的值
-而普通变量没有，每次都是100开始
+就是 useState 有缓存，它的实现不在这个组件内，有缓存能力，可以读取上一次的值
+而普通变量没有，每次都是 100 开始
 
-当然你也可以，不让组件刷新即可，不写setCount就ok了，组件就不会重新执行
+当然你也可以，不让组件刷新即可，不写 setCount 就 ok 了，组件就不会重新执行
 
 什么时候用：
 
@@ -453,7 +454,7 @@ function MyApp() {
   }
 
   function handleToggleTodo(id) {
-    const toggledTodoList = todoList.map(todo => {
+    const toggledTodoList = todoList.map((todo) => {
       if (todo.id === id) {
         return {
           ...todo,
@@ -467,7 +468,7 @@ function MyApp() {
   }
 
   function handleDeleteTodo(id) {
-    const deletedTodoList = todoList.filter(todo => todo.id !== id);
+    const deletedTodoList = todoList.filter((todo) => todo.id !== id);
     deletedTodoList.sort(sortTodo);
 
     setTodoList(deletedTodoList);
@@ -480,11 +481,11 @@ function MyApp() {
         type="text"
         placeholder="Add item into as todo"
         value={currentTodoItem}
-        onChange={e => setCurrentTodoItem(e.target.value)}
+        onChange={(e) => setCurrentTodoItem(e.target.value)}
       ></input>
       <button onClick={handleAddTodo}>Add</button>
       <ul>
-        {todoList.map(todo => {
+        {todoList.map((todo) => {
           return (
             <li className={todo.isCompleted ? "deleted" : ""} key={todo.id}>
               <input
@@ -511,9 +512,9 @@ root.render(<MyApp />);
 
 1. 获取外部数据（服务接口） => 往往是异步的 （不要阻塞渲染）
 2. 等接口返回，对已经渲染的结果进行更新渲染
-3. react提供了 useEffect hook （针对已经渲染的更新操作）
+3. react 提供了 useEffect hook （针对已经渲染的更新操作）
 
-知识点1: 执行时机是异步的, 每一次渲染完成之后
+知识点 1: 执行时机是异步的, 每一次渲染完成之后
 
 ```jsx
 function MyApp() {
@@ -527,9 +528,9 @@ function MyApp() {
 }
 ```
 
-知识点2: 可以拿到渲染的结果
+知识点 2: 可以拿到渲染的结果
 
-可以拿到渲染的结果，比如dom，还有最新的数据
+可以拿到渲染的结果，比如 dom，还有最新的数据
 
 ```jsx
 React.useEffect(() => {
@@ -542,7 +543,7 @@ let name = "qqq";
 return <h1 onClick={() => setCount(count + 1)}>Hello, CYB! {count}</h1>;
 ```
 
-知识点3: 通过useEffect获取接口数据, 第二个参数依赖性，只有依赖性采取执行
+知识点 3: 通过 useEffect 获取接口数据, 第二个参数依赖性，只有依赖性采取执行
 
 1. 没有写，那么每一次渲染都执行`useEffect(() => {...})`
 2. 如果是空数组，第一次渲染完后执行`useEffect(() => {...}, [])`
@@ -564,7 +565,7 @@ return (
 );
 ```
 
-知识点4: useEffect的返回值
+知识点 4: useEffect 的返回值
 
 这个分返回的函数，可以看作一些副作用的清理工作，比如取消订阅，取消定时器等
 
@@ -598,9 +599,9 @@ console.log("--组件中--");
 --回掉中--
 ```
 
-知识点5： async await 与 useEffect
+知识点 5： async await 与 useEffect
 
-当回掉函数用async修饰时，会返回promise对象，所以也会报错（和上面说的需要返回一个函数，如果有的话）
+当回掉函数用 async 修饰时，会返回 promise 对象，所以也会报错（和上面说的需要返回一个函数，如果有的话）
 
 ```jsx
 useEffect(() => {
@@ -613,7 +614,7 @@ useEffect(() => {
 }, [someId]);
 ```
 
-知识点6: 副作用理解 （外部作用）
+知识点 6: 副作用理解 （外部作用）
 外部影响内部：从外部获取数据，对内部渲染的结果产生了作用
 
 ## 第十章 useContext

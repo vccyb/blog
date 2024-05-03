@@ -1,7 +1,8 @@
 ---
 title: await-to-js 分析
 author: Chen YuBo
-pubDatetime: 2024-04-26T16:04:05.712Z
+date: 2024-04-26T16:04:05.712Z
+category: 源码分析
 draft: false
 featured: false
 description: "await-to-js"
@@ -9,14 +10,12 @@ tags:
   - vue
 ---
 
-## 目录
-
 ## 1 await-to-js
 
 Async await wrapper for easy error handling
 Async await 封装器可轻松处理错误
 
-下载了await-to-js，他自己有个doc，可以打开来看看
+下载了 await-to-js，他自己有个 doc，可以打开来看看
 
 有个介绍用法
 
@@ -62,7 +61,7 @@ async function asyncFunctionWithThrow() {
 }
 ```
 
-还有一个ts的用法
+还有一个 ts 的用法
 
 ```ts
 interface ServerResponse {
@@ -79,16 +78,16 @@ console.log(data.test);
 
 通过上述两段实例，我们可以发现这个库的作用是很明晰的
 
-就是通过暴露的to，然后将错误状态和成功状态再同一个层级，一个数组结构返回了
+就是通过暴露的 to，然后将错误状态和成功状态再同一个层级，一个数组结构返回了
 
 通过使用此库提供的 to 函数，我们可以同时处理 Promise 的成功和失败情况，返回一个结构如 [error, result] 的数组。
 在成功时，你会收到 [null, result]，而在失败时，你会收到包含错误信息的数组 [error, undefined]。
 
-优势：我们不再需要过多的try-catch
+优势：我们不再需要过多的 try-catch
 
 ## 3 源码分析
 
-核心就是err和result放到一个数组了
+核心就是 err 和 result 放到一个数组了
 
 ```ts
 /**
@@ -114,9 +113,9 @@ export function to<T, U = Error>(
 export default to;
 ```
 
-注意：这里它处理的事原来promise的状态
+注意：这里它处理的事原来 promise 的状态
 
-说实话，还是蛮简单的，就是我们自己返回了一个promise
+说实话，还是蛮简单的，就是我们自己返回了一个 promise
 
 ## 4 试一试吧
 

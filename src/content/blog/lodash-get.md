@@ -1,19 +1,18 @@
 ---
 title: lodash-get 分析
 author: Chen YuBo
-pubDatetime: 2024-05-01T16:04:05.712Z
+date: 2024-05-01T16:04:05.712Z
 draft: false
+category: 源码分析
 featured: false
 description: "lodash-get"
 tags:
   - vue
 ---
 
-## 目录
-
 ## 1 lodash-get
 
-lodash中有个get函数，支持从对象中方便的获取对应的属性值
+lodash 中有个 get 函数，支持从对象中方便的获取对应的属性值
 
 总的来说有几个特点：
 

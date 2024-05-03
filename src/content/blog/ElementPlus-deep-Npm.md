@@ -1,8 +1,9 @@
 ---
 title: Element-Plus技术揭秘专栏的知识学习笔记-组件库工程化实战之 从终端命令解析器说起谈谈 npm 包管理工具的运行原理
 author: Chen YuBo
-pubDatetime: 2024-03-18T13:46:10.211Z
+date: 2024-03-18T13:46:10.211Z
 featured: false
+category: 源码分析
 draft: false
 description: "学习笔记"
 tags:
@@ -11,16 +12,14 @@ tags:
 
 原文地址：https://juejin.cn/post/7161063570594070559
 
-## 目录
-
 ## 终端命令的执行流程
 
 通过命令操控计算机在 DOS、Linux 系统中最常用的方式。命令操作的核心便是命令解析器（如 Linux 中的 Shell）。命令解析器实现接收命令字符串，解析命令并执行相应操作。
 
 常见命令解析器：
 
-- shell：Unix操作系统下的命令解析器
-- bash：Linux操作系统下的命令解析器
+- shell：Unix 操作系统下的命令解析器
+- bash：Linux 操作系统下的命令解析器
 - cmd：Windows 命令解释器
 
 本质：对用户输入的命令进行解析，调用对应的执行程序。
@@ -37,15 +36,15 @@ tags:
 
 > 内部命令：常驻内存，cd ls、 外部命令，在磁盘中，执行需要将此磁盘的命令代码读入内存才能执行
 
-3. 在path变量中查找命令
+3. 在 path 变量中查找命令
 
-> 如果，不是内部命令，有没有命令的路径，那么就去系统环境变了PATH配置的目录中查找
+> 如果，不是内部命令，有没有命令的路径，那么就去系统环境变了 PATH 配置的目录中查找
 
 4. 其他 报错输入的不是命令
 
-## Node安装和执行
+## Node 安装和执行
 
-- node的安装，自动给PATH环境变了添加一个node所在的目录
+- node 的安装，自动给 PATH 环境变了添加一个 node 所在的目录
 
 ## npm run 发生了啥
 
@@ -109,13 +108,13 @@ npx eslint --init
 npm init -y
 ```
 
-然后新建目录bin，在bin目录下新建一个index.js文件，这个文件到时是作为一个shell文件进行执行的，需要在文件开头加一行：
+然后新建目录 bin，在 bin 目录下新建一个 index.js 文件，这个文件到时是作为一个 shell 文件进行执行的，需要在文件开头加一行：
 
 ```
 #!/usr/bin/env node
 ```
 
-配置package.json文件，增加bin字段，如下：
+配置 package.json 文件，增加 bin 字段，如下：
 
 ```json
 {
@@ -125,7 +124,7 @@ npm init -y
 }
 ```
 
-这个配置的意思是说，这个指令名称是 npm-link-test  运行之后执行的是 "./bin/index.js" 这个文件的代码。
+这个配置的意思是说，这个指令名称是 npm-link-test  运行之后执行的是 "./bin/index.js"  这个文件的代码。
 
 为我们只是为了理解 Node Cli 命令的运行原理，我们只需要在终端输入 npm-link-test 命令能运行起来即可。所以我们在 "./bin/index.js" 文件中加一行能体现我们命令运行成功的代码：
 

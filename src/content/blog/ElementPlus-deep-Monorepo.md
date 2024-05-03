@@ -1,8 +1,9 @@
 ---
 title: Element-Plus技术揭秘专栏的知识学习笔记-组件库工程化实战之 Monorepo 架构搭建
 author: Chen YuBo
-pubDatetime: 2024-03-09T14:59:53.329Z
+date: 2024-03-09T14:59:53.329Z
 featured: false
+category: 源码分析
 draft: false
 description: "学习笔记"
 tags:
@@ -10,8 +11,6 @@ tags:
 ---
 
 原文地址：https://juejin.cn/post/7146183222425518093#heading-12
-
-## 目录
 
 ## monorepo
 
@@ -86,7 +85,7 @@ packages:
 └── pnpm-workspace.yaml
 ```
 
-子包name，另外两个也是 `@cyb-ui/theme-chalk` 和 `@cyb-ui/utils`
+子包 name，另外两个也是 `@cyb-ui/theme-chalk` 和 `@cyb-ui/utils`
 
 ```json
 {
@@ -113,7 +112,7 @@ pnpm install @cyb-ui/theme-chalk -w
 pnpm install @cyb-ui/utils -w
 ```
 
-安装好后，他的根目录的package.json的依赖如下
+安装好后，他的根目录的 package.json 的依赖如下
 
 ```json
   "dependencies": {
@@ -140,9 +139,9 @@ pnpm install vue typescript @types/node -D -w
 pnpm tsc --init
 ```
 
-## 组件play环境
+## 组件 play 环境
 
-我们已经创建好了子包, 用vite创建项目即可
+我们已经创建好了子包, 用 vite 创建项目即可
 
 ```shell
 pnpm create vite play --template vue-ts
@@ -159,7 +158,7 @@ pnpm install
 }
 ```
 
-## Typescript 的 monorepo设置
+## Typescript 的 monorepo 设置
 
 ### TypeScript 项目引用 (project references)
 
@@ -177,7 +176,7 @@ tsconfig.json 文件有一个顶级属性"references"，它支持将 TypeScript�
 }
 ```
 
-### 拆分tsconfig.json
+### 拆分 tsconfig.json
 
 公共配置项 tsconfig.base.json 文件：
 

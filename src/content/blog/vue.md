@@ -1,15 +1,14 @@
 ---
 title: vue相关集合
 author: Chen YuBo
-pubDatetime: 2024-03-11T16:04:05.712Z
+date: 2024-03-11T16:04:05.712Z
 draft: false
+category: Vue
 featured: true
 description: "vue相关集合"
 tags:
   - vue
 ---
-
-## 目录
 
 ## 1 `v-size-ob` 指令
 
@@ -19,7 +18,7 @@ https://www.bilibili.com/video/BV18c411y7oi/?spm_id_from=333.337.search-card.all
 
 ```js
 const map = new WeakMap();
-const ob = new ReactiveSizeObserver(entries => {
+const ob = new ReactiveSizeObserver((entries) => {
   for (const entry of entries) {
     // 这个元素对应的回掉函数
     const handler = map.get(entry.target);
@@ -60,9 +59,9 @@ app.directive("size-ob", sizeDirect);
 <div v-size-ob="handleSizeChange">...</div>
 ```
 
-## 2 vue2 中props中的default中没有this
+## 2 vue2 中 props 中的 default 中没有 this
 
-在开发过程中，碰到过props默认值的问题，由尝试使用this.xxx 作为默认值，发现都不行
+在开发过程中，碰到过 props 默认值的问题，由尝试使用 this.xxx 作为默认值，发现都不行
 
 ```js
 // 1
@@ -88,11 +87,11 @@ default: function () {
 
 这几种写法的问题：
 
-1. 第一种写法，箭头函数，没有this，也就是使用当前的this，但是当前的this不是组件示例
+1. 第一种写法，箭头函数，没有 this，也就是使用当前的 this，但是当前的 this 不是组件示例
 2. 第二种写法的问题，这可能是因为此时 props 的默认值在组件实例化之前计算，导致 this 指向为 undefined。
 3. 直接就是类型错误了
 
-怎么解决，就是默认值不要去使用this这种, 简单在别的地方使用即可
+怎么解决，就是默认值不要去使用 this 这种, 简单在别的地方使用即可
 
 ```js
 default: ''
@@ -101,10 +100,10 @@ default: ''
 
 ## 3 vue 中读取文件的原始值
 
-这里要分vue2和vue3两种来看
+这里要分 vue2 和 vue3 两种来看
 
-1. vue2 他是使用vue-cli 基于的是webpack，文件需要 loader
-   所以需要告诉webpack 给对应的loader 处理，原始内容，可以使用 `raw-loader`
+1. vue2 他是使用 vue-cli 基于的是 webpack，文件需要 loader
+   所以需要告诉 webpack 给对应的 loader 处理，原始内容，可以使用 `raw-loader`
 
 ```js
 const { defineConfig } = require("@vue/cli-service");
@@ -123,24 +122,24 @@ module.exports = defineConfig({
 });
 ```
 
-当然你记得安装一下这个loader
+当然你记得安装一下这个 loader
 
-使用的时候 引用即可，假设文件中是base64
+使用的时候 引用即可，假设文件中是 base64
 
 ```ts
 import dataurl from "./img.dataurl";
 ```
 
-2. vite呢？vue3如果使用的是vite
+2. vite 呢？vue3 如果使用的是 vite
 
 ```ts
 import dataurl from "./img.dataurl?raw";
 ```
 
-使用raw后缀即可,获取就是文件内容string
+使用 raw 后缀即可,获取就是文件内容 string
 
 3. 其他的思路
-   其他的思路就不是读取原始文件了，可以将放到js文件中，然后到处
+   其他的思路就不是读取原始文件了，可以将放到 js 文件中，然后到处
 
 ```ts
 export default "xxxx base64";
@@ -148,7 +147,7 @@ export default "xxxx base64";
 
 ## 4 vue 中写样式的方式
 
-1. 直接在style中写
+1. 直接在 style 中写
 
 ```css
 <style>
@@ -170,7 +169,7 @@ export default "xxxx base64";
 </style>
 ```
 
-vue会给每一个元素加一个特殊属性 data-v-xxxx
+vue 会给每一个元素加一个特殊属性 data-v-xxxx
 
 你写的 选择器会带上这个属性选择器
 
@@ -180,7 +179,7 @@ vue会给每一个元素加一个特殊属性 data-v-xxxx
 }
 ```
 
-3. 使用一些css预编译器
+3. 使用一些 css 预编译器
 
 ```vue
 <style lang="scss" scoped>
@@ -224,13 +223,13 @@ export default {
 几个推荐：
 
 1. 命名大驼峰
-2. 模板书写-大驼峰 区别html
-3. 如果使用短横线， 加前缀，方便识别和区分html
+2. 模板书写-大驼峰 区别 html
+3. 如果使用短横线， 加前缀，方便识别和区分 html
 4. 统一使用一种风格
 
-## 6 vue中缓存方法
+## 6 vue 中缓存方法
 
-如果你不能使用computed, 解决计算属性没有参数传递的问题
+如果你不能使用 computed, 解决计算属性没有参数传递的问题
 
 ```js
 export function useComputed(fn) {
@@ -243,7 +242,7 @@ export function useComputed(fn) {
   }
   function getCache(args) {
     const keys = [...cache.keys()];
-    const key = keys.find(key => compare(key, args));
+    const key = keys.find((key) => compare(key, args));
     if (key) {
       return cache.get(key);
     }

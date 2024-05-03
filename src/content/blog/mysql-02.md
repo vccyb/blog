@@ -1,7 +1,7 @@
 ---
 title: Mysql express node.js 组合使用
 author: Chen YuBo
-pubDatetime: 2024-03-09T13:40:07.711Z
+date: 2024-03-09T13:40:07.711Z
 featured: false
 draft: false
 description: "mysql 组合 node.js 使用"
@@ -10,9 +10,7 @@ tags:
   - node.js
 ---
 
-## 目录
-
-mysql2 用来连接mysql和编写sq语句
+mysql2 用来连接 mysql 和编写 sq 语句
 express 用来提供接口 增删改差
 js-yaml 用来编写配置文件
 

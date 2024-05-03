@@ -1,17 +1,16 @@
 ---
 title: omit.js 分析
 author: Chen YuBo
-pubDatetime: 2024-04-26T16:04:05.712Z
+date: 2024-04-26T16:04:05.712Z
 draft: false
+category: 源码分析
 featured: false
 description: "omit.js"
 tags:
   - vue
 ---
 
-## 目录
-
-## 1 omit.js库的使用
+## 1 omit.js 库的使用
 
 可以通过单元测试看下
 
@@ -34,7 +33,7 @@ describe("omit", () => {
 });
 ```
 
-omit 就是ts里面的那个omit工具类型一样的作用，剔除某个属性
+omit 就是 ts 里面的那个 omit 工具类型一样的作用，剔除某个属性
 
 ## 2 源码
 
@@ -56,7 +55,7 @@ export function omit(obj, fields) {
 
 ## 3 补充 toBe 和 toEqual
 
-1. toEqual用于检查两个对象的值是否相等。它会递归比较对象的所有属性值，而不仅仅是检查它们是否是同一个对象。
+1. toEqual 用于检查两个对象的值是否相等。它会递归比较对象的所有属性值，而不仅仅是检查它们是否是同一个对象。
    适用于检查对象、数组等复杂数据结构的内容是否相等。
-2. toBe用于检查两个对象是否是同一个对象（在内存中的引用是否相同）。
+2. toBe 用于检查两个对象是否是同一个对象（在内存中的引用是否相同）。
    适用于检查两个变量是否引用了同一个实际对象，而不关心它们的内容是否相同。

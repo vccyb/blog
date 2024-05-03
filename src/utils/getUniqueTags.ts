@@ -1,23 +1,19 @@
-import { slugifyStr } from "./slugify";
-import type { CollectionEntry } from "astro:content";
-import postFilter from "./postFilter";
+import _ from 'lodash'
+import { dealLabel } from './dealLabel';
 
-interface Tag {
-  tag: string;
-  tagName: string;
-}
-
-const getUniqueTags = (posts: CollectionEntry<"blog">[]) => {
-  const tags: Tag[] = posts
-    .filter(postFilter)
-    .flatMap(post => post.data.tags)
-    .map(tag => ({ tag: slugifyStr(tag), tagName: tag }))
-    .filter(
-      (value, index, self) =>
-        self.findIndex(tag => tag.tag === value.tag) === index
-    )
-    .sort((tagA, tagB) => tagA.tag.localeCompare(tagB.tag));
-  return tags;
+const getUniqueTags = (posts) => {
+    let tags: string[] = [];
+    const filteredPosts = posts.filter(({data}) => {
+        return import.meta.env.PROD ? !data.draft : true
+    });
+    filteredPosts.forEach(post => {
+        tags = [...tags, ...dealLabel(post.data.tags)]
+            .filter(
+                (value: string, index: number, self: string[]) =>
+                    self.indexOf(value) === index
+            );
+    });
+    return _.compact(tags);
 };
 
 export default getUniqueTags;

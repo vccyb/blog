@@ -1,16 +1,15 @@
 ---
 title: 学习CSS动画 一点点深入
 author: Chen YuBo
-pubDatetime: 2024-02-18T14:08:58.680Z
+date: 2024-02-18T14:08:58.680Z
 featured: false
+category: HTML-CSS-JS
 draft: false
 description: "基于 Chokcoco 深入浅出 CSS 动画 文章学习，一点点深入吧"
 tags:
   - CSS
   - Animation
 ---
-
-## 目录
 
 ## CSS 动画基本介绍
 
@@ -57,7 +56,7 @@ animation-fill-mode：指定动画执行前后如何为目标元素应用样式
 
 ### `animation-name` 和 `animation-duration`
 
-- `animation-name` 指定由 `@keyframes` 描述的关键帧名称。 (CSS 引擎回去找到对应由keyframes定义的动画)
+- `animation-name` 指定由 `@keyframes` 描述的关键帧名称。 (CSS 引擎回去找到对应由 keyframes 定义的动画)
 - `animation-duration` 设置动画一个周期的时长。
 
 ### `animation-delay`
@@ -74,7 +73,7 @@ animation: move 2s 1s;
 
 同时 delay 是可以为负值的
 
-delay的技巧可以看：https://juejin.cn/post/7052506940777168927?searchId=20240218215548147B9DC4344BF987A35F#heading-16
+delay 的技巧可以看：https://juejin.cn/post/7052506940777168927?searchId=20240218215548147B9DC4344BF987A35F#heading-16
 
 ### `animation-timing-function` 缓动函数
 

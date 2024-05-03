@@ -1,15 +1,13 @@
 ---
 title: Mysql语法集
 author: Chen YuBo
-pubDatetime: 2024-03-03T09:32:43.593Z
+date: 2024-03-03T09:32:43.593Z
 featured: false
 draft: false
 description: "sql学习"
 tags:
   - sql
 ---
-
-## 目录
 
 ## 数据库
 
@@ -91,7 +89,7 @@ SELECT `name` as `user_name`,`id` as `user_id` FROM `user`;
 
 ### 排序
 
-ORDER BY [字段名称] desc降序(从大到小) asc 升序(从小到大)
+ORDER BY [字段名称] desc 降序(从大到小) asc 升序(从小到大)
 
 ```sql
 SELECT *  FROM `user` ORDER BY id DESC;
@@ -101,7 +99,7 @@ SELECT *  FROM `user` ORDER BY id DESC;
 
 limit [开始行] [限制条数]
 
-从0开始的
+从 0 开始的
 
 ```sql
 SELECT *  FROM `user` LIMIT 1,3
@@ -109,7 +107,7 @@ SELECT *  FROM `user` LIMIT 1,3
 
 ### 条件查询
 
-我们需要把搜索条件放在WHERE子句中
+我们需要把搜索条件放在 WHERE 子句中
 
 ```sql
 SELECT *  FROM `user` WHERE name = "cyb";
@@ -117,13 +115,13 @@ SELECT *  FROM `user` WHERE name = "cyb";
 
 ### 多个条件联合查询
 
-- and操作符
+- and 操作符
 
 ```sql
 SELECT *  FROM `user` WHERE name = "cyb" AND age = 18;
 ```
 
-- or操作符
+- or 操作符
 
 ```sql
 SELECT *  FROM `user` WHERE name = "cyb" OR age <= 18;
@@ -131,7 +129,7 @@ SELECT *  FROM `user` WHERE name = "cyb" OR age <= 18;
 
 ### 模糊查询
 
-在MySQL中，"LIKE"操作符用于模糊匹配字符串。而百分号（%）是用作通配符，表示任意字符（包括零个字符或多个字符）的占位符。
+在 MySQL 中，"LIKE"操作符用于模糊匹配字符串。而百分号（%）是用作通配符，表示任意字符（包括零个字符或多个字符）的占位符。
 
 - "满%"：匹配以"满"开头的字符串，后面可以是任意字符。
 - "%满"：匹配以"满"结尾的字符串，前面可以是任意字符。
@@ -163,7 +161,7 @@ INSERT INTO user(`name`,`hobby`,`age`) VALUES(NULL,NULL,NULL),('chenyubo','baske
 
 ### 删除
 
-删除id为11的记录
+删除 id 为 11 的记录
 
 ```sql
 DELETE FROM `user` WHERE id = 11;
@@ -177,7 +175,7 @@ DELETE FROM `user` WHERE id IN (8,9,10);
 
 ### 更新数据
 
-更新的字段使用=赋值, where确定更新的条例
+更新的字段使用=赋值, where 确定更新的条例
 
 ```sql
 UPDATE `user` SET name='asher',age=30,hobby='篮球' WHERE id = 12;
@@ -187,18 +185,18 @@ UPDATE `user` SET name='asher',age=30,hobby='篮球' WHERE id = 12;
 
 ### 表达式
 
-MySQL表达式是一种在MySQL数据库中使用的计算式或逻辑式。它们可用于查询、更新和过滤数据，以及进行条件判断和计算。
+MySQL 表达式是一种在 MySQL 数据库中使用的计算式或逻辑式。它们可用于查询、更新和过滤数据，以及进行条件判断和计算。
 
 1. 算术表达式：可以执行基本的数学运算，例如加法、减法、乘法和除法。例如：`SELECT col1 + col2 AS sum FROM table_name;`
 2. 字符串表达式：可以对字符串进行操作，例如连接、截取和替换。例如：`SELECT CONCAT(first_name, ' ', last_name) AS full_name FROM table_name;`
-3. 逻辑表达式：用于执行条件判断，返回布尔值（TRUE或FALSE）。例如：`SELECT * FROM table_name WHERE age > 18 AND gender = 'Male';`
+3. 逻辑表达式：用于执行条件判断，返回布尔值（TRUE 或 FALSE）。例如：`SELECT * FROM table_name WHERE age > 18 AND gender = 'Male';`
 4. 条件表达式：用于根据条件返回不同的结果。例如：`SELECT CASE WHEN age < 18 THEN 'Minor' ELSE 'Adult' END AS age_group FROM table_name;`
 5. 聚合函数表达式：用于计算数据集的聚合值，例如求和、平均值、最大值和最小值。例如：`SELECT AVG(salary) AS average_salary FROM table_name;`
 6. 时间和日期表达式：用于处理时间和日期数据，例如提取年份、月份或计算日期差值。例如：`SELECT YEAR(date_column) AS year FROM table_name;`
 
 ### 函数
 
-MySQL提供了大量的内置函数，用于在查询和操作数据时进行计算、转换和处理。以下是一些常用的MySQL函数分类及其示例：
+MySQL 提供了大量的内置函数，用于在查询和操作数据时进行计算、转换和处理。以下是一些常用的 MySQL 函数分类及其示例：
 
 1. 字符串函数：
 
@@ -210,10 +208,10 @@ MySQL提供了大量的内置函数，用于在查询和操作数据时进行计
 
 2. 数值函数：
 
-- `ABS(x)`：返回x的绝对值。
-- `ROUND(x, d)`：将x四舍五入为d位小数。
-- `CEILING(x)`：返回不小于x的最小整数。
-- `FLOOR(x)`：返回不大于x的最大整数。
+- `ABS(x)`：返回 x 的绝对值。
+- `ROUND(x, d)`：将 x 四舍五入为 d 位小数。
+- `CEILING(x)`：返回不小于 x 的最小整数。
+- `FLOOR(x)`：返回不大于 x 的最大整数。
 - `RAND()`：返回一个随机数。
 
 3. 日期和时间函数：
@@ -243,7 +241,7 @@ MySQL提供了大量的内置函数，用于在查询和操作数据时进行计
 
 子查询（Subquery），也被称为嵌套查询（Nested Query），是指在一个查询语句中嵌套使用另一个完整的查询语句。子查询可以被视为一个查询的结果集，它可以作为外层查询的一部分，用于进一步筛选、计算或操作数据。
 
-子查询通常出现在主查询的WHERE子句、FROM子句、HAVING子句或SELECT子句中，以提供更复杂的查询逻辑。子查询可以根据主查询的结果动态生成结果集，用于过滤和匹配数据，或者作为函数的参数使用。
+子查询通常出现在主查询的 WHERE 子句、FROM 子句、HAVING 子句或 SELECT 子句中，以提供更复杂的查询逻辑。子查询可以根据主查询的结果动态生成结果集，用于过滤和匹配数据，或者作为函数的参数使用。
 
 子查询可以返回单个值、一列值、一行值或者一个结果集，具体取决于子查询的语法和用法。根据子查询返回的结果类型，可以将其与主查询的其他表达式进行比较、连接或使用作为条件进行过滤。
 
@@ -273,7 +271,7 @@ SELECT * FROM `user`, `photo` WHERE `user`.`id` = `photo`.`user_id`
 
 语法规则 LEFT JOIN [连接的表] ON [连接的条件]
 
-并且以第一个表作为驱动表 被驱动表如果没有值则补充null
+并且以第一个表作为驱动表 被驱动表如果没有值则补充 null
 
 结果会以驱动表为主
 

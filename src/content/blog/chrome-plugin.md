@@ -1,7 +1,7 @@
 ---
 title: 谷歌插件
 author: Chen YuBo
-pubDatetime: 2024-04-04T03:46:41.064Z
+date: 2024-04-04T03:46:41.064Z
 featured: false
 draft: false
 description: "谷歌浏览器扩展开发学习"
@@ -15,7 +15,7 @@ tags:
 
 ### 编写基本的文件
 
-manifest.json文件
+manifest.json 文件
 
 > 目录中创建一个名为 manifest.json 的新文件。此 JSON 文件描述了扩展程序的功能和配置
 > 例如，大多数清单文件包含一个 "action" 键，用于声明 Chrome 应用作扩展程序的操作图标的图片，以及当用户点击扩展程序的操作图标时在弹出式窗口中显示的 HTML 页面。
@@ -57,7 +57,7 @@ hello.html
 
 ### 效果
 
-![](@assets/images/chromeEx/chrome-01.png)
+![](/assets/images/chromeEx/chrome-01.png)
 
 ### 控制台日志和错误
 
@@ -78,4 +78,4 @@ console.log("This is a popup!");
 ```
 
 示意图
-![](@assets/images/chromeEx/chrome-02.png)
+![](/assets/images/chromeEx/chrome-02.png)

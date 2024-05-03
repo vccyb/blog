@@ -1,8 +1,9 @@
 ---
 title: Element-Plus技术揭秘专栏的知识学习笔记-组件库工程化实战之 ESlint全解
 author: Chen YuBo
-pubDatetime: 2024-03-12T11:49:42.677Z
+date: 2024-03-12T11:49:42.677Z
 featured: false
+category: 源码分析
 draft: false
 description: "学习笔记"
 tags:
@@ -11,34 +12,32 @@ tags:
 
 原文地址：https://juejin.cn/post/7157743898939359262#heading-31
 
-## 目录
-
 ## ESlint 的主要作用
 
 ESLint 的主要作用在最后一项已经进行了总结：**检查语法，发现问题、强制代码风格**。
 
-## ESlint的工作原理
+## ESlint 的工作原理
 
 ESLint 是如何读懂我们的代码的呢？答案是靠 AST。ESLint 主要通过 AST 进行工作的，把源码通过编译器编译成 AST，然后遍历 AST 节点进行和我们配置的 ESLint 规则进行匹配，匹配成功了就通过规则里的函数进行对 AST 节点的操作，找到问题和要修复的地方，遍历完所有 AST 节点之后遍进行相应提示或修复。
 
-- 源码编译器编译为AST
-- 遍历AST节点，匹配规则
+- 源码编译器编译为 AST
+- 遍历 AST 节点，匹配规则
 - 匹配成功，进行响应的函数操作
-- 遍历完所有AST节点，提示问题或修复
+- 遍历完所有 AST 节点，提示问题或修复
 
 ### ESlint 如何读取配置的
 
-在启动了 ESLint 检测命令之后，ESLint 将自动在待校验的文件目录里寻找 ESLint 配置文件，接着是父级目录，一直到系统的根目录，除非在 ESLint 配置文件中指定 root: true 停止向上寻找。这也是 ESLint 配置文件中 root: true 配置项的作用。
+在启动了 ESLint 检测命令之后，ESLint 将自动在待校验的文件目录里寻找 ESLint 配置文件，接着是父级目录，一直到系统的根目录，除非在 ESLint 配置文件中指定  root: true  停止向上寻找。这也是 ESLint 配置文件中 root: true 配置项的作用。
 
 在读取配置的过程中有一个点是需要特别注意的，就是配置文件中的 extends 选项的理解，extends 选项就是继承其他配置文件，通过 extends 选项我们可以使用自身的配置（eslint: 开头）或者插件中的配置（plugin: 开头）或者是第三方模块中的配置。最终 ESLint 会通过递归处理 extends，合并成一个配置对象。
 
-### 编译源码获取AST
+### 编译源码获取 AST
 
-在加载完毕配置之后，ESlint就进行编译器的确定，选一个编译器对源码进行编译
+在加载完毕配置之后，ESlint 就进行编译器的确定，选一个编译器对源码进行编译
 
 > 当用户没有指定 parser 时，默认使用 espree，若有指定 parser 则使用指定的 parser。通过编译器编译源码之后就获得了 AST，然后就可以通过 AST 去操作我们的源码了。
 
-### Rules的原理
+### Rules 的原理
 
 在前面读取配置的时候，就已经把所有的 plugin 和它的 rules 加载进来了。
 
@@ -48,9 +47,9 @@ Rules 的原理就是针对源码的 AST 节点添加处理函数，也就是访
 
 在通过编译器获得 AST 之后，就可以遍历 AST，然后查看规则中有没有配置针对该 AST 节点进行检查的 visitor 函数，如果存在就会调用该 visitor 函数进行处理，获得警报信息或者要修复的信息，最后输出警报信息和进行相关源码修复。
 
-## 创建一个ESlint 插件
+## 创建一个 ESlint 插件
 
-### 创建一个ESLint的插件开发环境
+### 创建一个 ESLint 的插件开发环境
 
 ```
 ├── README.md
@@ -64,7 +63,7 @@ Rules 的原理就是针对源码的 AST 节点添加处理函数，也就是访
 └── pnpm-workspace.yaml
 ```
 
-创建一个 monorepo的工程
+创建一个 monorepo 的工程
 
 我们进入 `eslint-plugin-colint` 目录运行以下命令：
 
@@ -88,7 +87,7 @@ yo eslint:rule
 
 接着会在 lib 目录下生成一个 rules 目录及一个 no-var.js 的文件。
 
-### 调试及编写ESlint插件
+### 调试及编写 ESlint 插件
 
 接着我们先把插件运行起来。我们回到根目录把我们的插件安装起来：
 
@@ -103,7 +102,7 @@ packages:
   - packages/*
 ```
 
-安装完毕之后的根目录的package.json 文件如下：
+安装完毕之后的根目录的 package.json 文件如下：
 
 ```json
   "dependencies": {
@@ -124,7 +123,7 @@ packages:
 
 注意：ESLint 插件在配置项 plugins 中只需要写插件名称即可。eslint-plugin- 此部分不用填写。
 
-给我们的 no-var这条规则加上监听
+给我们的 no-var 这条规则加上监听
 
 ```js
 module.exports = {
@@ -224,7 +223,7 @@ module.exports = {
 
 ok，怎么共享呢？
 
-我们自己的eslint插件暴露一个`index.js`, 比如我们的eslint-plugin-cyb,就是 `ESlint/packages/eslint-plugin-cyb/lib/index.js`
+我们自己的 eslint 插件暴露一个`index.js`, 比如我们的 eslint-plugin-cyb,就是 `ESlint/packages/eslint-plugin-cyb/lib/index.js`
 
 ```js
 module.exports = {
@@ -242,7 +241,7 @@ module.exports = {
 
 这样表明我们在 configs 选项中设置了一组 recommended 的规则，后续用户可以直接使用该集成的规则配置，而不用自己手动在 .eslintrc.js 文件中的 rules 中进行一个个规则配置了。
 
-用户使用的时候呢？直接extends，就能继承所有的写到里面的rules了
+用户使用的时候呢？直接 extends，就能继承所有的写到里面的 rules 了
 
 ```js
 module.exports = {
@@ -252,7 +251,7 @@ module.exports = {
 
 一样的效果，更加的清爽好用！！！
 
-## 创建可共享的ESlint 配置
+## 创建可共享的 ESlint 配置
 
 我们现在的前端项目基本都需要配置 ESLint 的，相同的项目的 ESLint 的配置都是差不多的。如果每一个项目都需要进行从头开始配置的话，那么就非常浪费不必要的时间了，所以我们希望可以针对一些相同的项目只进行一次配置然后在其他项目中直接引用即可，这就是 ESLint 共享配置。并且还可以把 ESLint 共享配置上传到 npm 服务器供其他人下载下来在其项目中安装使用。
 
@@ -292,7 +291,7 @@ module.exports = {
 };
 ```
 
-命令制定rules目录
+命令制定 rules 目录
 
 ```js
 npx eslint test.js --rulesdir rules // --rulesdir 指定运行的规则目录
@@ -333,7 +332,7 @@ ESLint 本身已经提供了很多的规则，但也覆盖不了所有的情况�
 
 在 extends 选项中进行设置，其中 plugin: 表示这是一个插件，后面跟着的就是插件名称，/ 后面表示的该插件配置集成选项，也就是该插件已经进行相关的 rules 设置，使用者只需要使用它推荐的就可以了。
 
-比如eslint-plugin-vue，他的lib/index.js
+比如 eslint-plugin-vue，他的 lib/index.js
 
 ```json
 
@@ -430,7 +429,7 @@ ESLint 已经有部分代码风格的检测，直接和 Prettier 进行使用会
 
 ## 代码规范自动设置
 
-### VScode workspace设置
+### VScode workspace 设置
 
 值得注意的是我们一般都会进行 VSCode 的 Worksapce 选项设置，设置完后会在根目录下生成一个 .vscode 目录并且这个目录是提交到仓库中的，这样所有使用 VSCode 编辑器的人打开这个项目都会拥有相同的配置体验。
 
