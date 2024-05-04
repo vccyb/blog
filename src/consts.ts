@@ -111,6 +111,16 @@ export const infoLinks = [
     name: "github",
     outlink: "https://github.com/vccyb",
   },
+  {
+    icon: "ri-profile-line",
+    name: "resume",
+    outlink: "https://chenyubo-resume.vercel.app",
+  },
+  {
+    icon: "ri-mail-line",
+    name: "email",
+    outlink: "13170906656@163.com",
+  },
 ];
 
 /**
