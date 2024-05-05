@@ -38,3 +38,9 @@ lodash 中 get 函数，可以方便的获取对象的属性值
 一个很迷你的库，是将传入的值，转化为数组
 
 [arrify](/blog/arrify/)
+
+## 5 vue2 中源码的工具函数
+
+一些在 vue2 源码中使用的工具函数
+
+[vue2-utils](/blog/vue2-utils)
