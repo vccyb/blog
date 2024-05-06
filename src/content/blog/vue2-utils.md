@@ -74,3 +74,62 @@ export function isValidArrayIndex(val: any): boolean {
 ```
 
 利用 n>=0 && isFinite(val)判断是值否在区间`[0, 2^53-1]`
+
+## 5 makeMap 生成一个判断值是否在给定 list 的 map
+
+```ts
+export function makeMap(
+  str: string,
+  expectsLowerCase?: boolean
+): (key: string) => true | undefined {
+  const map = Object.create(null);
+  const list: Array<string> = str.split(",");
+  for (let i = 0; i < list.length; i++) {
+    map[list[i]] = true;
+  }
+  return expectsLowerCase ? (val) => map[val.toLowerCase()] : (val) => map[val];
+}
+```
+
+这个函数利用到了闭包来实现传入一个以,分隔的字符串，返回一个校验传参是否属于这个字符串中的其中一项的函数的功能，支持传入第二个参数规定是否期望字符串里的每一项都为小写格式（且传参大小写不敏感）
+
+```js
+// 检查是否为Vue的内置标签
+const isBuiltInTag = makeMap("slot,component", true);
+
+isBuiltInTag("slot"); // true
+isBuiltInTag("c"); // false
+isBuiltInTag("Component"); // true
+```
+
+## 6 cached 缓存函数
+
+```ts
+export function cached<R>(fn: (str: string) => R): (sr: string) => R {
+  const cache: Record<string, R> = Object.create(null);
+  return function cachedFn(str: string) {
+    const hit = cache[str];
+    // 调用一次函数，并缓存结果
+    return hit || (cache[str] = fn(str));
+  };
+}
+```
+
+这个函数同样是利用到了闭包，实现的功能是传入一个普通函数，使之转化成带有缓存的函数，就避免了重复计算，可见 Vue 底层对于性能的极致优化。
+
+## 7 camelize
+
+```ts
+// Camelize a hyphen-delimited string.
+// 用于匹配连字符（-）后面跟着任意一个字母字符（\w）
+const camelizeRE = /-(\w)/g;
+export const camelize = (str: string): string => {
+  return str.replace(camelize, (_, c) => (c ? c.toUpperCase() : ""));
+};
+```
+
+replace 的用法
+
+- 第一个参数就是正则表达式，找到匹配的字符串进行替换。 `a-bc-d`
+- 第二个参数传入了一个函数，其中函数的第一个参数是匹配的子串，这里也就是-b 和-d 了；
+- 这个函数的第二个参数就是刚才提到的捕获组，这里就是 b 和 d 了，函数的返回值就是要替换成的字符串，于是就实现了这么一个把 kebab-case 的字符串转成 camelCase 的需求了。

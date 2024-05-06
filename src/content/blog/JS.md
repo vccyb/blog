@@ -482,3 +482,29 @@ run(main);
 | call、apply、bind | 指向第一个参数    |
 
 箭头函数没有`this`，基于闭包，编译的时候确定，词法作用域，定义时候
+
+## 12 获取元素的维度
+
+You can use getBoundingClientRect method to get the dimensions of an element.
+
+```js
+const roadmapWrapper = document.querySelector(".roadmap-wrapper");
+const dimensions = roadmapWrapper.getBoundingClientRect();
+
+console.log(dimensions); // DOMRect { x: 8, y: 8, width: 784, height: 784, top: 8, right: 792, bottom: 792, left: 8 }
+```
+
+## 13 冻结对象
+
+要使对象不可变，可以使用 object.freeze（）方法。它可以防止修改现有特性值并防止添加新特性。
+
+```js
+const roadmap = {
+  name: "JavaScript",
+};
+
+Object.freeze(roadmap);
+
+roadmap.name = "JavaScript Roadmap"; // throws an error in strict mode
+console.log(roadmap.name); // JavaScript
+```
