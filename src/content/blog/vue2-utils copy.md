@@ -138,3 +138,31 @@ tool [CMD]
   --start		Starts the app
   --build		Builds the app
 ```
+
+## 5 使用颜色
+
+```js
+const arg = require("arg");
+const chalk = require("chalk");
+
+try {
+  const args = arg({
+    "--start": Boolean,
+    "--build": Boolean,
+  });
+
+  if (args["--start"]) {
+    console.log(chalk.bgCyanBright("starting the app"));
+  }
+} catch (e) {
+  console.log(chalk.yellow(e.message));
+  console.log();
+  usage();
+}
+
+function usage() {
+  console.log(`${chalk.whiteBright("tool [CMD]")}
+  ${chalk.greenBright("--start")}\tStarts the app
+  ${chalk.greenBright("--build")}\tBuilds the app`);
+}
+```
