@@ -166,3 +166,91 @@ function usage() {
   ${chalk.greenBright("--build")}\tBuilds the app`);
 }
 ```
+
+## 6 配置
+
+大多数脚手架上支持配置的，一个比较好的实践上在`package.json`中书写脚手架的配置
+
+```json title="testProject/package.json"
+{
+  "name": "testProject",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "tool": {
+    "port": 9999 // 此处我们使用一个配置
+  }
+}
+```
+
+脚手架就需要针对配置进行进行不同功能
+
+```js title="tool/bin/index.js"
+#!/usr/bin/env node
+const arg = require("arg");
+const chalk = require("chalk");
+const path = require("path");
+
+try {
+  const args = arg({
+    "--start": Boolean,
+    "--build": Boolean,
+  });
+
+  if (args["--start"]) {
+    // 这里就能拿到package.json了
+    const pkg = require(path.join(process.cwd(), "package.json"));
+    // TODO: do something with pkg
+    console.log(chalk.bgCyanBright("starting the app"));
+  }
+} catch (e) {
+  console.log(chalk.yellow(e.message));
+  console.log();
+  usage();
+}
+
+function usage() {
+  console.log(`${chalk.whiteBright("tool [CMD]")}
+  ${chalk.greenBright("--start")}\tStarts the app
+  ${chalk.greenBright("--build")}\tBuilds the app`);
+}
+```
+
+但是这个时候我们到子目录去执行命令`tool --start`，是会报错的，因为 cwd 的地址就不是项目的根目录了
+
+优化， 使用第三方的包
+
+```js
+const pkgUp = require("pkg-up");
+
+//...
+if (args["--start"]) {
+  const pkgPath = pkgUp.sync({ cwd: process.cwd() });
+  const pkg = require(pkgPath);
+  if (pkg.tool) {
+    console.log("Found configuration", pkg.tool);
+    // TODO: do something with configuration
+  } else {
+    console.log(chalk.yellow("Could not find configuration, using default"));
+    // TODO: get default configuration
+  }
+  console.log(chalk.bgCyanBright("starting the app"));
+}
+```
+
+补充坑点：
+
+1. 我们是 tool 命令去查询配置，所以 pkg-up 的依赖谁装到 tool
+2. pkg-up 这个包大版本升级后从 commonjs 到 esmodule 了，3 的大版本是 commonjs，可以使用 require 语法
+
+解决完上面的问题，如果你的配置也是 9999,执行`tool --start`,出现结果
+
+```shell
+Found configuration { port: 9999 }
+```
