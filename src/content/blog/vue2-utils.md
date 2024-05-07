@@ -133,3 +133,49 @@ replace 的用法
 - 第一个参数就是正则表达式，找到匹配的字符串进行替换。 `a-bc-d`
 - 第二个参数传入了一个函数，其中函数的第一个参数是匹配的子串，这里也就是-b 和-d 了；
 - 这个函数的第二个参数就是刚才提到的捕获组，这里就是 b 和 d 了，函数的返回值就是要替换成的字符串，于是就实现了这么一个把 kebab-case 的字符串转成 camelCase 的需求了。
+
+## 8 hyphenate
+
+```ts
+const hyphenateRE = /\B([A-Z])/g;
+export const hyphenate = (str: string): string => {
+  return str.replace(hyphenateRE, "-$1").toLowerCase();
+};
+```
+
+## 9 toArray 把类数组转成真正的数组
+
+```ts
+export function toArray(list: any, start?: number): Array<any> {
+  start = start || 0;
+  return Array.from(list).slice(start);
+}
+```
+
+## 10 extend 合并源对象的属性到目标对象
+
+```ts
+export function extend(
+  to: Record<PropertyKey, any>,
+  _from: Record<PropertyKey, any>
+): Record<PropertyKey, any> {
+  for (const key in _from) {
+    to[key] = _from[key];
+  }
+  return to;
+}
+```
+
+## 11 toObject 将对象数组合并成一个对象
+
+```ts
+export function toObject(arr: Array<any>): object {
+  const res = {};
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i]) {
+      extend(res, arr[i]);
+    }
+  }
+  return res;
+}
+```
