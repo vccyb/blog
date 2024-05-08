@@ -179,3 +179,5 @@ export function toObject(arr: Array<any>): object {
   return res;
 }
 ```
+
+## 12 looseEqual 宽松相等
