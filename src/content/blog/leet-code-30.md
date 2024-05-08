@@ -76,3 +76,79 @@ function createCounter(init: number): Counter {
   };
 }
 ```
+
+## 5 转换数组中的每个元素
+
+```ts
+function map(arr: number[], fn: (n: number, i: number) => number): number[] {
+  let res = [];
+  arr.forEach((item, index) => {
+    res.push(fn(item, index));
+  });
+  return res;
+}
+```
+
+## 6 过滤数组中的元素
+
+```ts
+type Fn = (n: number, i: number) => any;
+
+function filter(arr: number[], fn: Fn): number[] {
+  let res = [];
+  for (let i = 0; i < arr.length; i++) {
+    if (fn(arr[i], i)) {
+      res.push(arr[i]);
+    }
+  }
+  return res;
+}
+```
+
+## 7 数组归约运算
+
+```ts
+type Fn = (accum: number, curr: number) => number;
+
+function reduce(nums: number[], fn: Fn, init: number): number {
+  let accumulator = init;
+  for (const element of nums) {
+    accumulator = fn(accumulator, element);
+  }
+  return accumulator;
+}
+```
+
+## 9 复合函数
+
+```ts
+type F = (x: number) => number;
+
+function compose(functions: F[]): F {
+  return function (x) {
+    if (functions.length === 0) return x;
+    let input = x;
+    for (let i = functions.length - 1; i >= 0; i--) {
+      const currFunc = functions[i];
+      input = currFunc(input);
+    }
+    return input;
+  };
+}
+```
+
+## 10 返回传递的参数的长度
+
+```ts
+type JSONValue =
+  | null
+  | boolean
+  | number
+  | string
+  | JSONValue[]
+  | { [key: string]: JSONValue };
+
+function argumentsLength(...args: JSONValue[]): number {
+  return args.length;
+}
+```
