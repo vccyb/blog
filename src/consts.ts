@@ -136,7 +136,7 @@ export const donate = {
   tip: "感谢大佬送来的咖啡☕",
   wechatQRCode: "/WeChatQR.JPG",
   alipayQRCode: "/AliPayQR.JPG",
-  paypalUrl: "https://paypal.me/xxxxxxxxxx",
+  paypalUrl: "#",
 };
 
 /**

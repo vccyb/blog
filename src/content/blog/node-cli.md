@@ -254,3 +254,65 @@ if (args["--start"]) {
 ```shell
 Found configuration { port: 9999 }
 ```
+
+## 7 重构代码
+
+让我们暂时从配置中休息一下，来重构一下我们的代码。
+我们将在我们的`tool`项目中创建一个名为 `src` 的目录，并在其内部创建两个目录：`commands` 和 `config`。在 `commands` 中，我们将创建一个 `start.js` 文件，在 `config` 中，我们将创建一个 `config-mgr.js` 文件。
+
+```js title="tool/src/commands/start.js"
+const chalk = require("chalk");
+
+module.export = function start(config) {
+  console.log(chalk.bgCyanBright("  Starting the app  "));
+  console.log(chalk.gray("Received configuration in start -"), config);
+};
+```
+
+```js title="tool/src/config/config-mgr.js"
+const chalk = require("chalk");
+const pkgUp = require("pkg-up");
+
+module.exports = function getConfig() {
+  const pkgPath = pkgUp.sync({ cwd: process.cwd() });
+  const pkg = require(pkgPath);
+
+  if (pkg.tool) {
+    console.log("Found configuration", pkg.tool);
+    return pkg.tool;
+  } else {
+    console.log(chalk.yellow("Could not find configuration, using default"));
+    return { port: 1234 };
+  }
+};
+```
+
+写了两个模块后，我们去修改`bin/index.js` 使用该模块
+
+```js
+const arg = require("arg");
+const chalk = require("chalk");
+const getConfig = require("../src/config/config-mgr");
+const start = require("../src/commands/start");
+
+try {
+  const args = arg({
+    "--start": Boolean,
+    "--build": Boolean,
+  });
+  if (args["--start"]) {
+    const config = getConfig();
+    start(config);
+  }
+} catch (e) {
+  console.log(chalk.yellow(e.message));
+  console.log();
+  usage();
+}
+
+function usage() {
+  console.log(`${chalk.whiteBright("tool [CMD]")}
+  ${chalk.greenBright("--start")}\tStarts the app
+  ${chalk.greenBright("--build")}\tBuilds the app`);
+}
+```
