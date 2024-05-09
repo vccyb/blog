@@ -152,3 +152,55 @@ function argumentsLength(...args: JSONValue[]): number {
   return args.length;
 }
 ```
+
+## 11 只允许一次函数调用
+
+```ts
+type JSONValue =
+  | null
+  | boolean
+  | number
+  | string
+  | JSONValue[]
+  | { [key: string]: JSONValue };
+type OnceFn = (...args: JSONValue[]) => JSONValue | undefined;
+
+function once(fn: Function): OnceFn {
+  let isCalled = false;
+  return function (...args) {
+    if (isCalled) return undefined;
+    isCalled = true;
+    return fn(...args);
+  };
+}
+```
+
+## 12 记忆函数
+
+```ts
+type Fn = (...params: number[]) => number;
+
+function memoize(fn: Fn): Fn {
+  const cache = {};
+  return function (...args) {
+    const key = JSON.stringify(args);
+    if (key in cache) {
+      return cache[key];
+    }
+    const functionOutput = fn(...args);
+    cache[key] = functionOutput;
+    return functionOutput;
+  };
+}
+```
+
+## 13 两个 Promise 对象相加
+
+```ts
+type P = Promise<number>;
+
+async function addTwoPromises(promise1: P, promise2: P): P {
+  const [a, b] = await Promise.all([promise1, promise2]);
+  return a + b;
+}
+```
