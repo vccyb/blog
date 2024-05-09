@@ -316,3 +316,32 @@ function usage() {
   ${chalk.greenBright("--build")}\tBuilds the app`);
 }
 ```
+
+## 8 js 配置文件
+
+之前我们是把配置项放到 package.json 里面，现在我们要放到 js 文件里
+
+```js title="tool/src/config/config-mgr.js"
+const chalk = require("chalk");
+const { cosmiconfigSync } = require("cosmiconfig");
+const configLoader = cosmiconfigSync("tool");
+
+module.exports = function getConfig() {
+  const result = configLoader.search(process.cwd());
+  if (!result) {
+    console.log(chalk.yellow("Could not find configuration, using default"));
+    return { port: 1234 };
+  } else {
+    console.log("Found configuration", result.config);
+    return result.config;
+  }
+};
+```
+
+```js title="tool.config.js"
+module.exports = {
+  port: 6666,
+};
+```
+
+这里上面的 cosmiconfig 就会找到对应的配置`tool.config.js` 并加载输出
