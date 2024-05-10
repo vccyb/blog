@@ -508,3 +508,112 @@ Object.freeze(roadmap);
 roadmap.name = "JavaScript Roadmap"; // throws an error in strict mode
 console.log(roadmap.name); // JavaScript
 ```
+
+## 14 基于 CSS 变量的主题切换
+
+css 变量方案有兼容性的问题
+
+### 1 定义两套主题
+
+```css
+/* 暗色主题 */
+html[data-theme="dark"] {
+  --text-color: #fff;
+  --bg1: #102128;
+  --bg2: #2d5567;
+}
+
+/* 默认亮色主题 */
+:root {
+  --text-color: #333;
+  --bg1: #c7ffdd;
+  --bg2: #fbd988;
+}
+```
+
+### 2 定义切换
+
+如何 html 生效，就是加上自定义属性
+
+```html
+<html data-theme="dark"></html>
+```
+
+为啥定义到 html 里面，继承，这些变量定义在`html`里面，所有的子元素可以继承
+
+### 3 样式使用 css 变量
+
+```vue
+<style scoped>
+.main {
+  background: var(--bg1);
+  color: var(--text-color);
+}
+</style>
+```
+
+### 4 全局记录当前主题
+
+```ts
+import { ref } from "vue";
+
+const theme = ref("light");
+
+export function useTheme() {
+  return {
+    theme,
+    toggleTheme() {
+      theme.value = theme.value === "light" ? "dark" : "light";
+    },
+  };
+}
+```
+
+### 5 需要使用当前主题的地方
+
+```js
+import { useTheme } from "@/composables/useTheme";
+const { theme, toggleTheme } = useTheme();
+
+//...
+<div>
+  <p>{{ theme }}</p>
+  <h1>{{theme === 'light' ? '亮色' : '暗色'}}</h1>
+</div>;
+```
+
+这里假设 div 需要用到当前主题
+
+### 6 全局数据和根元素的属性关联上
+
+```ts title="useTheme.ts"
+import { ref, watchEffect } from "vue";
+
+const theme = ref("light");
+
+watchEffect(() => {
+  document.documentElement.dataset.theme = theme.value;
+});
+
+export function useTheme() {
+  return {
+    theme,
+    toggleTheme() {
+      theme.value = theme.value === "light" ? "dark" : "light";
+    },
+  };
+}
+```
+
+### 7 持久化主题
+
+```ts
+type Theme = "light" | "dark";
+const key = "__theme__";
+const theme = ref<Theme>((localStorage.getItem(key) as Theme) || "light");
+
+watchEffect(() => {
+  document.documentElement.dataset.theme = theme.value;
+  localStorage.setItem(key, theme.value);
+});
+```
