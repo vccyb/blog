@@ -204,3 +204,82 @@ async function addTwoPromises(promise1: P, promise2: P): P {
   return a + b;
 }
 ```
+
+## 14 睡眠函数
+
+```ts
+async function sleep(millis: number): Promise<void> {
+  return new Promise((resolve, reject) => {
+    try {
+      setTimeout(() => {
+        resolve();
+      }, millis);
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+```
+
+## 15 执行可取消的延迟函数
+
+```ts
+type JSONValue =
+  | null
+  | boolean
+  | number
+  | string
+  | JSONValue[]
+  | { [key: string]: JSONValue };
+type Fn = (...args: JSONValue[]) => void;
+
+function cancellable(fn: Fn, args: JSONValue[], t: number): Function {
+  const timer = setTimeout(() => {
+    fn(...args);
+  }, t);
+  return () => {
+    clearTimeout(timer);
+  };
+}
+```
+
+## 16 间隔取消
+
+```ts
+type JSONValue =
+  | null
+  | boolean
+  | number
+  | string
+  | JSONValue[]
+  | { [key: string]: JSONValue };
+type Fn = (...args: JSONValue[]) => void;
+
+function cancellable(fn: Fn, args: JSONValue[], t: number): Function {
+  fn(...args);
+  const timer = setInterval(() => {
+    fn(...args);
+  }, t);
+
+  return () => {
+    clearInterval(timer);
+  };
+}
+```
+
+## 17 有时间限制的 Promise 对象
+
+```ts
+type Fn = (...params: any[]) => Promise<any>;
+
+function timeLimit(fn: Fn, t: number): Fn {
+  return async function (...args) {
+    return Promise.race([
+      fn(...args),
+      new Promise((_, reject) =>
+        setTimeout(() => reject("Time Limit Exceeded"), t)
+      ),
+    ]);
+  };
+}
+```

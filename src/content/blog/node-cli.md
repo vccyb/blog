@@ -345,3 +345,85 @@ module.exports = {
 ```
 
 这里上面的 cosmiconfig 就会找到对应的配置`tool.config.js` 并加载输出
+
+## 9 验证配置
+
+### 使用 `ajv` 验证 cli 配置是否正确
+
+ajv 的库，该库根据 Json 模式验证配置。
+
+```js title ="tool/src/config/schema.json"
+{
+  "properties": {
+    "port": {
+      "type": "number"
+    }
+  }
+}
+```
+
+然后我们将使用 ajv 来验证我们的配置。请注意，我们使用 process.exit（1）来退出流程，因为我们不想继续使用无效的配置。
+
+```js title="tool/src/config/config-mgr.js"
+const schema = require("./schema.json");
+const Ajv = require("ajv");
+const ajv = new Ajv();
+
+//...
+const isValid = ajv.validate(schema, result.config);
+if (!isValid) {
+  console.log(chalk.yellow("Invalid configuration was supplied"));
+  console.log(ajv.errors);
+  process.exit(1);
+}
+```
+
+我们把配置配置改下，尝试触发错误的逻辑
+
+```js title = "testProject/tool.config.js"
+module.exports = {
+  port: "6666",
+};
+```
+
+输出
+
+```shell
+╰─$ tool --start
+strict mode: missing type "object" for keyword "properties" at "#" (strictTypes)
+Invalid configuration was supplied
+[
+  {
+    instancePath: '/port',
+    schemaPath: '#/properties/port/type',
+    keyword: 'type',
+    params: { type: 'number' },
+    message: 'must be number'
+  }
+]
+```
+
+### 更好的提示
+
+有一个类库，可以帮助我们在 cli 的界面，更好的现实 ajv 的错误提示
+
+```js title="tool/src/config/config-mgr.js"
+const betterAjvErrors = require("better-ajv-errors").default;
+const ajv = new Ajv({ jsonPointers: true });
+
+// ...
+console.log(betterAjvErrors(schema, result.config, ajv.errors));
+```
+
+错误提示的美化
+
+```shell
+╰─$ tool --start
+NOT SUPPORTED: option jsonPointers. Deprecated jsPropertySyntax can be used instead.
+strict mode: missing type "object" for keyword "properties" at "#" (strictTypes)
+Invalid configuration was supplied
+TYPE must be number
+
+> 1 | {"port":"6666"}
+    |         ^^^^^^ 👈🏽  type must be number
+```
