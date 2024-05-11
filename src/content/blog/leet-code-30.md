@@ -283,3 +283,85 @@ function timeLimit(fn: Fn, t: number): Fn {
   };
 }
 ```
+
+## 18 有时间限制的缓存
+
+```ts
+class TimeLimitedCache {
+  private cache;
+  constructor() {
+    this.cache = new Map();
+  }
+
+  set(key: number, value: number, duration: number): boolean {
+    const existed = this.cache.get(key);
+    this.cache.set(key, {
+      value: value,
+      duration: Date.now() + duration,
+    });
+    if (existed) {
+      return existed.duration >= Date.now();
+    } else {
+      return false;
+    }
+  }
+
+  get(key: number): number {
+    const existed = this.cache.get(key);
+    if (existed) {
+      if (existed.duration >= Date.now()) return existed.value;
+      this.cache.delete(key);
+    }
+    return -1;
+  }
+
+  count(): number {
+    return [...this.cache.values()].filter((el) => el.duration >= Date.now())
+      .length;
+  }
+}
+```
+
+## 19 函数防抖
+
+```ts
+function debounce(fn: F, t: number) {
+  let timerId;
+  return function (...args) {
+    clearTimeout(timerId);
+    timerId = setTimeout(() => {
+      fn.apply(this, ...args);
+    }, t);
+  };
+}
+```
+
+## 20 并行执行异步函数
+
+```ts
+type Fn<T> = () => Promise<T>;
+
+function promiseAll<T>(functions: Fn<T>[]): Promise<T[]> {
+  return new Promise((resovle, reject) => {
+    if (functions.length === 0) {
+      resovle([]);
+      return;
+    }
+
+    const res = new Array(functions.length).fill(null);
+    let reslovedCount = 0;
+    functions.forEach(async (el, idx) => {
+      try {
+        const subResult = await el();
+        res[idx] = subResult;
+        reslovedCount++;
+        if (reslovedCount === functions.length) {
+          resovle(res);
+        }
+      } catch (err) {
+        reject(err);
+      }
+    });
+  });
+}
+```
