@@ -348,7 +348,7 @@ module.exports = {
 
 ## 9 验证配置
 
-### 使用 `ajv` 验证 cli 配置是否正确
+### 9.1 使用 `ajv` 验证 cli 配置是否正确
 
 ajv 的库，该库根据 Json 模式验证配置。
 
@@ -403,7 +403,7 @@ Invalid configuration was supplied
 ]
 ```
 
-### 更好的提示
+### 9.2 更好的提示 betterAjvErrors
 
 有一个类库，可以帮助我们在 cli 的界面，更好的现实 ajv 的错误提示
 
@@ -426,4 +426,124 @@ TYPE must be number
 
 > 1 | {"port":"6666"}
     |         ^^^^^^ 👈🏽  type must be number
+```
+
+## 10 日志 Logging
+
+### 10.1 日志使用
+
+我们在代码中使用了各种控制台日志语句。有些控制台日志面向用户，有些是调试，有些是信息，有些是警告。让我们给这些乱七八糟的东西排个序。
+
+有很多日志库：比如`winston`和`bunyan`
+但是这里我们自己写
+
+```js title="tool/src/logger.js"
+const chalk = require("chalk");
+
+module.exports = function createLogger(name) {
+  return {
+    log: (...args) => console.log(chalk.gray(...args)),
+    warning: (...args) => console.log(chalk.yellow(...args)),
+    highlight: (...args) => console.log(chalk.bgCyanBright(...args)),
+    debug: console.log,
+  };
+};
+```
+
+使用我们写的日志函数
+
+```js title="config-mgr.js"
+const logger = require("../logger")("config:mgr");
+
+// console.log(chalk.yellow("Could not find configuration, using default"));
+logger.warning("Could not find configuration, using default");
+
+// console.log(chalk.yellow("Invalid configuration was supplied"));
+logger.warning("Invalid configuration was supplied");
+
+// console.log("Found configuration", result.config);
+logger.debug("Found configuration", result.config);
+```
+
+```js title="start.js"
+const logger = require("../logger")("commands:start");
+
+module.export = function start(config) {
+  logger.highlight("  Starting the app  ");
+  logger.debug("Received configuration", config);
+};
+```
+
+```js title="index.js"
+const logger = require("../src/logger")("bin");
+
+//...
+const args = arg({
+  "--start": Boolean,
+  "--build": Boolean,
+});
+logger.debug("Received args", args);
+```
+
+输出结果
+
+```shell
+tool-tutorial/testProject$ tool --start
+Received args { _: [], '--start': true }
+Found configuration { port: 6666 }
+  Starting the app
+received configuration { port: 6666 }
+```
+
+### 10.2 debug 日志
+
+使用 debug 库（npm i debug）替换 debug 的 console.log 调用，并传递我们收到的名称
+
+```js title="logger.js"
+const chalk = require("chalk");
+const debug = require("debug");
+module.exports = function createLogger(name) {
+  return {
+    log: (...args) => console.log(chalk.gray(...args)),
+    warning: (...args) => console.log(chalk.yellow(...args)),
+    highlight: (...args) => console.log(chalk.bgCyanBright(...args)),
+    debug: debug(name),
+  };
+};
+```
+
+debug 可让我们将日志范围扩大到特定命名空间 我们收到的名称
+
+现在运行我们的工具时，我们将只看到这一条面向用户的消息。在我们需要调试代码之前，调试日志是隐藏的。
+
+```shell
+tool-tutorial/testProject$ tool --start
+  Starting the app
+```
+
+```shell
+tool-tutorial/testProject$ DEBUG=* tool --start
+bin Received args { _: [], '--start': true } +0ms
+config:mgr Found configuration { port: 6666 } +0ms
+  Starting the app
+commands:start received configuration { port: 6666 } +0ms
+```
+
+请注意，调试日志的范围是其名称：bin、config:mgr 和 commands:start。此外，每行末尾都有与上一条日志的差值（以毫秒为单位）。
+
+debug 还能让我们通过环境变量的命名来过滤日志。我们可以用 `commands:\*` 调用它，以便只包含命令日志。
+
+```shell
+tool-tutorial/testProject$ DEBUG=commands:* tool --start
+  Starting the app
+commands:start received configuration { port: 6666 } +0ms
+```
+
+还有个写法是 -xxx，删除 xxx 的
+
+```shell
+tool-tutorial/testProject$ DEBUG=*,-bin tool --start
+config:mgr Found configuration { port: 6666 } +0ms
+  Starting the app
+commands:start received configuration { port: 6666 } +0ms
 ```
