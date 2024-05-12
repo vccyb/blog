@@ -4,6 +4,8 @@ date: 2024-05-06T12:25:58.155Z
 description: 这篇文章基于网络上的教程，构建一个自己的脚手架
 ---
 
+<img src="/spinner.gif" data-src="/assets/images/node-cli.png">
+
 ## 1 两个工程的设置
 
 1. 我们需要创建两个目录：`tool`和 `testProject`

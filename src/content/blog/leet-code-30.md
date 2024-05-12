@@ -365,3 +365,88 @@ function promiseAll<T>(functions: Fn<T>[]): Promise<T[]> {
   });
 }
 ```
+
+## 21 判断对象是否为空
+
+```ts
+type JSONValue =
+  | null
+  | boolean
+  | number
+  | string
+  | JSONValue[]
+  | { [key: string]: JSONValue };
+type Obj = Record<string, JSONValue> | JSONValue[];
+
+function isEmpty(obj: Obj): boolean {
+  if (Array.isArray(obj)) {
+    return obj.length === 0;
+  }
+  return Object.keys(obj).length === 0;
+}
+```
+
+## 22 分块数组
+
+```ts
+type JSONValue =
+  | null
+  | boolean
+  | number
+  | string
+  | JSONValue[]
+  | { [key: string]: JSONValue };
+type Obj = Record<string, JSONValue> | Array<JSONValue>;
+
+function chunk(arr: Obj[], size: number): Obj[][] {
+  const result = [];
+  for (let i = 0; i < arr.length; i = i + size) {
+    result.push(arr.slice(i, i + size));
+  }
+  return result;
+}
+```
+
+## 23 数组原型对象的最后一个元素
+
+```ts
+declare global {
+  interface Array<T> {
+    last(): T | -1;
+  }
+}
+
+Array.prototype.last = function () {
+  if (this.length === 0) {
+    return -1;
+  }
+  return this[this.length - 1];
+};
+```
+
+## 24 分组
+
+```js
+/**
+ * @param {Function} fn
+ * @return {Object}
+ */
+Array.prototype.groupBy = function (fn) {
+  const map = new Map();
+  this.forEach((item) => {
+    const key = fn(item);
+    const arr = map.get(key) || [];
+    arr.push(item);
+    map.set(key, arr);
+  });
+  const ans = {};
+  for (let [key, val] of map) {
+    ans[key] = val;
+  }
+  return ans;
+};
+
+/**
+ * [1,2,3].groupBy(String) // {"1":[1],"2":[2],"3":[3]}
+ */
+```
