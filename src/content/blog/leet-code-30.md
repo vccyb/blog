@@ -450,3 +450,69 @@ Array.prototype.groupBy = function (fn) {
  * [1,2,3].groupBy(String) // {"1":[1],"2":[2],"3":[3]}
  */
 ```
+
+## 25 排序方式
+
+```js
+/**
+ * @param {Array} arr
+ * @param {Function} fn
+ * @return {Array}
+ */
+var sortBy = function (arr, fn) {
+  return arr.sort((a, b) => fn(a) - fn(b));
+};
+```
+
+## 26 根据 ID 合并两个数组
+
+```js
+/**
+ * @param {Array} arr1
+ * @param {Array} arr2
+ * @return {Array}
+ */
+var join = function (arr1, arr2) {
+  const datas = new Map();
+  for (let item of arr1) {
+    update(item, datas);
+  }
+  for (let item of arr2) {
+    update(item, datas);
+  }
+
+  return [...datas.values()].sort((a, b) => a.id - b.id);
+};
+
+function update(change, datas) {
+  let target = {};
+  if (datas.has(change.id)) target = datas.get(change.id);
+  else datas.set(change.id, target);
+
+  for (let key of Object.keys(change)) {
+    target[key] = change[key];
+  }
+}
+```
+
+## 27 扁平化嵌套数组
+
+```js
+/**
+ * @param {Array} arr
+ * @param {number} depth
+ * @return {Array}
+ */
+var flat = function (arr, n) {
+  if (n <= 0) return arr;
+  const res = [];
+  for (const item of arr) {
+    if (Array.isArray(item)) {
+      res.push(...flat(item, n - 1));
+    } else {
+      res.push(item);
+    }
+  }
+  return res;
+};
+```
