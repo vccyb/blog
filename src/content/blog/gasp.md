@@ -96,3 +96,102 @@ gsap.from("#box2", {
 ```
 
 <img data-src="/assets/images/gifs/gsap-box.gif"/>
+
+## 5 文字动画 与 stagger
+
+```js
+gsap.from("h1", {
+  opacity: 0,
+  duration: 1,
+  y: 30,
+  stagger: 0.3,
+});
+```
+
+> 0.3: stagger 属性设置了动画之间的时间间隔。在这个例子中，如果页面上有多个 h1 元素，每个后续 h1 元素的动画将比前一个延迟 0.3 秒开始。如果只有一个 h1 元素，stagger 属性将不会对动画产生影响，因为没有什么可以被错开
+
+## 6 无限动画 repeat 和 反向播放 yoyo
+
+```js
+gsap.to("#box", {
+  x: 1000,
+  duration: 2,
+  delay: 1,
+  rotate: 360,
+  repeat: -1,
+  yoyo: true,
+});
+```
+
+## 7 时间的控制
+
+## 7.1 duraton 和 delay
+
+```js
+gsap.to("#box", {
+  x: 1000,
+  duration: 2,
+  delay: 1,
+  rotate: 360,
+  // yoyo: true,
+});
+
+gsap.to("#box1", {
+  x: 1000,
+  duration: 2,
+  delay: 3,
+  rotate: 360,
+});
+
+gsap.to("#box2", {
+  x: 1000,
+  duration: 2,
+  delay: 5,
+  scale: 0.5,
+});
+```
+
+主要就是控制 duration 和 delay
+
+## 7.2 timeline
+
+上面的写法可以改造为 timeline 的写法
+
+```js
+gsap
+  .timeline({
+    defaults: { duration: 2 }, // 设置时间线的默认持续时间为2秒
+  })
+  .to("#box", {
+    x: 1000,
+    rotate: 360,
+    // yoyo: true, // 如果你想在时间线中使用 yoyo 效果，可以在这里添加
+  })
+  .to("#box1", {
+    x: 1000,
+    rotate: 360,
+  })
+  .to("#box2", {
+    x: 1000,
+    scale: 0.5,
+  });
+```
+
+- 同步性：
+  - Timeline：在 Timeline 中，动画是同步进行的，这意味着你可以控制动画的开始、结束和持续时间，以及它们之间的相对顺序。
+  - gsap.to()：如果你使用多个 gsap.to() 调用，除非它们被添加到同一个 Timeline，否则它们将默认同时开始，并且它们的同步性不能被控制。
+- 嵌套：
+  - Timeline：可以创建嵌套的 Timeline，这意味着你可以在一个 Timeline 内部开始另一个 Timeline，这样可以创建复杂的、多层次的动画序列。
+  - gsap.to()：gsap.to() 调用本身不能被嵌套，但你可以并排使用它们来创建多个动画。
+- 控制：
+  - Timeline：提供了更高级的控制，如全局速度控制、更容易的倒放和更复杂的回调函数。
+  - gsap.to()：提供了基本的动画控制，但要实现更高级的功能，可能需要更多的代码和逻辑。
+- 回调和事件：
+  - Timeline：可以在 Timeline 的特定时间点添加回调，或者监听 Timeline 的事件，如开始、更新、重复和完成。
+  - gsap.to()：每个 gsap.to() 动画可以有自己的回调，但要实现跨多个动画的复杂逻辑，可能需要额外的代码。
+- 性能：
+  - Timeline：通过将多个动画组织到一个 Timeline 中，可以减少浏览器的重绘和重排次数，从而提高性能。
+  - gsap.to()：单独的动画可能不会导致性能问题，但如果有大量的动画同时进行，并且它们没有被有效地组织，可能会影响性能。
+- 代码组织：
+  - Timeline：提供了一种更清晰、更结构化的方式来组织动画代码，使得维护和更新更容易。
+  - gsap.to()：虽然使用 gsap.to() 可以快速简单地创建动画，但随着动画逻辑的复杂化，代码可能会变得更加难以管理。
