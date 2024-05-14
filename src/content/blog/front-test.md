@@ -10,7 +10,9 @@ tags:
   - vue
 ---
 
-## 1 给 jest 添加 babel 支持 ESModule 的 import 导入
+### 1 Jest
+
+### 1.1 给 jest 添加 babel 支持 ESModule 的 import 导入
 
 1. 添加 babel
 
@@ -37,7 +39,7 @@ pnpm add @babel/core @babel/preset-env
 
 好，之后测试就可以使用 import 导入你要测试的函数了
 
-## 2 jest 中的 toEqual 和 toBe
+### 1.2 jest 中的 toEqual 和 toBe
 
 1. toEqual
 
@@ -62,7 +64,9 @@ expect(obj1).toBe(obj3); // 通过，因为它们引用了同一个对象
 expect(obj1).not.toBe(obj2); // 通过，因为它们引用了不同的对象
 ```
 
-## 3 vitest 添加 globals
+## 2 vitest
+
+### 2.1 vitest 添加 globals
 
 我们在写单元测试的时候，每一个单元测试文件都需要引入测试框架 vitest，会很繁琐,例如
 
@@ -136,7 +140,7 @@ module.exports = {
 
 ```
 
-## 4 vitest 中的 toStrictEqual 和 toEqual 区别
+### 2.2 vitest 中的 toStrictEqual 和 toEqual 区别
 
 - 检查具有 `undefined`  属性的键。 例如 使用  `.toStrictEqual`  时， `{a: undefined, b: 2}`  与  `{b: 2}`  不匹配。
 - 检查数组稀疏性。 例如 使用  .toStrictEqual  时， [, 1]  与  [undefined, 1]  不匹配。
@@ -165,7 +169,7 @@ it("test toStrictEqual", () => {
 });
 ```
 
-## 5 vitest 中 Error
+### 2.3 vitest 中 Error
 
 捕获错误的一个断言方法，例如在一些抛出错误，表单检验、数据格式错误、try...catch 等场景下会用到
 
@@ -177,11 +181,11 @@ it("test Error ", () => {
 });
 ```
 
-## 6 vitest 中的快照断言
+### 2.4 vitest 中的快照断言
 
 快照可以理解成，把对象的结构或者基础数据类型转换成字符串，然后做一个拍照存档的概念，一般用于记录，其实就是一个偷懒的行为。例如我有一个盒子，里面有一个苹果，我拍照记录了，下次如果盒子里面放了梨，那就代表盒子被别人动过了，用例就会失败了
 
-### toMatchInlineSnapshot
+#### toMatchInlineSnapshot
 
 toMatchInlineSnapshot 用于行内快照断言，它适合小范围,少量的数据结构存储
 
@@ -211,7 +215,7 @@ it("test toMatchInlineSnapshot", () => {
 
 有个坑，就是匹配对象，使用行内快照的时候，就需要匹配的快照字符串和引号隔开
 
-### toMatchSnapshot
+#### toMatchSnapshot
 
 toMatchSnapshot 快照断言会生成一个文件，它适合一些大型的，长久不变更的地方，例如对配置文件进行快照或者如果使用一些远程图标库 icon，我们可以对 icon 地址进行快照，这个文件如果变更了，就会出现报错，报错就代表有风险，需要谨慎操作。
 
@@ -228,7 +232,7 @@ it("test toMatchSnapshot", () => {
 
 然后在命令行输入 u 二次确认之后就可以通过了
 
-## 7 vitest 中的函数断言
+### 2.5 vitest 中的函数断言
 
 - `toHaveBeenCalled` 判断函数是否被调用
 - `toHaveBeenCalledTimes` 判断函数被调用的次数
@@ -252,3 +256,9 @@ it("test function ", () => {
   expect(buySpy).toHaveBeenCalledWith("apples", 10);
 });
 ```
+
+## 3 vitest 组件测试
+
+### 3.1 组件的基本测试
+
+[vites 测试组件-基础](/blog/test-component-basic/)
