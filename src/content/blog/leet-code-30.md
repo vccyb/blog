@@ -516,3 +516,186 @@ var flat = function (arr, n) {
   return res;
 };
 ```
+
+## 28 精简对象
+
+```js
+/**
+ * @param {Object|Array} obj
+ * @return {Object|Array}
+ */
+var compactObject = function (obj) {
+  if (obj == null || typeof obj !== "object") {
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
+    const res = [];
+    for (let item of obj) {
+      const val = compactObject(item);
+      if (val) res.push(val);
+    }
+    return res;
+  }
+
+  const res = {};
+  const keys = Object.keys(obj);
+  for (let key of keys) {
+    const val = compactObject(obj[key]);
+    if (val) res[key] = val;
+  }
+  return res;
+};
+```
+
+## 29 事件发射器
+
+```js
+class EventEmitter {
+  constructor() {
+    this.events = {};
+  }
+
+  /**
+   * @param {string} eventName
+   * @param {Function} callback
+   * @return {Object}
+   */
+  subscribe(eventName, callback) {
+    this.events[eventName] = this.events[eventName] ?? [];
+    this.events[eventName].push(callback);
+    return {
+      unsubscribe: () => {
+        this.events[eventName] = this.events[eventName].filter(
+          (f) => f !== callback
+        );
+        if (this.events[eventName].length === 0) {
+          delete this.events[eventName];
+        }
+      },
+    };
+  }
+
+  /**
+   * @param {string} eventName
+   * @param {Array} args
+   * @return {Array}
+   */
+  emit(eventName, args = []) {
+    if (!(eventName in this.events)) return [];
+    return this.events[eventName].map((f) => f(...args));
+  }
+}
+
+/**
+ * const emitter = new EventEmitter();
+ *
+ * // Subscribe to the onClick event with onClickCallback
+ * function onClickCallback() { return 99 }
+ * const sub = emitter.subscribe('onClick', onClickCallback);
+ *
+ * emitter.emit('onClick'); // [99]
+ * sub.unsubscribe(); // undefined
+ * emitter.emit('onClick'); // []
+ */
+```
+
+## 30 包装数组
+
+```js
+/**
+ * @param {number[]} nums
+ * @return {void}
+ */
+var ArrayWrapper = function (nums) {
+  this.values = nums;
+};
+
+/**
+ * @return {number}
+ */
+ArrayWrapper.prototype.valueOf = function () {
+  return this.values.reduce((pre, cur) => pre + cur, 0);
+};
+
+/**
+ * @return {string}
+ */
+ArrayWrapper.prototype.toString = function () {
+  return "[" + this.values + "]";
+};
+
+/**
+ * const obj1 = new ArrayWrapper([1,2]);
+ * const obj2 = new ArrayWrapper([3,4]);
+ * obj1 + obj2; // 10
+ * String(obj1); // "[1,2]"
+ * String(obj2); // "[3,4]"
+ */
+```
+
+## 31 使用方法链的计算器
+
+```js
+class Calculator {
+  /**
+   * @param {number} value
+   */
+  constructor(value) {
+    this.value = value;
+  }
+
+  /**
+   * @param {number} value
+   * @return {Calculator}
+   */
+  add(value) {
+    this.value += value;
+    return this;
+  }
+
+  /**
+   * @param {number} value
+   * @return {Calculator}
+   */
+  subtract(value) {
+    this.value -= value;
+    return this;
+  }
+
+  /**
+   * @param {number} value
+   * @return {Calculator}
+   */
+  multiply(value) {
+    this.value *= value;
+    return this;
+  }
+
+  /**
+   * @param {number} value
+   * @return {Calculator}
+   */
+  divide(value) {
+    if (value === 0) throw "Division by zero is not allowed";
+    this.value /= value;
+    return this;
+  }
+
+  /**
+   * @param {number} value
+   * @return {Calculator}
+   */
+  power(value) {
+    this.value **= value;
+    return this;
+  }
+
+  /**
+   * @return {number}
+   */
+  getResult() {
+    return this.value;
+  }
+}
+```
