@@ -125,7 +125,7 @@ gsap.to("#box", {
 
 ## 7 时间的控制
 
-## 7.1 duraton 和 delay
+### 7.1 duraton 和 delay
 
 ```js
 gsap.to("#box", {
@@ -153,7 +153,7 @@ gsap.to("#box2", {
 
 主要就是控制 duration 和 delay
 
-## 7.2 timeline
+### 7.2 timeline
 
 上面的写法可以改造为 timeline 的写法
 
@@ -195,3 +195,70 @@ gsap
 - 代码组织：
   - Timeline：提供了一种更清晰、更结构化的方式来组织动画代码，使得维护和更新更容易。
   - gsap.to()：虽然使用 gsap.to() 可以快速简单地创建动画，但随着动画逻辑的复杂化，代码可能会变得更加难以管理。
+
+### 7.3 timeline Demo
+
+```html
+<div id="nav">
+  <h2>sheryians</h2>
+  <div id="part2">
+    <h4>Work</h4>
+    <h4>About</h4>
+    <h4>Courses</h4>
+    <h4>Blog</h4>
+  </div>
+</div>
+
+<h1>Chenyubo Coding Cool</h1>
+```
+
+```css
+#nav {
+  background-color: blueviolet;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  padding: 30px 50px;
+}
+
+#part2 {
+  display: flex;
+  gap: 50px;
+}
+h1 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 80px;
+  white-space: nowrap;
+}
+```
+
+```js
+let tl = gsap.timeline();
+
+tl.from("h2", {
+  y: -20,
+  opacity: 0,
+  duration: 1,
+  delay: 0.5,
+});
+
+tl.from("h4", {
+  y: -20,
+  opacity: 0,
+  duration: 1,
+  stagger: 0.3,
+});
+
+tl.from("h1", {
+  y: 20,
+  opacity: 0,
+  duration: 0.5,
+  scale: 0.2,
+});
+```
+
+<img data-src="/assets/images/gifs/gsap-nav.gif"/>
