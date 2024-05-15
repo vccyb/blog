@@ -262,3 +262,85 @@ tl.from("h1", {
 ```
 
 <img data-src="/assets/images/gifs/gsap-nav.gif"/>
+
+## 8 ScrollTrigger
+
+```html
+<div id="page1">
+  <div id="box"></div>
+</div>
+<div id="page2">
+  <div id="box"></div>
+</div>
+<div id="page3">
+  <div id="box"></div>
+</div>
+```
+
+记得引 scrollTrigger 的 cdn
+
+```css
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+#page1 {
+  height: 100%;
+  width: 100%;
+  background-color: lightblue;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#page2 {
+  height: 100%;
+  width: 100%;
+  background-color: rgb(39, 196, 248);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#page3 {
+  height: 100%;
+  width: 100%;
+  background-color: rgb(8, 130, 191);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#box {
+  height: 300px;
+  width: 300px;
+  background-color: crimson;
+}
+```
+
+js
+
+```js
+gsap.from("#page1 #box", {
+  scale: 0,
+  delay: 1,
+  duration: 2,
+  rotate: 360,
+});
+
+gsap.from("#page2  #box", {
+  scale: 0,
+  delay: 1,
+  duration: 2,
+  rotate: 360,
+  scrollTrigger: "#page2 #box",
+});
+```
