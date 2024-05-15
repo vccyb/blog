@@ -200,3 +200,61 @@ it("查询组件", () => {
   );
 });
 ```
+
+## 6 断言元素
+
+### 6.1 断言文本和 DOM
+
+- `wrapper.html()`输出 dom 结构
+- `wrapper.text()`输出文本
+
+```ts
+it("mount", () => {
+  const wrapper = mount(HelloWorld, { props: { msg: "Hello Vitest" } });
+  expect(wrapper.text()).toContain("Hello Vitest");
+  expect(wrapper.html()).toContain("Hello Vitest");
+  console.log("text ===", wrapper.text()); // Hello Vitest
+  console.log("html ===", wrapper.html()); // <div> <h1>Hello Vitest</h1></div>
+});
+```
+
+### 6.2 断言元素展示和隐藏
+
+`v-if`和`v-show`，
+
+- `v-if` 是没有 dom 节点，就不会渲染
+- `v-show` 是渲染了，只是 display: none
+
+两种断言的方式不一样
+
+- exists 元素是否在 dom (用于 v-if)
+- isVisble 元素在 dom 上，可能不展示(用于 v-show)
+
+```ts
+it("元素是否展示，是否可见 ", () => {
+  const wrapper = mount(Button);
+  const showDom = wrapper.find('[data-testid="show"]');
+
+  const ifDom = wrapper.find('[data-testid="if"]');
+  expect(showDom.isVisible()).toBeFalsy();
+  expect(showDom.exists()).not.toBeFalsy();
+  expect(ifDom.exists()).toBeFalsy();
+});
+```
+
+### 6.3 断言元素的属性 attributes
+
+通过 find 获取了具体的 dom 节点之后，可以通过 attributes()获取到当前 dom 的属性，可以根据具体的属性做具体的断言
+
+```ts
+it("元素的属性 ", () => {
+  const wrapper = mount(Button);
+  const showDom = wrapper.find('[data-testid="show"]');
+  console.log("attributes", showDom.attributes());
+});
+```
+
+```vue
+<div v-show="false" data-testid="show">show button</div>
+attributes { 'data-testid': 'show', style: 'display: none;' }
+```
