@@ -344,3 +344,45 @@ gsap.from("#page2  #box", {
   scrollTrigger: "#page2 #box",
 });
 ```
+
+### 8.1 对象写法
+
+```js
+gsap.from("#page2  #box", {
+  scale: 0,
+  duration: 2,
+  rotate: 360,
+  scrollTrigger: {
+    trigger: "#page2 #box",
+    scroller: "body",
+    markers: true,
+    start: "top 60%",
+  },
+});
+```
+
+trigger: 指定了触发动画的元素，这里是 "#page2 #box"。
+
+scroller: 指定了滚动的容器。在这个例子中，"body" 表示滚动将基于 body 元素。如果你的页面有特定的滚动容器，你可能需要指定它而不是 body。
+
+markers: 当设置为 true 时，GSAP 将在 trigger 元素附近创建可视化标记，这可以帮助你了解动画触发的确切位置。这对于调试和精确控制动画非常有用。
+
+start: 定义了动画开始的滚动位置。在这个例子中，"top 60%" 表示当 trigger 元素到达页面顶部 60% 的位置时，动画将开始。这个值可以是百分比，也可以是具体的像素值（如 "top 300px"）。
+
+### 8.2 ScrollTrigger Demo
+
+```js
+gsap.from("#page2  h1", {
+  opacity: 0,
+  duration: 2,
+  x: 500,
+  scrollTrigger: {
+    trigger: "#page2  h1",
+    scroller: "body",
+    markers: true,
+    start: "top 50%",
+  },
+});
+```
+
+<img data-src="/assets/images/gifs/gsap-scrollTrigger-01.gif"/>
