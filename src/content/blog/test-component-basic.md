@@ -258,3 +258,24 @@ it("元素的属性 ", () => {
 <div v-show="false" data-testid="show">show button</div>
 attributes { 'data-testid': 'show', style: 'display: none;' }
 ```
+
+### 6.4 断言组件的属性
+
+通过 wrapper.vm 可以拿到当前组件实例的方法和属性,例如 $data,$props
+
+```ts
+// 组件定义了 props 和 ref
+const name = ref("customer-ref");
+
+defineProps<{
+  msg: string;
+}>();
+
+it("组件的属性 ", () => {
+  const wrapper = mount(Find, { props: { msg: "Hello Vitest" } });
+  console.log(wrapper.vm);
+  console.log(wrapper.vm.$props);
+  console.log(wrapper.vm.$props);
+  console.log(wrapper.vm.name);
+});
+```
