@@ -10,7 +10,7 @@ tags:
   - vue
 ---
 
-### 1 Jest
+## 1 Jest
 
 ### 1.1 给 jest 添加 babel 支持 ESModule 的 import 导入
 
