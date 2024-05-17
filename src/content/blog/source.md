@@ -44,3 +44,7 @@ lodash 中 get 函数，可以方便的获取对象的属性值
 一些在 vue2 源码中使用的工具函数
 
 [vue2-utils](/blog/vue2-utils)
+
+## 6 yocto-queue
+
+[yocto-queue 队列 链表](/blog/yocto-queue)
