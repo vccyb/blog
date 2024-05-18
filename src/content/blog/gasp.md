@@ -386,3 +386,22 @@ gsap.from("#page2  h1", {
 ```
 
 <img data-src="/assets/images/gifs/gsap-scrollTrigger-01.gif"/>
+
+## 8.3 end 用法
+
+```ts
+scrollTrigger: {
+  trigger: "#page2  #box",
+  scroller: "body",
+  markers: true,
+  start: "top 60%",
+  end: "top 30%",
+  scrub: 2
+}
+```
+
+- start: 定义了动画开始的滚动位置。"top 60%" 表示当 trigger 元素滚动到页面顶部 60% 的位置时，动画将开始。
+
+- end: 定义了动画结束的滚动位置。"top 30%" 表示当 trigger 元素滚动到页面顶部 30% 的位置时，动画将结束。请注意，end 属性将覆盖 duration 属性，因为动画的持续时间将由滚动位置决定。
+
+- scrub: 2 表示动画的播放速度是滚动速度的两倍。正值表示动画播放速度比滚动快，负值则相反。1 表示与滚动速度相同，0.5 表示是滚动速度的一半。
