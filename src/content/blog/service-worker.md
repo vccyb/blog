@@ -206,3 +206,30 @@ A string indicating how the HTTP cache is used for service worker scripts resour
   The HTTP cache will not be used for the main script or its imports. All service worker script resources will be updated from the network.
 
   如果设置为 'none'，则在为顶级 /service-worker.js 或任何导入的脚本（例如假设的 path/to/import.js）发出请求时，系统不会查询 HTTP 缓存。
+
+## 添加更新 sw 的 update
+
+```js
+registration.addEventListener("updatefound", () => {
+  console.log("New worker being installed => ", registration.installing);
+});
+```
+
+我们去更新一下 sw.js
+
+```js title="sw.js"
+console.log("hello world");
+```
+
+<img data-src="/assets/images/sw/service-worker-06.png">
+<img data-src="/assets/images/sw/service-worker-07.png">
+
+点击 skipWaiting，就可以使用新的 sw 了
+
+## service worker context
+
+```js title="sw.js"
+console.log("self", self);
+```
+
+我们用 self 访问
