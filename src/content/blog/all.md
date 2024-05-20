@@ -35,3 +35,9 @@ tags:
 ## 6 前端测试
 
 [前端测试合集](/blog/front-test/)
+
+## 7 node.js 相关
+
+[node.js 合集](/blog/node/)
+
+[构建脚手架](/blog/node-cli/)

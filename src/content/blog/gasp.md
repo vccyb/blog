@@ -387,7 +387,7 @@ gsap.from("#page2  h1", {
 
 <img data-src="/assets/images/gifs/gsap-scrollTrigger-01.gif"/>
 
-## 8.3 end 用法
+### 8.3 end 用法
 
 ```ts
 scrollTrigger: {
@@ -405,3 +405,27 @@ scrollTrigger: {
 - end: 定义了动画结束的滚动位置。"top 30%" 表示当 trigger 元素滚动到页面顶部 30% 的位置时，动画将结束。请注意，end 属性将覆盖 duration 属性，因为动画的持续时间将由滚动位置决定。
 
 - scrub: 2 表示动画的播放速度是滚动速度的两倍。正值表示动画播放速度比滚动快，负值则相反。1 表示与滚动速度相同，0.5 表示是滚动速度的一半。
+
+## 9 svg 动画
+
+### 9.1 svg 基础知识
+
+svg 标签就是一个容器，其中有很多类型的标签
+
+```html
+<svg width="190" height="160">
+  <path d="M 10 80 Q 95 10 180 80" stroke="black" fill="transparent" />
+</svg>
+```
+
+<img data-src="/assets/images/svg-01.png"/>
+
+尝试调整一下
+
+```html
+<svg width="1900" height="160">
+  <path d="M 0 80 Q 900 10 1800 80" stroke="black" fill="transparent" />
+</svg>
+```
+
+<img data-src="/assets/images/svg-02.png"/>
