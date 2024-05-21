@@ -429,3 +429,49 @@ svg 标签就是一个容器，其中有很多类型的标签
 ```
 
 <img data-src="/assets/images/svg-02.png"/>
+
+### 9.2 gsap svg 小动画
+
+```html
+<div id="string">
+  <svg width="1000" height="200">
+    <path d="M 10 100 Q 500 100 990 100" stroke="white" fill="transparent" />
+  </svg>
+</div>
+```
+
+```js
+const initialPath = `M 10 100 Q 500 100 990 100`;
+const finalPath = `M 10 100 Q 500 100 990 100`;
+
+const string = document.querySelector("#string");
+
+string.addEventListener("mouseenter", (event) => {
+  console.log("mouse enter");
+});
+
+string.addEventListener("mousemove", (event) => {
+  console.log(event.y);
+  path = `M 10 100 Q ${event.x} ${event.y} 990 100`;
+  gsap.to("svg path", {
+    attr: {
+      d: path, // 这里使用gsap的attr属性来修改path的d属性
+      duration: 0.3,
+      ease: "power3.out",
+    },
+  });
+});
+
+string.addEventListener("mouseleave", () => {
+  console.log("mouse leave");
+  gsap.to("svg path", {
+    attr: {
+      d: finalPath, // 这里使用gsap的attr属性来修改path的d属性
+      duration: 1.2,
+      ease: "elastic.out(1,0.4)  ",
+    },
+  });
+});
+```
+
+<img data-src="/assets/images/gifs/gsap-svg.gif"/>
