@@ -233,3 +233,102 @@ console.log("self", self);
 ```
 
 我们用 self 访问
+
+## 利用 sw 缓存文件
+
+### 进行缓存文件
+
+```js title="sw.js"
+const addResourceToCache = async (resources) => {
+  const cache = await caches.open("v1");
+  await cache.addAll(resources);
+};
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    addResourceToCache([
+      "./",
+      "./app.js",
+      "./index.html",
+      "./contact.html",
+      "./profile.html",
+      "./images/contactus.png",
+      "./images/home.jpg",
+      "./images/profile.jpg",
+    ])
+  );
+});
+```
+
+这里的路径有很大的问题，如果不是跟目录建议相对写法
+<img data-src="/assets/images/sw/sw-08.png">
+
+### fetch 监听
+
+```js title="sw.js"
+self.addEventListener("fetch", (event) => {
+  event.respondWith(caches.match(event.request));
+});
+```
+
+### 离线体验
+
+此时我们去 sw 里面设置为离线，
+此时去网络看就可以发现，当然点击不同的 tab，比如 Profile 也是一样的
+<img data-src="/assets/images/sw/sw-08.png">
+
+sw 在客户端的浏览器，缓存获取的
+
+### 优化缓存逻辑
+
+一个更好的缓存逻辑是：如果请求在缓存里面，那么我们走缓存，否者我们请求，请求完毕后再缓存
+
+```js title="sw.js"
+const cacheMatch = async (request) => {
+  const cacheResponse = await caches.match(request);
+  if (cacheResponse) return cacheResponse;
+
+  const networkResponse = await fetch(request);
+  const cache = await caches.open("v1");
+  await cache.put(request, networkResponse.clone());
+  return networkResponse;
+};
+```
+
+我们在 index.html 添加一个新的图片
+
+```html title="index.html"
+<img src="images/home.jpg" alt="" width="300" height="200" />
+<img src="images/hasbulla.jpg" alt="" width="300" height="200" />
+```
+
+```js title="sw.js"
+self.addEventListener("fetch", (event) => {
+  event.respondWith(cacheMatch(event.request));
+});
+```
+
+有个动作，你需要去删除掉 index.html 的缓存先
+
+此时你刷新，就会请求并缓存新的图片了
+
+### 缓存没有，网络也没有的优化
+
+```js
+const cacheMatch = async (request) => {
+  const cacheResponse = await caches.match(request);
+  if (cacheResponse) return cacheResponse;
+  try {
+    const networkResponse = await fetch(request);
+    const cache = await caches.open("v1");
+    await cache.put(request, networkResponse.clone());
+    return networkResponse;
+  } catch (err) {
+    return new Response("Response not found!");
+  }
+};
+```
+
+此时你去，离线，你又删除了缓存中的，那么就找不到了，就会走这个逻辑
+
+<img data-src="/assets/images/sw/sw-10.png">
