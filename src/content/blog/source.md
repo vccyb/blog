@@ -48,3 +48,7 @@ lodash 中 get 函数，可以方便的获取对象的属性值
 ## 6 yocto-queue
 
 [yocto-queue 队列 链表](/blog/yocto-queue)
+
+## 7 为什么 Vue2 this 能够直接获取到 data 和 methods
+
+[为什么 Vue2 this 能够直接获取到 data 和 methods](/blog/vue2-this-data-methods)
