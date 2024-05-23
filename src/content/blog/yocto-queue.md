@@ -1,6 +1,7 @@
 ---
 title: "yocto-queue源码分析"
 date: 2024-05-17T13:04:05.831Z
+category: 源码分析
 ---
 
 ## yocto-queue 介绍
