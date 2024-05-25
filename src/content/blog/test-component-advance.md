@@ -100,3 +100,133 @@ it("mount", async () => {
   expect(wrapper.text()).toContain("third render"); // data 是否正确渲染在页面上
 });
 ```
+
+## 如何设置 props
+
+```js
+<script setup lang="ts">
+defineProps<{
+  msg: string
+}>()
+</script>
+
+<template>
+  <div>{{ msg }}</div>
+</template>
+```
+
+```js
+it("mount props", async () => {
+  const wrapper = mount(Props, {
+    props: {
+      msg: "props msg",
+    },
+  });
+  expect(wrapper.text()).toContain("props msg");
+});
+```
+
+### 动态 setProps
+
+```js
+it("update props", async () => {
+  const wrapper = mount(Props, {
+    props: {
+      msg: "props msg",
+    },
+  });
+  expect(wrapper.text()).toContain("props msg");
+  await wrapper.setProps({
+    msg: "second render",
+  });
+  expect(wrapper.props("msg")).toBe("second render"); // props 有没有值
+  expect(wrapper.text()).toContain("second render"); // props 是否正确渲染在页面上
+});
+```
+
+日志输出
+
+```js
+console.log("wrapper", wrapper.props("msg"));
+```
+
+## 如何测试 emits
+
+要修改和添加案例
+
+```js
+<script setup lang="ts">
+interface Emits {
+  (e: 'change', value: string)
+  (e: 'update:pageIndex', value: number)
+  (e: 'update:pageSize', value: string, size: number)
+}
+
+const emits = defineEmits<Emits>()
+
+const resetPage = (value: string) => {
+  emits('update:pageSize', value, 10)
+  emits('update:pageIndex', 1)
+  emits('change', value)
+}
+</script>
+
+<template>
+  <div @click="resetPage('customer')" data-testid="button">button</div>
+</template>
+
+```
+
+```js
+it("mount", async () => {
+  const wrapper = mount(Emitted);
+  const button = wrapper.find('[data-testid="button"]');
+  await button.trigger("click");
+  const emits = wrapper.emitted();
+  console.log("emits", emits);
+  // emits {
+  //   'update:pageSize': [ [ 'customer', 10 ] ],
+  //   'update:pageIndex': [ [ 1 ] ],
+  //   change: [ [ 'customer' ] ],
+  //   click: [ [ [MouseEvent] ] ]
+  // }
+  expect(emits).toHaveProperty("update:pageIndex");
+  expect(emits).toHaveProperty("update:pageSize");
+  expect(emits).toHaveProperty("change");
+});
+```
+
+wrapper.emitted() 是一个数组，可以获取到 emit 事件的记录，根据数组里面的内容去断言
+
+## provide/inject
+
+```vue title="Parent.vue"
+provide('parentValue', 'this is parent data')
+```
+
+按钮组件拿到 parent 传递过来的 parentValue 值
+
+```vue title="Button.vue"
+const text = inject('parentValue')
+<div> {{ text }}</div>
+```
+
+```js
+describe("测试 provide", () => {
+  it("测试顶层组件渲染正确传递值给子组件", async () => {
+    const wrapper = mount(Parent);
+    expect(wrapper.text()).toContain("this is parent data");
+  });
+
+  it("测试子组件能拿到顶层组件传递的值", async () => {
+    const wrapper = mount(Button, {
+      global: {
+        provide: {
+          parentValue: "test provide",
+        },
+      },
+    });
+    expect(wrapper.text()).toContain("test provide");
+  });
+});
+```
