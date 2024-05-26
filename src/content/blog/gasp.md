@@ -1,7 +1,7 @@
 ---
-title: "GASP学习"
+title: "GSAP学习"
 date: 2024-05-11T12:25:58.155Z
-description: "学习GASP，加强前端技能"
+description: "学习GSAP，加强前端技能"
 ---
 
 这里我们以油管博主的一个教程来看
@@ -475,3 +475,135 @@ string.addEventListener("mouseleave", () => {
 ```
 
 <img data-src="/assets/images/gifs/gsap-svg.gif"/>
+
+## 10 gsap 项目 1 鼠标项目
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div id="cursor"></div>
+    <div id="main">
+      <div id="image">
+        <div id="overlay"></div>
+        <img src="./01.png" alt="" />
+      </div>
+    </div>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+      integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="./script.js"></script>
+  </body>
+</html>
+```
+
+```css
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+#main {
+  height: 100%;
+  width: 100%;
+  background-color: #111;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#cursor {
+  height: 20px;
+  width: 20px;
+  background-color: white;
+  border-radius: 50%;
+  position: fixed;
+  font-size: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 9;
+  background-color: #fffffff6;
+}
+
+#image {
+  height: 36vw;
+  width: 65vw;
+  background-color: antiquewhite;
+  position: relative;
+}
+
+#image img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+#overlay {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  position: absolute;
+  z-index: 10;
+}
+```
+
+```js
+const main = document.querySelector("#main");
+const cursor = document.querySelector("#cursor");
+const imageDiv = document.querySelector("#image");
+
+main.addEventListener("mousemove", (event) => {
+  gsap.to("#cursor", {
+    x: event.x,
+    y: event.y,
+    duration: 0.6,
+    ease: "back.out",
+  });
+});
+
+imageDiv.addEventListener("mouseenter", () => {
+  cursor.innerHTML = "Hello Vccyb";
+  gsap.to("#cursor", {
+    scale: 4,
+    duration: 0.3,
+    backgroundColor: "#ffffff5c",
+  });
+});
+
+imageDiv.addEventListener("mouseleave", () => {
+  cursor.innerHTML = " ";
+  gsap.to("#cursor", {
+    scale: 1,
+    duration: 0.3,
+    backgroundColor: "#fffffff6",
+  });
+});
+```
+
+### 10.1 遮罩难点
+
+这里有一个难点是，鼠标进入图片后，cursor 变大，就会阻碍鼠标的事件，就会有断断续续的感觉
+
+<img data-src="/assets/images/gifs/gsap-p-01.png"/>
+
+### 10.2 效果
+
+<img data-src="/assets/images/gifs/gsap-p-02.gif"/>

@@ -271,3 +271,65 @@ const computedPrice = useComputed(fn);
 
 容器组件搞定逻辑
 展示组件搞定界面
+
+## 8 vue 方法中属性丢失的问题
+
+```
+methods
+  querySearch
+
+实例
+
+this.querySearch = methods.querySearch.bind(this)
+
+```
+
+所以 实例上绑定的是 新方法 `bind`会返回一个新函数
+
+简单解决，就是把方法放到 data 上就行了
+
+## 9 防抖 + vue
+
+我们常用的写法
+
+```js
+import { debounce } from "lodash";
+const text = ref("");
+const inputHandler = (e) => {
+  text.value = e.target.value;
+};
+const debounceHandler = debounce(inputHandler, 1000); // 去使用这个函数
+```
+
+自定义 Ref 方式
+
+```js title="debounceRef.js"
+import { customRef } from "vue";
+export function debounceRef(value, duration = 1000) {
+  let timer;
+  return customRef((track, trigger) => {
+    return {
+      get() {
+        // 收集依赖
+        track();
+        return value;
+      },
+      set(val) {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          // 派发更新
+          trigger();
+          value = val;
+        }, duration);
+      },
+    };
+  });
+}
+```
+
+使用
+
+```js
+import { debounceRef } from ./debounceRef";
+const text = debounceRef("", 500);
+```
