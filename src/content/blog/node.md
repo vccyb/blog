@@ -126,3 +126,92 @@ https://juejin.cn/post/7261119531891490877
    <img data-src="/assets/images/node/node-npm-01.png">
 
 ## 5 npm run 原理
+
+### 5.1 命令
+
+我们装一个 vite，然后在 package.json 中配置一个 scripts，然后运行 `npm run dev`
+vite 会自动找到 index.html
+
+可执行文件哪
+
+```
+node_modules
+  .bin
+    vite
+```
+
+这个.bin 下的可执行文件哪来的，是 vite 安装的时候添加的, 具体可以看
+
+```js title="node_modules/vite/package.json"
+  "bin": {
+    "vite": "bin/vite.js"
+  },
+```
+
+### 5.2 执行命令-查找规则
+
+1. 当前项目找 node_modules/.bin
+2. 全局的 node_modules/.bin
+3. 环境变量去找
+4. 报错
+
+### 5.3 npm 生命周期
+
+```json
+"scripts": {
+    "predev": "node prev.js",
+    "dev": "node index.js",
+    "postdev": "node post.js"
+}
+```
+
+## 6 npx
+
+`npx`它允许用户在不安装全局包的情况下，运行已安装在本地项目中的包或者远程仓库中的包。
+
+**npx 的优势**
+
+- 避免全局安装：npx 允许你执行 npm package，而不需要你先全局安装它。
+- 总是使用最新版本：如果你没有在本地安装相应的 npm package，npx 会从 npm 的 package 仓库中下载并使用最新版。
+- 执行任意 npm 包：npx 不仅可以执行在 package.json 的 scripts 部分定义的命令，还可以执行任何 npm package。
+- 执行 GitHub gist：npx 甚至可以执行 GitHub gist 或者其他公开的 JavaScript 文件。
+
+**npm 和 npx 区别**
+
+- npx 侧重于执行命令的，执行某个模块命令。虽然会自动安装模块，但是重在执行某个命令
+- npm 侧重于安装或者卸载某个模块的。重在安装，并不具备执行某个模块的功能。
+
+查找规则
+
+- 当前项目找 node_modules/.bin
+- 全局
+- 官网下载 用完就删
+
+## 7 发布 npm 包
+
+发布 npm 包的好处
+
+- 方便团队或者跨团队共享代码，使用 npm 包就可以方便的管理，并且还可以进行版本控制
+
+```
+npm adduser
+npm login
+npm publish
+```
+
+## 8 npm 私服
+
+**构建私服有什么收益吗？**
+
+- 可以离线使用，你可以将 npm 私服部署到内网集群，这样离线也可以访问私有的包。
+- 提高包的安全性，使用私有的 npm 仓库可以更好的管理你的包，避免在使用公共的 npm 包的时候出现漏洞。
+- 提高包的下载速度，使用私有 npm 仓库，你可以将经常使用的 npm 包缓存到本地，从而显著提高包的下载速度，减少依赖包的下载时间。这对于团队内部开发和持续集成、部署等场景非常有用
+
+**搭建**
+Verdaccio 是可以帮我们快速构建 npm 私服的一个工具
+
+具体地址：https://juejin.cn/post/7261872148213415994
+
+## 9 模块化
+
+## 10 全局变量&全局 API
