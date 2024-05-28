@@ -230,3 +230,229 @@ describe("测试 provide", () => {
   });
 });
 ```
+
+## directive
+
+从业务角度，从组件的角度
+
+### 局部指令
+
+```vue
+<script setup lang="ts">
+const vTooltip = {
+  beforeMount(el: Element) {
+    el.classList.add("with-tooltip");
+  },
+};
+</script>
+
+<template>
+  <div>
+    <div v-tooltip data-testid="tooltip">show tooltip</div>
+  </div>
+</template>
+```
+
+```ts
+it("tooltip", async () => {
+  const wrapper = mount(Directive);
+  const tooltip = wrapper.find('[data-testid="tooltip"]');
+  expect(tooltip.html()).toContain("with-tooltip");
+});
+```
+
+### 全局指令
+
+如果是全局的自定义指令,就得如下写法，需要在 main.ts 里面全局定义指令
+
+```ts
+// main.ts
+app.directive("tooltip", vTooltip);
+```
+
+```vue
+<script setup lang="ts"></script>
+
+<template>
+  <div>
+    <div v-tooltip data-testid="tooltip">show tooltip</div>
+  </div>
+</template>
+```
+
+测试用例需要 directives 注入进来
+
+```js
+it("tooltip", async () => {
+  const wrapper = mount(Directive, {
+    global: {
+      directives: {
+        tooltip: vTooltip,
+      },
+    },
+  });
+  const tooltip = wrapper.find('[data-testid="tooltip"]');
+  expect(tooltip.html()).toContain("with-tooltip");
+});
+```
+
+## components
+
+当我们在使用一些第三方组件的时候，可能第三方组件就是全局注册的，我们就不需要在每一个组件里面每次引入使用的组件，例如我有个 GlobalComponent 组件，被全局注册了
+
+```js
+import GlobalComponent from "./components/6/GlobalComponent.vue";
+app.component("GlobalComponent", GlobalComponent);
+```
+
+那么在使用的时候就不需要在当前组件引入了，直接使用就行
+
+```vue
+<template>
+  <div>
+    <GlobalComponent></GlobalComponent>
+  </div>
+</template>
+
+<script setup lang="ts"></script>
+```
+
+我们直接 mount 一下这个
+
+```ts title="错误写法"
+it("mount error component", async () => {
+  const wrapper = mount(Global);
+  console.log(wrapper.html());
+  expect(wrapper.text()).toContain("My Global Component");
+});
+```
+
+需要在测试的时候，把组件注册进去
+
+```ts title="正确写法"
+it("mount success component", async () => {
+  const wrapper = mount(Global, {
+    global: {
+      components: {
+        GlobalComponent,
+      },
+    },
+  });
+  expect(wrapper.text()).toContain("My Global Component");
+});
+```
+
+## plugins
+
+我们再来看看 plugins， 插件很常见，vuex、vue-router 都是插件，我们如何测试插件呢，我列了一个平常可能会使用到的 i18n 插件
+
+```js
+// i18n.ts
+const i18nPlugin = {
+  install(app: any, options: PluginOptions = {}) {
+    const messages = options.messages ?? {};
+
+    app.config.globalProperties.$t = function (key: string) {
+      const language = options.defaultLanguage ?? "en";
+      return messages[language]?.[key] || key;
+    };
+  },
+};
+```
+
+```vue
+<!-- Plugin.vue -->
+<template>
+  <div>{{ $t("hello") }}</div>
+</template>
+
+<script setup lang="ts"></script>
+```
+
+main.ts 里面需要注册插件，这里我们直接定义 hello 的值是 'Hello Plugin'
+
+```ts
+app.use(i18nPlugin, {
+  defaultLanguage: "en",
+  messages: {
+    en: {
+      hello: "Hello Plugin",
+    },
+  },
+});
+```
+
+使用
+
+```js
+describe("测试 plugin", () => {
+  it("uses i18n plugin", () => {
+    const wrapper = mount(Plugin, {
+      global: {
+        plugins: [
+          [
+            i18nPlugin,
+            {
+              defaultLanguage: "en",
+              messages: {
+                en: {
+                  hello: "Hello test i18nPlugin",
+                },
+              },
+            },
+          ],
+        ],
+      },
+    });
+    expect(wrapper.text()).toBe("Hello test i18nPlugin");
+  });
+});
+```
+
+## attachTo
+
+我们有时候会在组件里面直接操作 dom,例如下面一个组件一开始渲染了 first render onMounted 之后，获取 dom 之后，直接把 h4 里的内容改成 111
+
+```vue
+<script setup lang="ts">
+import { onMounted } from "vue";
+onMounted(() => {
+  const ele = document.querySelector("h4") as Element;
+  ele.innerHTML = "111";
+});
+</script>
+
+<template>
+  <h4 style="color: red">first render</h4>
+</template>
+```
+
+如果不使用 attachTo, 会渲染报错
+
+```js
+it("attach render error", async () => {
+  const wrapper = mount(Attach);
+  await nextTick();
+  expect(wrapper.text()).toContain("111");
+});
+```
+
+正确的用法是 attachTo 到 body 上面或者其他的 DOM 上
+
+```js
+it("attach success render", async () => {
+  // const div = document.createElement('div')
+  // document.body.appendChild(div)
+  const wrapper = mount(Attach, {
+    attachTo: document.body,
+    // attachTo: div // 任意一个 dom
+  });
+  await nextTick();
+  console.log("wrapper", wrapper.html());
+  expect(wrapper.text()).toContain("111");
+});
+```
+
+## teleport
+
+如何测试呢？ MyTeleport.Vue 组件使用了 Teleport 功能，Teleport 包括了一个子组件 Signup.vue
