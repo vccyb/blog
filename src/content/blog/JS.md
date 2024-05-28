@@ -617,3 +617,98 @@ watchEffect(() => {
   localStorage.setItem(key, theme.value);
 });
 ```
+
+## 15 AJAX 的进度监控
+
+### AJAX 的两套实现
+
+1. XHR XMLHttpRequest axios
+2. fetch umi-request
+
+### XHR 和 Fetch 的区别
+
+<img data-src="/assets/images/JS/JS-01.png" class="w-[100%]">
+
+### 响应的进度监控
+
+XHR, 主要就是触发 progress 这个事件，上传的时候会一直触发
+
+```js
+xhr.addEventListener("progress", (e) => {
+  console.log(e.loaded, e.total);
+  opProcess &&
+    onProcess({
+      loaded: e.loaded,
+      total: e.total,
+    });
+});
+
+xhr.open(method, url);
+xhr.send(data);
+```
+
+fetch 其实就是获取总量和以及响应的
+
+```js
+const resp = await fetch(url, {
+  method,
+  body: data,
+});
+
+const total = +resp.headers.get("content-length");
+const decoder = new TextDecoder();
+let body = "";
+const reader = resp.body.getReader();
+let loaded = 0;
+while (1) {
+  const { done, value } = await reader.read();
+  if (done) {
+    break;
+  }
+  loaded += value.length;
+  body += decoder.decode(value);
+  onProcess && onProcess({ loaded, total });
+}
+```
+
+### 上传的进度监控
+
+fetch 的设计基于 promise，就是成功失败
+
+XHR 监控上传的接口即可
+
+```js
+xhr.upload.addEventListener("progress", (e) => {
+  console.log(e.loaded, e.total);
+});
+```
+
+## 16 模拟微任务
+
+```js
+/**
+ * 将传入的函数放入微队列中执行
+ */
+function runMicroTask(task) {
+  if (typeof Promise === "function") {
+    Promise.resolve().then(task);
+    return;
+  }
+
+  if (typeof MutationObserver === "function") {
+    let ob = new MutationObserver(task);
+    let node = document.createTextNode("");
+    ob.observe(node, {
+      characterData: true,
+    });
+    node.data = 1;
+    return;
+  }
+
+  // node
+  if (process && typeof process.nextTick === "function") {
+    process.nextTick(task);
+    return;
+  }
+}
+```
