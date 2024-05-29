@@ -456,3 +456,167 @@ it("attach success render", async () => {
 ## teleport
 
 如何测试呢？ MyTeleport.Vue 组件使用了 Teleport 功能，Teleport 包括了一个子组件 Signup.vue
+
+```vue title="MyTeleport.Vue"
+<template>
+  <Teleport to="#modal">下面渲染子组件 <Signup></Signup> </Teleport>
+</template>
+
+<script lang="ts" setup>
+import Signup from "./Signup.vue";
+</script>
+```
+
+```vue title="Signup.vue"
+<template>
+  <div>
+    <form @submit.prevent="submit">
+      <input v-model="username" />
+    </form>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { ref, computed, defineEmits } from "vue";
+
+const emit = defineEmits(["signup"]);
+
+const username = ref("");
+
+const error = computed(() => {
+  return username.value.length < 8;
+});
+
+const submit = () => {
+  if (!error.value) {
+    emit("signup", username.value);
+  }
+};
+</script>
+```
+
+因为 teleport 到了当前组件的外部，需要额外使用 getComponent 或者 findComponent 来直接获取 Signup.vue，然后再进行相关的断言操作
+
+```js
+beforeEach(() => {
+  const el = document.createElement("div");
+  el.id = "modal";
+  document.body.appendChild(el);
+});
+
+afterEach(() => {
+  document.body.outerHTML = "";
+});
+
+test("teleport", async () => {
+  const wrapper = mount(Teleport);
+  console.log(wrapper.html());
+  const signup = wrapper.getComponent(Signup);
+  await signup.get("input").setValue("valid_username");
+  await signup.get("form").trigger("submit.prevent");
+
+  expect(signup.emitted().signup[0]).toEqual(["valid_username"]);
+});
+```
+
+## ref
+
+我们有时需要访问 DOM 元素或子组件，以手动操作它们，而不是依赖数据绑定，例如一个 进入页面之后，自动聚焦的输入框，如何使用 ref 自动聚焦？
+
+```vue
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
+
+const input = ref<HTMLInputElement | null>(null);
+const model = defineModel<string>();
+
+onMounted(() => {
+  input.value?.focus();
+});
+</script>
+
+<template>
+  <div>
+    <input ref="input" v-model="model" />
+  </div>
+</template>
+```
+
+我们要测两点东西
+
+1. ref 获取 input 元素存在
+2. input 元素被聚焦了
+
+测试
+
+```js
+import { shallowMount } from "@vue/test-utils";
+import Ref from "./Ref.vue";
+
+describe("Ref", () => {
+  it("自动聚焦的输入框", () => {
+    const wrapper = shallowMount(Ref, {
+      attachTo: document.body,
+    });
+    const input =
+      wrapper.find <
+      HTMLInputElement >
+      {
+        ref: "input",
+      };
+    expect(document.activeElement).toBe(input.element);
+  });
+});
+```
+
+## defineAsyncComponent
+
+看一个异步加载到的 demo , Lazy.vue 组件内部有一个异步的 pdf 预览组件.
+
+```vue title="Lazy.vue"
+// Lazy.vue
+<script setup lang="ts">
+import { defineAsyncComponent } from "vue";
+
+// 简单用法
+const AsyncPdf = defineAsyncComponent({
+  loader: () => import("./AsyncPdf.vue"),
+  delay: 200,
+});
+</script>
+
+<template>
+  <h4 style="color: red">测试 async</h4>
+  <br />
+  <AsyncPdf></AsyncPdf>
+</template>
+```
+
+```vue title="AsyncPdf.vue"
+// AsyncPdf.vue
+<script setup lang="ts"></script>
+
+<template>
+  <div>
+    <div>pdf file</div>
+    <div v-if="false" data-testid="if">if button</div>
+    <div v-show="false" data-testid="show">show button</div>
+  </div>
+</template>
+```
+
+我们只需要测试，1 秒之后，页面出现 pdf
+
+```ts
+import { mount } from "@vue/test-utils";
+import Lazy from "./Lazy.vue";
+
+describe("Lazy", () => {
+  it("renders Lazy component", async () => {
+    const wrapper = mount(Lazy);
+    expect(wrapper.text()).not.toContain("pdf");
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    expect(wrapper.text()).toContain("pdf");
+  });
+});
+```
