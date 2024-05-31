@@ -607,3 +607,165 @@ imageDiv.addEventListener("mouseleave", () => {
 ### 10.2 效果
 
 <img data-src="/assets/images/gifs/gsap-p-02.gif"/>
+
+## 11 gsap 项目 2 时间线动画
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="main">
+      <div id="nav">
+        <h2>Chen YuBo</h2>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="32"
+          height="32"
+          fill="currentColor"
+        >
+          <path d="M3 4H21V6H3V4ZM9 11H21V13H9V11ZM3 18H21V20H3V18Z"></path>
+        </svg>
+      </div>
+      <div id="full">
+        <h4>Work</h4>
+        <h4>About</h4>
+        <h4>Vue</h4>
+        <h4>React</h4>
+        <h4>vite</h4>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="32"
+          height="32"
+          fill="currentColor"
+        >
+          <path
+            d="M11.9997 10.5865L16.9495 5.63672L18.3637 7.05093L13.4139 12.0007L18.3637 16.9504L16.9495 18.3646L11.9997 13.4149L7.04996 18.3646L5.63574 16.9504L10.5855 12.0007L5.63574 7.05093L7.04996 5.63672L11.9997 10.5865Z"
+          ></path>
+        </svg>
+      </div>
+    </div>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+      integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="./script.js"></script>
+  </body>
+</html>
+```
+
+```css
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  overflow: hidden;
+}
+
+#main {
+  height: 100%;
+  width: 100%;
+  background-image: url(./01.png);
+  background-size: cover;
+  background-position: center;
+}
+
+#nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px 50px;
+  color: #fff;
+}
+
+#nav i {
+  font-size: 30px;
+  font-weight: 800;
+}
+
+#full {
+  height: 100%;
+  width: 40%;
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.544);
+  right: 0;
+  top: 0;
+  backdrop-filter: blur(10px);
+  padding: 150px 60px;
+  display: flex;
+  flex-direction: column;
+  justify-self: center;
+  gap: 1rem;
+  right: -40%;
+}
+
+#full h4 {
+  font-size: 50px;
+  font-weight: 500;
+}
+
+#full svg {
+  position: absolute;
+  top: 5%;
+  right: 10%;
+  background-color: white;
+  border-radius: 50%;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 25px;
+}
+```
+
+```js
+const tl = gsap.timeline({
+  paused: true,
+});
+
+tl.to("#full", {
+  right: 0,
+  duration: 0.6,
+});
+
+tl.from("#full h4", {
+  x: 150,
+  duration: 0.6,
+  stagger: 0.3,
+  opacity: 0,
+});
+
+tl.from("#full svg", {
+  opacity: 0,
+});
+
+const menu = document.querySelector("#nav svg");
+const close = document.querySelector("#full svg");
+menu.addEventListener("click", () => {
+  tl.play();
+});
+
+close.addEventListener("click", () => {
+  tl.reverse();
+});
+```

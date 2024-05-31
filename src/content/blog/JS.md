@@ -712,3 +712,79 @@ function runMicroTask(task) {
   }
 }
 ```
+
+## 17 函数重载
+
+https://www.bilibili.com/video/BV1ju4y127xX/?spm_id_from=333.788&vd_source=ff519b14c2f26ffed121e75322acc97e
+
+假设我们希望实现一个这样的重载
+
+```js
+getUser();
+getUser(1);
+getUser(1, 20);
+getUser("张");
+getUser("张", "男");
+```
+
+```js
+import createOverload from "@/utils/overload";
+const getUser = createOverload();
+
+// 无参的
+getUsers.addImpl(() => {
+  console.log("查询所有用户");
+});
+
+const searchPage = (page, size = 10) => {
+  console.log("按照页码和数量查询用户");
+};
+
+// 对应2、3
+getUsers.addImpl("number", searchPage);
+getUsers.addImpl("number", "number", searchPage);
+
+// 对应一个字符串
+getUsers.addImpl("string", (name) => {
+  console.log("按照姓名查询用户");
+});
+
+// 对应2个字符串
+getUsers.addImpl("string", "string", (name, gender) => {
+  console.log("按照姓名和性别查询用户");
+});
+
+
+
+调用呢？
+
+getUser('a')
+```
+
+那么怎么实现呢？
+
+```js title="overload"
+function createOverload() {
+  const callMap = new Map();
+  return overload(...args) {
+    const key = args.map(arg => typeof arg).join(',')
+    const fn = callMap.get(key)
+    if(fn) {
+      return fn.apply(this, args)
+    }
+    throw new Error('no impl method')
+  }
+
+  overload.addImpl = function (...args) {
+    const fn = args.pop();
+    if(!fn || typeof fn !== 'function') {
+      return
+    }
+    const types = args;
+    callMap.set(types.join(','), fn);
+  }
+
+}
+
+export default createOverload;
+```
