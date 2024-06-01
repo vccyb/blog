@@ -214,4 +214,208 @@ Verdaccio 是可以帮我们快速构建 npm 私服的一个工具
 
 ## 9 模块化
 
+### 9.1 commonjs 规范
+
+package.json type 不写，或者是 commonjs
+
+**引入模块**
+
+```js
+// 1. 引入模块
+require("./test.js");
+
+// 2. 引入第三方模块
+const md5 = require("md5");
+
+// 3. node.js 内置模块
+const fs = require("node:fs");
+
+// 4. c++扩展  node-gyp .node 模块
+
+// 5. json
+const data = require("./data.json");
+```
+
+导出模块
+
+```js
+module.exports = {};
+
+module.exports = 123;
+```
+
+### 9.2 es module 规范
+
+package.json type 是 module
+
+导入
+
+```js
+import xxx from "./test.js";
+
+import { testA } from "./test.js";
+
+import { testB as myTestB } from "./test.js";
+
+import * as all from "./test.js";
+
+import json from "./data.json" assert { type: "json" };
+```
+
+导出
+
+```js
+export default {
+  xxx,
+};
+
+export const testA = 123;
+export const testB = () => console.log("hello world");
+```
+
+### 9.3 区别
+
+Cjs 和 ESM 的区别
+
+- Cjs 是基于运行时的同步加载，esm 是基于编译时的异步加载
+- Cjs 是可以修改值的，esm 值并且不可修改（可读的）
+- Cjs 不可以 tree shaking，esm 支持 tree shaking
+- commonjs 中顶层的 this 指向这个模块本身，而 ES6 中顶层 this 指向 undefined
+
 ## 10 全局变量&全局 API
+
+没有 Dom、和 Bom
+
+### 10.1 定义全局变量
+
+```js
+global.xxx = "xxx";
+```
+
+注意代码执行的先后顺序，每个模块都能访问到
+
+```js
+globalThis.name = xxx;
+```
+
+这个会自动识别环境，换成 global 或者 window
+
+### 10.2 nodejs 内置 api
+
+```js
+__dirname; // 当前模块所在目录的绝对路径
+__filename; // 当前文件的绝对路口，包裹文件名和扩展名
+
+process;
+```
+
+- process.argv: 这是一个包含命令行参数的数组。第一个元素是 Node.js 的执行路径，第二个元素是当前执行的 JavaScript 文件的路径，之后的元素是传递给脚本的命令行参数。
+- process.env: 这是一个包含当前环境变量的对象。您可以通过 process.env 访问并操作环境变量。
+- process.cwd(): 这个方法返回当前工作目录的路径。
+- process.on(event, listener): 用于注册事件监听器。您可以使用 process.on 监听诸如 exit、uncaughtException 等事件，并在事件发生时执行相应的回调函数。
+- process.exit([code]): 用于退出当前的 Node.js 进程。您可以提供一个可选的退出码作为参数。
+- process.pid: 这个属性返回当前进程的 PID（进程 ID）。
+
+## 11 CSR SSR SEO
+
+jsdom 是一个模拟浏览器环境的库，可以在 Node.js 中使用 DOM API
+
+```js
+const fs = require("node:fs");
+const { JSDOM } = require("jsdom");
+
+const dom = new JSDOM(`<!DOCTYPE html><div id='app'></div>`);
+
+const document = dom.window.document;
+
+const window = dom.window;
+
+fetch("https://api.thecatapi.com/v1/images/search?limit=10&page=1")
+  .then((res) => res.json())
+  .then((data) => {
+    const app = document.getElementById("app");
+    data.forEach((item) => {
+      const img = document.createElement("img");
+      img.src = item.url;
+      img.style.width = "200px";
+      img.style.height = "200px";
+      app.appendChild(img);
+    });
+    fs.writeFileSync("./index.html", dom.serialize());
+  });
+```
+
+### 11.1 CSR SSR
+
+我们上面的操作属于 SSR （Server-Side Rendering）服务端渲染请求数据和拼装都在服务端完成，而我们的 Vue,react 等框架这里不谈(nuxtjs,nextjs)，是在客户端完成渲染拼接的属于 CSR（Client-Side Rendering）客户端渲染
+CSR 和 SSR 区别
+
+1. 页面加载方式：
+
+   - CSR：在 CSR 中，服务器返回一个初始的 HTML 页面，然后浏览器下载并执行 JavaScript 文件，JavaScript 负责动态生成并更新页面内容。这意味着初始页面加载时，内容较少，页面结构和样式可能存在一定的延迟。
+   - SSR：在 SSR 中，服务器在返回给浏览器之前，会预先在服务器端生成完整的 HTML 页面，包含了初始的页面内容。浏览器接收到的是已经渲染好的 HTML 页面，因此初始加载的速度较快。
+
+2. 内容生成和渲染：
+
+   - CSR：在 CSR 中，页面的内容生成和渲染是由客户端的 JavaScript 脚本负责的。当数据变化时，JavaScript 会重新生成并更新 DOM，从而实现内容的动态变化。这种方式使得前端开发更加灵活，可以创建复杂的交互和动画效果。
+   - SSR：在 SSR 中，服务器在渲染页面时会执行应用程序的代码，并生成最终的 HTML 页面。这意味着页面的初始内容是由服务器生成的，对于一些静态或少变的内容，可以提供更好的首次加载性能。
+
+3. 用户交互和体验：
+
+   - CSR：在 CSR 中，一旦初始页面加载完成，后续的用户交互通常是通过 AJAX 或 WebSocket 与服务器进行数据交互，然后通过 JavaScript 更新页面内容。这种方式可以提供更快的页面切换和响应速度，但对于搜索引擎爬虫和 SEO（搜索引擎优化）来说，可能需要一些额外的处理。
+   - SSR：在 SSR 中，由于页面的初始内容是由服务器生成的，因此用户交互可以直接在服务器上执行，然后服务器返回更新后的页面。这样可以提供更好的首次加载性能和对搜索引擎友好的内容。
+
+### 11.2 SEO
+
+SEO （Search Engine Optimization，搜索引擎优化）
+
+CSR 应用对 SEO 并不是很友好
+
+因为在首次加载的时候获取 HTML 信息较少 搜索引擎爬虫可能无法获取完整的页面内容
+
+而 SSR 就不一样了 由于 SSR 在服务器端预先生成完整的 HTML 页面，搜索引擎爬虫可以直接获取到完整的页面内容。这有助于搜索引擎正确理解和评估页面的内容
+
+## 12 path
+
+```js
+const path = require("node:path");
+
+// 1. basename 返回给定路径的最后一部分
+// c.html
+console.log(path.basename("/foo/bar/baz/xx/c.html"));
+
+// 如果是MacOs 系统性处理windows路径
+path.win32.basename("\\foo\\bar\\baz\\xx\\c.html");
+
+// 2. dirname 返回路径的目录名称
+// /foo/bar/baz/xx
+console.log(path.dirname("/foo/bar/baz/xx/c.html"));
+
+// 3. extname 返回后缀名
+// .js
+console.log(path.extname("/a/b/c/index.js"));
+
+// 4. path.join() 拼接路径
+// /a/b/
+console.log(path.join("/a", "/b", "/c", "../"));
+
+//5 path.resolve() 解析路径，返回的是绝对路径
+// 都是绝对路径返回最后一个
+console.log(path.resolve("/a")); // -> /a
+console.log(path.resolve("./index.js"));
+
+console.log(path.resolve(__dirname, "./index.js"));
+
+//6 parse 和 format
+console.log(path.parse("/home/user/dir/file.txt"));
+
+console.log(
+  path.format({
+    root: "/",
+    dir: "/home/user/documents",
+    base: "file.txt",
+    ext: ".txt",
+    name: "file",
+  })
+);
+```
