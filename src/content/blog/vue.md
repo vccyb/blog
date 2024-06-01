@@ -333,3 +333,58 @@ export function debounceRef(value, duration = 1000) {
 import { debounceRef } from ./debounceRef";
 const text = debounceRef("", 500);
 ```
+
+## 10 冻结对象提升效率
+
+https://www.bilibili.com/video/BV1Bc411w7hG/?p=27&spm_id_from=pageDriver
+
+vue 中，数据会变成响应式对象，这个是比较耗时的，比如视频中 100w 的条数据，如果你只是展示，不会改变这种，就可以直接冻结
+
+```js
+this.datas = Object.freeze(this.datas);
+```
+
+## 11 使用 defer 优化白屏
+
+https://www.bilibili.com/video/BV1YP411z75i/?spm_id_from=pageDriver&vd_source=ff519b14c2f26ffed121e75322acc97e
+
+延迟渲染的机制
+
+```js title="useDefer.js"
+import { ref } from "vue";
+export function useDefer(maxCount = 100) {
+  const frameCount = ref(0);
+  let rafId;
+  function updateFrameCount() {
+    rafId = requestAnimationFrame(() => {
+      frameCount.value++;
+      if (frameCount.value >= maxCount) {
+        return;
+      }
+      updateFrameCount();
+    });
+  }
+  updateFrameCount();
+  onUnMounted(() => {
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+    }
+  });
+  return function defer(n) {
+    // return 目前渲染的多少挣 >= n
+    return frameCount.value >= n;
+  };
+}
+```
+
+使用
+
+```vue
+<template>
+  <div v-for="n in 100">
+    <heavy-comp v-if="defer(n)"></heavy-comp>
+  </div>
+</template>
+```
+
+使用 defer(n),表示在第 n 帧渲染，以此优化白屏问题

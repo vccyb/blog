@@ -102,3 +102,57 @@ CORS 是一套机制，用于浏览器校验跨域请求
   <img src="/spinner.gif" data-src="/assets/images/project/cors-1.png">
   <img src="/spinner.gif" data-src="/assets/images/project/cors-3.png">
 </div>
+
+## 4 绝对路径和相对路径
+
+我们讲的主图是网络的路径，也是前端开发打交道的
+
+### 绝对路径
+
+绝对路径: URL
+省略写法：省略的就会用当前页面的
+
+1. 省略协议名 `<a href="//localhost:5500/b.html"></a>`
+
+2. 省略协议名、域名、端口 `<a href="/b.html"></a>`
+
+绝对的意思是，和当前页面资源的 path 无关
+
+```
+http://localhost:5500/a/b/c/a/index.html
+/b.html -> http://localhost:5500/b.html  // 与当前页面资源path无关
+```
+
+### 相对路径
+
+相对当前页面的 path
+
+```
+http://a.com/admin/index.html
+./news -> http://a.com/admin/news
+../news -> http://a.com/news
+```
+
+## 5 浏览器缓存
+
+1. 浏览器缓存分类
+
+- 强缓存
+
+  - Expires
+  - Cache-Control
+
+- 协商缓存
+
+  - Last-Modified
+  - Etag
+
+2. 强缓存
+
+- Expires
+
+  - 服务器返回响应头，包含 Expires 字段，表示过期时间
+
+```
+
+```

@@ -788,3 +788,54 @@ function createOverload() {
 
 export default createOverload;
 ```
+
+## 18 使用代理实现单例
+
+```js
+function singleton(className) {
+  let ins;
+  let parameters;
+  return new Proxy(className, {
+    construct(target, args) {
+      if (!ins) {
+        ins = new className(target, ...args);
+        parameters = args;
+      }
+      if (!isSame(parameters, args)) {
+        throw new Error("参数不一致");
+      }
+      return ins;
+    },
+  });
+}
+```
+
+## 19 深度克隆
+
+解决循环引用问题
+
+```js
+function deepClone(value) {
+  const cache = new weakMap();
+  function _deepClone(value) {
+    if (value === null || typeof value !== "object") {
+      return value;
+    }
+    if (cache.has(value)) {
+      return cache.get(value);
+    }
+    const result = Array.isArray(value) ? [] : {};
+    cache.set(value, result);
+    for (let key in value) {
+      if (value.hasOwnProperty(key)) {
+        result[key] = deepClone(value[key]);
+      }
+    }
+    return result;
+  }
+
+  return _deepClone(value);
+}
+```
+
+## 20

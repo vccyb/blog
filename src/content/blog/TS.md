@@ -146,3 +146,10 @@ type Method = "GET" | "POST" | "PUT";
 1. 加上 default 的这个之后，默认的返回值就是 never 类型
 2. 如果未来新增了 PUT，更具类型的收缩，default 收缩为了 `PUT`
 3. never 是不可能被一个`PUT`类型的赋值的，所以编译就报错了
+
+## 4 使用泛型 和 keyof 约束参数
+
+```ts
+function handler<T extend object, K extend keyof T>(object: T, prop: K) {}
+
+```
