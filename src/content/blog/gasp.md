@@ -769,3 +769,94 @@ close.addEventListener("click", () => {
   tl.reverse();
 });
 ```
+
+### 11.1 效果
+
+<img data-src="/assets/images/gifs/gsap-p-03.gif"/>
+
+## 12 gsap 项目 3 文字动画
+
+```html
+<h1>Job Chen</h1>
+```
+
+```css
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: gilory;
+  color: white;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background-color: #111;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  font-size: 100px;
+  padding: 0 1rem;
+  overflow: hidden;
+}
+
+h1 span {
+  display: inline-block;
+}
+```
+
+```js
+function breakText() {
+  const h1 = document.querySelector("h1");
+  const splitText = h1.textContent.split("");
+
+  let halfValue = splitText.length / 2;
+
+  let textSpan = splitText.map((item, index) => {
+    let className = index < halfValue ? "left" : "right";
+    return (item = `<span class="${className}">${item}</span>`);
+  });
+
+  textSpan = textSpan.join("");
+
+  h1.innerHTML = textSpan;
+}
+
+breakText();
+
+// gsap.from("h1 span", {
+//   y: 50,
+//   opacity: 0,
+//   duration: 0.8,
+//   delay: 0.5,
+//   stagger: 0.15,
+// });
+
+gsap.from("h1 .left", {
+  y: 80,
+  duration: 0.6,
+  delay: 0.5,
+  stagger: 0.15,
+  opacity: 0,
+});
+
+gsap.from("h1 .right", {
+  y: 80,
+  duration: 0.6,
+  delay: 0.5,
+  stagger: -0.15,
+  opacity: 0,
+});
+```
+
+### 12.1 效果
+
+<img data-src="/assets/images/gifs/gsap-p-04.gif"/>
