@@ -838,4 +838,78 @@ function deepClone(value) {
 }
 ```
 
-## 20
+## 20 数据的流式获取
+
+传统的请求接口
+
+```js
+async function getResponse() {
+  // 这里只是相应头
+  const resp = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      content: "xxx",
+    }),
+  });
+  // 响应体
+  const msg = await resp.text();
+  console.log(msg);
+}
+```
+
+但是这种体验不好，要等待好久
+
+优化
+
+```js
+async function getResponse() {
+  // 这里只是相应头
+  const resp = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      content: "xxx",
+    }),
+  });
+  // 流读取
+  const reader = resp.body.getReader();
+  const textDecoder = new TextDecoder();
+  while (1) {
+    const { done, value } = await reader.read();
+    if (done) {
+      break;
+    }
+    const str = textDecoder.decode(value);
+    console.log(str);
+  }
+}
+```
+
+## 21 数组的，并集、交集、差集
+
+```js
+const arr1 = [33, 22, 55, 33, 11, 33, 5];
+const arr2 = [22, 55, 77, 88, 88, 99, 99];
+
+// 并集
+const union = [...new Set([...arr1, ...arr2])];
+
+// 交集
+const cross = [...new Set(arr1.filter((it) => arr2.includes(it)))];
+
+// 差集
+const diff = union.filter((it) => !cross.includes(it));
+```
+
+## 22 编码顺序和字典顺序
+
+默认是编码顺序,如果要使用字典排序
+
+```js
+names.sort((a, b) => a.localeCompare(b));
+```
