@@ -860,3 +860,153 @@ gsap.from("h1 .right", {
 ### 12.1 效果
 
 <img data-src="/assets/images/gifs/gsap-p-04.gif"/>
+
+## 13 gsap 项目 4 文字动画 2
+
+```html
+<div id="page1"></div>
+<div id="page2">
+  <div id="move">
+    <div class="marque">
+      <h1>THRIVE BEYOND LIMITS</h1>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        width="48"
+        height="48"
+        fill="currentColor"
+      >
+        <path
+          d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"
+        ></path>
+      </svg>
+    </div>
+    <div class="marque">
+      <h1>THRIVE BEYOND LIMITS</h1>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        width="48"
+        height="48"
+        fill="currentColor"
+      >
+        <path
+          d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"
+        ></path>
+      </svg>
+    </div>
+    <div class="marque">
+      <h1>THRIVE BEYOND LIMITS</h1>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        width="48"
+        height="48"
+        fill="currentColor"
+      >
+        <path
+          d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"
+        ></path>
+      </svg>
+    </div>
+    <div class="marque">
+      <h1>THRIVE BEYOND LIMITS</h1>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        width="48"
+        height="48"
+        fill="currentColor"
+      >
+        <path
+          d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"
+        ></path>
+      </svg>
+    </div>
+    <div class="marque">
+      <h1>THRIVE BEYOND LIMITS</h1>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        width="48"
+        height="48"
+        fill="currentColor"
+      >
+        <path
+          d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"
+        ></path>
+      </svg>
+    </div>
+  </div>
+</div>
+<div id="page3"></div>
+```
+
+```css
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: gilory;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background-color: #111;
+}
+
+#page1,
+#page2,
+#page3,
+#page4 {
+  height: 100vh;
+  width: 100%;
+}
+
+#move {
+  background-color: lawngreen;
+  display: flex;
+  overflow: hidden;
+}
+
+.marque {
+  flex-shrink: 0;
+  padding: 1rem;
+  display: flex;
+  gap: 1rem;
+  transition: translateX(-100%);
+}
+```
+
+```js
+window.addEventListener("wheel", (event) => {
+  if (event.deltaY > 0) {
+    gsap.to(".marque", {
+      transform: "translateX(-200%)",
+      duration: 4,
+      repeat: -1,
+      ease: "none",
+    });
+
+    gsap.to(".marque svg", {
+      rotate: 180,
+    });
+  } else {
+    gsap.to(".marque", {
+      transform: "translateX(0%)",
+      duration: 2,
+      repeat: -1,
+      ease: "none",
+    });
+
+    gsap.to(".marque svg", {
+      rotate: 0,
+    });
+  }
+});
+```
