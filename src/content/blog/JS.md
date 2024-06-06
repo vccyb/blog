@@ -913,3 +913,29 @@ const diff = union.filter((it) => !cross.includes(it));
 ```js
 names.sort((a, b) => a.localeCompare(b));
 ```
+
+## 23 跨标签页的数据共享 - BroadcastChannel
+
+跨标签页的通信
+
+```js
+// 每一个标签页创建同一个标签频道
+const channel = new BroadcastChannel("demo");
+
+export function sendMsg(type, content) {
+  channel.postMessage({
+    type,
+    content, // 这里的数据要是普通数据
+  });
+}
+
+export function listenMsg(callback) {
+  const handler = (e) => {
+    callback && callback(e.data);
+  };
+  channel.addEventListener("message", handler);
+  return () => {
+    channel.removeEventListener("message", handler);
+  };
+}
+```

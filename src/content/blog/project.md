@@ -132,27 +132,3 @@ http://a.com/admin/index.html
 ./news -> http://a.com/admin/news
 ../news -> http://a.com/news
 ```
-
-## 5 浏览器缓存
-
-1. 浏览器缓存分类
-
-- 强缓存
-
-  - Expires
-  - Cache-Control
-
-- 协商缓存
-
-  - Last-Modified
-  - Etag
-
-2. 强缓存
-
-- Expires
-
-  - 服务器返回响应头，包含 Expires 字段，表示过期时间
-
-```
-
-```
