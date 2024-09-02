@@ -939,3 +939,12 @@ export function listenMsg(callback) {
   };
 }
 ```
+
+## 24 原型链
+
+隐式原型（`__proto__`）指向构造函数的原型`prototype`
+
+特殊点：
+
+1. Function 的隐式原型指向他的原型自己，直接扔到内存
+2. Object 的 prototype 的`__proto__`指向 null
