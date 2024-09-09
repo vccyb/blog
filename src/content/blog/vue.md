@@ -388,3 +388,89 @@ export function useDefer(maxCount = 100) {
 ```
 
 使用 defer(n),表示在第 n 帧渲染，以此优化白屏问题
+
+## 12 isIdle 是否空闲
+
+vue2 写法
+
+```vue
+<template>
+  <div>
+    <p v-if="isIdle">用户已空闲</p>
+    <p v-else>用户活跃</p>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      isIdle: false,
+      timer: null,
+      timeout: 5000, // 设置空闲时间为5秒
+    };
+  },
+  methods: {
+    resetTimer() {
+      this.isIdle = false;
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => {
+        this.isIdle = true;
+      }, this.timeout);
+    },
+    handleActivity() {
+      this.resetTimer();
+    },
+  },
+  mounted() {
+    window.addEventListener("mousemove", this.handleActivity);
+    window.addEventListener("keydown", this.handleActivity);
+    this.resetTimer(); // 初始化
+  },
+  beforeDestroy() {
+    clearTimeout(this.timer);
+    window.removeEventListener("mousemove", this.handleActivity);
+    window.removeEventListener("keydown", this.handleActivity);
+  },
+};
+</script>
+```
+
+vue3 hook 写法
+
+```js
+import { ref, onMounted, onUnmounted } from "vue";
+
+export function useIdle(timeout = 5000) {
+  const isIdle = ref(false);
+
+  let timer;
+  const resetTimer = () => {
+    isIdle.value = false;
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      isIdle.value = true;
+    }, timeout);
+  };
+
+  const handleActivity = () => {
+    resetTimer();
+  };
+
+  onMounted(() => {
+    window.addEventListener("mousemove", handleActivity);
+    window.addEventListener("keydown", handleActivity);
+    resetTimer(); // 初始化
+  });
+
+  onUnmounted(() => {
+    clearTimeout(timer);
+    window.removeEventListener("mousemove", handleActivity);
+    window.removeEventListener("keydown", handleActivity);
+  });
+
+  return {
+    isIdle,
+  };
+}
+```
