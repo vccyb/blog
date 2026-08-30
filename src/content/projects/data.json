@@ -1,0 +1,16 @@
+[
+  {
+    "id": "vccyb's blog",
+    "link": "https://chenyubo.vercel.app/",
+    "desc": "个人博客，记录前端学习的过程（基于 Astro + astro-antfustyle-theme）",
+    "icon": "i-ri-quill-pen-line",
+    "category": "站点"
+  },
+  {
+    "id": "Waline 评论服务",
+    "link": "https://blog-waline-wheat-two.vercel.app/",
+    "desc": "博客评论系统（Waline）的 Vercel 部署与维护",
+    "icon": "i-ri-chat-3-line",
+    "category": "服务"
+  }
+]

@@ -1,10 +1,6 @@
 ---
 title: 这是我的一篇测试文章
-author: Chen YuBo
-date: 2024-02-12T10:22:19.848Z
-featured: false
-draft: false
-description: "哈哈哈哈"
+pubDate: 2024-02-12T10:22:19.848Z
 ---
 
 哈哈哈啊哈哈

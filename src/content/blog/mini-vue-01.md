@@ -1,13 +1,9 @@
 ---
 title: mini-vue-01-工程搭建
-author: Chen YuBo
-date: 2024-03-08T16:27:16.027Z
-featured: false
-category: 源码分析
-draft: false
-description: "mini-vue这个工程搭建"
 tags:
+  - 源码分析
   - mini-vue
+pubDate: 2024-03-08T16:27:16.027Z
 ---
 
 ## 工程初始化

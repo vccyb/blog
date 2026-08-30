@@ -1,14 +1,10 @@
 ---
 title: 手写promise
-author: Chen YuBo
-date: 2024-03-03T09:32:43.593Z
-featured: false
-category: HTML-CSS-JS
-draft: false
-description: "手写promise"
 tags:
+  - HTML-CSS-JS
   - promise
   - 手写源码
+pubDate: 2024-03-03T09:32:43.593Z
 ---
 
 ## 基本实现

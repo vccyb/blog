@@ -1,13 +1,9 @@
 ---
 title: Parallel, Sequence, Race Promises
-author: Chen YuBo
-date: 2024-02-27T15:00:02.813Z
-featured: false
-category: HTML-CSS-JS
-draft: false
-description: "Parallel, Sequence, Race Promises"
 tags:
+  - HTML-CSS-JS
   - promise
+pubDate: 2024-02-27T15:00:02.813Z
 ---
 
 有时有，对于一组 Promise，我们有着不同的处理方法

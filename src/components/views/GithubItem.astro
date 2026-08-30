@@ -1,0 +1,148 @@
+---
+import Link from '~/components/base/Link.astro'
+import { formatDate } from '~/utils/datetime'
+
+import type { ExtendedReleaseData, ExtendedPrData } from './GithubView.astro'
+
+type Props =
+  | {
+      collectionType: 'releases'
+      idx: number
+      item: ExtendedReleaseData
+      isDiffMonth: boolean
+    }
+  | {
+      collectionType: 'prs'
+      idx: number
+      item: ExtendedPrData
+      isDiffMonth: boolean
+    }
+
+const { collectionType, idx, item, isDiffMonth } = Astro.props
+
+const isOrg =
+  collectionType === 'releases'
+    ? item.repoIsInOrganization
+    : item.repository.isInOrganization
+
+const mainLogoSrc = item.mainLogo
+const mainLogoAlt =
+  collectionType === 'releases'
+    ? item.repoNameWithOwner
+    : item.repository.nameWithOwner
+const subLogoSrc = item.subLogo
+
+const firstLinkHref = item.url
+const firstLinkText = collectionType === 'releases' ? item.pkgName : item.title
+
+const secondLinkHref =
+  collectionType === 'releases' ? item.repoUrl : item.repository.url
+const secondLinkText =
+  collectionType === 'releases'
+    ? item.repoNameWithOwner
+    : item.repository.nameWithOwner
+
+const time = collectionType === 'releases' ? item.publishedAt! : item.createdAt
+const content =
+  collectionType === 'releases' ? item.descriptionHTML : item.bodyHTML
+---
+
+<details
+  class={`slide-enter flex flex-col ${isDiffMonth ? 'mt-12 lt-sm:mt-10' : ''}`}
+  style={{ '--enter-stage': idx }}
+>
+  {/* Logo */}
+  <summary
+    class="flex items-center gap-4 lt-sm:gap-2 cursor-pointer [&::-webkit-details-marker]:hidden"
+  >
+    <div class="flex-none relative">
+      <img
+        class={`size-11 lt-sm:size-10 border mt-0.2 border-gray-100 dark:border-gray-800
+            ${isOrg ? 'rounded-lg' : 'rounded-full transform-scale-108'}`}
+        src={mainLogoSrc}
+        alt={mainLogoAlt}
+      />
+      {
+        subLogoSrc && (
+          <div
+            class={`absolute bottom--2 right--1.6 flex justify-center items-center
+              size-6 p-0.72 border border-gray:5 rounded-full
+              bg-white  dark:bg-[#121212]`}
+          >
+            {subLogoSrc.includes('://') ? (
+              <img src={subLogoSrc} alt="Sub logo" />
+            ) : (
+              <span class={subLogoSrc} />
+            )}
+          </div>
+        )
+      }
+    </div>
+
+    {/* Text */}
+    <div class="flex-1 flex justify-between items-center gap-2 min-w-0">
+      <div class="flex flex-col gap-0.5 min-w-0">
+        <Link
+          class="flex items-center gap-1.5 op-100! text-4.4 lt-sm:text-3.9 hover:underline"
+          href={firstLinkHref}
+          external={true}
+        >
+          {
+            collectionType === 'prs' &&
+              (item.state === 'MERGED' ? (
+                <span
+                  u-i-bx-git-merge
+                  class="text-purple-500 dark:text-purple-400 size-4.5 lt-sm:size-4 shrink-0"
+                />
+              ) : (
+                <span
+                  u-i-bx-git-pull-request
+                  class="text-green-500 dark:text-green-400 size-4.5 lt-sm:size-4 shrink-0"
+                />
+              ))
+          }
+          <span class="truncate">{firstLinkText}</span>
+        </Link>
+        <div class="flex items-center text-sm lt-sm:text-3.2 op-transition">
+          <Link class="truncate" href={secondLinkHref} external={true}>
+            {secondLinkText}
+          </Link>
+        </div>
+      </div>
+      <div class="shrink-0 flex flex-col items-end gap-0.6">
+        <Link
+          class="op-100! font-mono text-4.2 lt-sm:text-3.6 hover:underline"
+          href={firstLinkHref}
+          external={true}
+        >
+          {
+            collectionType === 'releases' && (
+              <span>
+                v{item.versionParts[0]}
+                <span class={`github-${item.versionType}`}>
+                  {item.versionParts[1]}
+                </span>
+              </span>
+            )
+          }
+          {collectionType === 'prs' && <span>#{item.number}</span>}
+        </Link>
+        <time class="op-60 text-sm lt-sm:text-3.2" datetime={time} title={time}>
+          {formatDate(time, false)}
+        </time>
+      </div>
+    </div>
+  </summary>
+  <div
+    class="prose
+      [&.prose>:first-child]:mt-[1.6em] [&.prose>:last-child]:mb-[1.25em]
+      [&.prose_h1]:text-1em [&.prose_h1]:lt-sm:text-sm
+      [&.prose_h2]:text-1em [&.prose_h2]:lt-sm:text-sm
+      [&.prose_h3]:text-1em [&.prose_h3]:lt-sm:text-sm
+      [&.prose_h4]:text-1em [&.prose_h4]:lt-sm:text-sm
+      [&.prose_h5]:text-1em [&.prose_h5]:lt-sm:text-sm
+      [&.prose_h5_a]:text-[0.875em]
+      [&.prose_li]:lt-sm:text-sm"
+    set:html={content}
+  />
+</details>

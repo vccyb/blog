@@ -1,0 +1,21 @@
+/* Site-specific styles layered on top of the theme defaults.
+   Imported at the end of BaseLayout so these rules win the cascade. */
+
+/* CJK body font — fontsource variable package with unicode-range slicing
+   (browser downloads only the slices it renders). Family name resolves
+   through Inter's fallback chain configured in astro.config.ts. */
+@import '@fontsource-variable/noto-sans-sc';
+
+/* Waline comment widget — align with the theme's minimal monochrome look.
+   The mount point sits inside `.prose`, so `--fg-*` resolve there;
+   `--c-*` come from main.css and follow light/dark automatically. */
+#waline {
+  --waline-theme-color: var(--fg-deep, #222);
+  --waline-active-color: var(--fg-deep, #222);
+  --waline-bgcolor: var(--c-bg, #fff);
+  --waline-bgcolor-light: var(--c-bg, #fff);
+  --waline-border-color: rgba(125, 125, 125, 0.3);
+  --waline-info-bgcolor: rgba(125, 125, 125, 0.08);
+  --waline-info-color: var(--fg-light, #888);
+  font-size: 1rem;
+}

@@ -1,15 +1,11 @@
 ---
 title: shadcn/ui 为啥那么火？前端组件库
-author: Chen YuBo
-date: 2024-09-02T07:20:55.819Z
-draft: false
-category: 前端工程化
-featured: true
-description: "工程化一些"
 tags:
+  - 前端工程化
   - shadcn
   - ui
   - 组件库
+pubDate: 2024-09-02T07:20:55.819Z
 ---
 
 ## 前言

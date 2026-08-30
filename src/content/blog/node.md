@@ -1,6 +1,6 @@
 ---
-title: "node.js 学习"
-date: 2024-05-19T07:20:55.819Z
+title: node.js 学习
+pubDate: 2024-05-19T07:20:55.819Z
 ---
 
 ## 1 概述

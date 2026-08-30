@@ -1,12 +1,8 @@
 ---
 title: 谷歌插件
-author: Chen YuBo
-date: 2024-04-04T03:46:41.064Z
-featured: false
-draft: false
-description: "谷歌浏览器扩展开发学习"
 tags:
   - JS
+pubDate: 2024-04-04T03:46:41.064Z
 ---
 
 教程地址：https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world?hl=zh-cn

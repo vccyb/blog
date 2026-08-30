@@ -1,7 +1,8 @@
 ---
-title: "promisify 分析"
-date: 2024-06-02T12:25:58.155Z
-category: 源码分析
+title: promisify 分析
+tags:
+  - 源码分析
+pubDate: 2024-06-02T12:25:58.155Z
 ---
 
 ## 简单需求

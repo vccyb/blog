@@ -1,0 +1,109 @@
+---
+import Link from '~/components/base/Link.astro'
+import type { ShareConfig } from '~/types'
+
+interface ShareLink {
+  baseUrl: string
+  formatUrl: (postUrl: URL, config?: [boolean, string?]) => string
+  label: string
+  title: string
+}
+
+interface Props {
+  config: ShareConfig
+}
+
+const { config } = Astro.props
+const postUrl = Astro.url
+
+const SHARE_LINKS: Record<string, ShareLink> = {
+  twitter: {
+    baseUrl: 'https://twitter.com/intent/tweet?text=',
+    formatUrl: (url, cfg) =>
+      `${SHARE_LINKS.twitter.baseUrl}${encodeURIComponent(
+        `Reading ${cfg?.[1] ? `${cfg[1]}'s ` : ''}${url}\n\nI think...`
+      )}`,
+    label: 'twitter',
+    title: 'Tweet this post',
+  },
+  bluesky: {
+    baseUrl: 'https://bsky.app/intent/compose?text=',
+    formatUrl: (url, cfg) =>
+      `${SHARE_LINKS.bluesky.baseUrl}${encodeURIComponent(
+        `Reading ${cfg?.[1] ? `${cfg[1]}'s ` : ''}${url}. I think...`
+      )}`,
+    label: 'bluesky',
+    title: 'Share this post on Bluesky',
+  },
+  mastodon: {
+    baseUrl: 'https://elk.zone/intent/post?text=',
+    formatUrl: (url, cfg) =>
+      `${SHARE_LINKS.mastodon.baseUrl}${encodeURIComponent(
+        `Reading ${cfg?.[1] ? `${cfg[1]}'s ` : ''}${url}\n\nI think...`
+      )}`,
+    label: 'mastodon',
+    title: 'Share this post on Mastodon',
+  },
+  facebook: {
+    baseUrl: 'https://www.facebook.com/sharer.php?u=',
+    formatUrl: (url) => `${SHARE_LINKS.facebook.baseUrl}${url}`,
+    label: 'facebook',
+    title: 'Share this post on Facebook',
+  },
+  pinterest: {
+    baseUrl: 'https://pinterest.com/pin/create/button/?url=',
+    formatUrl: (url) => `${SHARE_LINKS.pinterest.baseUrl}${url}`,
+    label: 'pinterest',
+    title: 'Share this post on Pinterest',
+  },
+  reddit: {
+    baseUrl: 'https://www.reddit.com/submit?url=',
+    formatUrl: (url) => `${SHARE_LINKS.reddit.baseUrl}${url}`,
+    label: 'reddit',
+    title: 'Share this post on Reddit',
+  },
+  telegram: {
+    baseUrl: 'https://t.me/share/url?url=',
+    formatUrl: (url) => `${SHARE_LINKS.telegram.baseUrl}${url}`,
+    label: 'telegram',
+    title: 'Share this post via Telegram',
+  },
+  whatsapp: {
+    baseUrl: 'https://wa.me/?text=',
+    formatUrl: (url) => `${SHARE_LINKS.whatsapp.baseUrl}${url}`,
+    label: 'whatsapp',
+    title: 'Share this post via WhatsApp',
+  },
+  email: {
+    baseUrl: 'mailto:?subject=See%20this%20post&body=',
+    formatUrl: (url) => `${SHARE_LINKS.email.baseUrl}${url}`,
+    label: 'email',
+    title: 'Share this post via email',
+  },
+}
+
+const links = Object.entries(config)
+  .filter(([key, value]) => value && key in SHARE_LINKS)
+  .map(([key, cfg]) => {
+    const linkConfig = SHARE_LINKS[key]
+    return {
+      url: linkConfig.formatUrl(postUrl, cfg),
+      label: linkConfig.label,
+      title: linkConfig.title,
+    }
+  })
+---
+
+<span class="font-mono op-50">&gt; </span>
+<span class="op-50">share on</span>
+{' '}
+{
+  links.map((link, idx) => (
+    <>
+      <Link class="op-50!" href={link.url} title={link.title} external={true}>
+        {link.label}
+      </Link>
+      {idx < links.length - 1 && <span class="op-25"> / </span>}
+    </>
+  ))
+}

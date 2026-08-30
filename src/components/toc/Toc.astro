@@ -1,0 +1,181 @@
+---
+import { FEATURES } from '~/config'
+
+interface Props {
+  isArticle: boolean
+}
+
+const { isArticle } = Astro.props
+
+const { toc } = FEATURES
+if (!toc || (Array.isArray(toc) && !toc[0])) return
+const { minHeadingLevel, maxHeadingLevel } = toc[1]
+---
+
+<table-of-contents
+  data-min-h={isArticle ? minHeadingLevel : undefined}
+  data-max-h={isArticle ? maxHeadingLevel : undefined}
+  data-pagefind-ignore="all"
+>
+  <slot />
+</table-of-contents>
+
+<script>
+  class Toc extends HTMLElement {
+    #minH: number | undefined
+    #maxH: number | undefined
+    #observer: IntersectionObserver | null = null
+    #headingMapToc = new Map<Element, HTMLAnchorElement[]>()
+
+    #currentActiveHeading: Element | null = null
+    #previousActiveLinks: HTMLAnchorElement[] = []
+
+    connectedCallback() {
+      this.#onIdle(() => this.#init())
+    }
+
+    disconnectedCallback() {
+      this.#cleanup()
+    }
+
+    #init = () => {
+      this.#minH = this.#getHeadingLevel(this.dataset.minH)
+      this.#maxH = this.#getHeadingLevel(this.dataset.maxH)
+
+      // map heading elements to their corresponding toc links
+      const tocLinks = this.#getElements('a', false) as HTMLAnchorElement[]
+      this.#generateHeadingMapToc(tocLinks)
+
+      // get all belonging heading elements on the page
+      const headings =
+        this.#minH && this.#maxH
+          ? this.#getElements(
+              this.#getTocHeadingsSelector(this.#minH, this.#maxH)
+            )
+          : this.#getElements('.toc-heading')
+
+      // observe heading elements to trigger highlight change
+      this.#observer = new IntersectionObserver(this.#onIntersect, {
+        root: null,
+        rootMargin: '0% 0% -75% 0%',
+        threshold: 0,
+      })
+
+      for (const headingEl of headings) {
+        this.#observer.observe(headingEl)
+      }
+    }
+
+    #onIdle = (cb: IdleRequestCallback) =>
+      (window.requestIdleCallback || ((cb) => setTimeout(cb, 1)))(cb)
+
+    #onIntersect = (entries: IntersectionObserverEntry[]) => {
+      if (!entries.length) return
+
+      // get latest trigger heading element
+      let latest = entries[0]
+      for (let i = 1; i < entries.length; i++) {
+        if (entries[i].time > latest.time) latest = entries[i]
+      }
+      const latestTriggerHeading = latest.target
+      if (!latestTriggerHeading) return
+
+      // get need to highlight heading element
+      // (if current heading is located below 1/4 of the viewport,
+      // highlight previous heading)
+      // (avoid highlight next heading when scrolling up)
+      const isLocatedBelow =
+        latest.boundingClientRect.top > window.innerHeight / 4
+      const targetHeading = isLocatedBelow
+        ? this.#getPreviousHeading(this.#headingMapToc, latestTriggerHeading)
+        : latestTriggerHeading
+
+      // if target heading is not changed, return
+      if (!targetHeading || targetHeading === this.#currentActiveHeading) return
+
+      // diff update aria-current
+      const newLinks = this.#headingMapToc.get(targetHeading) ?? []
+
+      if (this.#previousActiveLinks && this.#previousActiveLinks.length) {
+        for (const tocLinkEl of this.#previousActiveLinks) {
+          tocLinkEl.removeAttribute('aria-current')
+        }
+      }
+      for (const tocLinkEl of newLinks) {
+        tocLinkEl.setAttribute('aria-current', 'true')
+
+        // when toc is too long, scroll active toc link into viewport
+        tocLinkEl.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
+
+      this.#currentActiveHeading = targetHeading
+      this.#previousActiveLinks = newLinks
+    }
+
+    #getHeadingLevel = (level: string | undefined) => {
+      return level ? parseInt(level, 10) : undefined
+    }
+
+    #getElements = (selector: string, fromDocument = true) => {
+      return fromDocument
+        ? Array.from(document.querySelectorAll(selector))
+        : Array.from(this.querySelectorAll(selector))
+    }
+
+    #generateHeadingMapToc = (tocLinks: HTMLAnchorElement[]) => {
+      for (const link of tocLinks) {
+        const { hash } = new URL(link.href)
+        const id = decodeURIComponent(hash.replace(/^#/, ''))
+        const headingEl = document.getElementById(id)
+
+        if (headingEl) {
+          if (this.#headingMapToc.has(headingEl)) {
+            this.#headingMapToc.get(headingEl)?.push(link)
+          } else {
+            this.#headingMapToc.set(headingEl, [link])
+          }
+        }
+      }
+    }
+
+    // returns a CSS selector string for the specified heading levels
+    #getTocHeadingsSelector = (
+      minH: number,
+      maxH: number,
+      baseSelector = ''
+    ) => {
+      const levelSelectors = []
+      for (let i = minH; i <= maxH; i++) {
+        baseSelector
+          ? levelSelectors.push(`${baseSelector} h${i}`)
+          : levelSelectors.push(`h${i}`)
+      }
+
+      return levelSelectors.join(', ')
+    }
+
+    #getPreviousHeading = (
+      headingMapToc: Map<Element, HTMLAnchorElement[]>,
+      curHeading: Element
+    ) => {
+      let prevHeading = null
+
+      for (const h of headingMapToc.keys()) {
+        if (h === curHeading) return prevHeading
+        prevHeading = h
+      }
+
+      return null
+    }
+
+    #cleanup = () => {
+      this.#observer?.disconnect()
+      this.#observer = null
+      this.#headingMapToc.clear()
+      this.#currentActiveHeading = null
+      this.#previousActiveLinks = []
+    }
+  }
+
+  customElements.define('table-of-contents', Toc)
+</script>

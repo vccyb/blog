@@ -1,13 +1,9 @@
 ---
 title: 源码系列
-author: Chen YuBo
-date: 2024-04-26T16:04:05.712Z
-draft: false
-category: 源码分析
-featured: true
-description: "源码系列合集"
 tags:
-  - vue
+  - 源码分析
+  - Vue
+pubDate: 2024-04-26T16:04:05.712Z
 ---
 
 ## 1 await-to-js

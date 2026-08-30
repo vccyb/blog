@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="吉祥物占位贴纸">
+  <!-- 占位吉祥物：竹绿小猫贴纸（DESIGN.md §2 色板：竹绿 + 樱粉腮红 + 藏蓝灰五官），真实六角色贴纸到位后替换本文件 -->
+  <!-- 耳朵（贴纸白边） -->
+  <path d="M22 14 L30 52 L58 30 Z" fill="#8fd8bd" stroke="#ffffff" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M98 14 L90 52 L62 30 Z" fill="#8fd8bd" stroke="#ffffff" stroke-width="6" stroke-linejoin="round"/>
+  <!-- 内耳 -->
+  <path d="M30 26 L36 46 L52 34 Z" fill="#ffd6e4"/>
+  <path d="M90 26 L84 46 L68 34 Z" fill="#ffd6e4"/>
+  <!-- 头 -->
+  <circle cx="60" cy="64" r="40" fill="#a5e5c8" stroke="#ffffff" stroke-width="6"/>
+  <!-- 眼睛 -->
+  <circle cx="46" cy="60" r="4.5" fill="#283556"/>
+  <circle cx="74" cy="60" r="4.5" fill="#283556"/>
+  <circle cx="47.5" cy="58.5" r="1.5" fill="#ffffff"/>
+  <circle cx="75.5" cy="58.5" r="1.5" fill="#ffffff"/>
+  <!-- 腮红 -->
+  <ellipse cx="36" cy="72" rx="7" ry="4" fill="#ffd6e4"/>
+  <ellipse cx="84" cy="72" rx="7" ry="4" fill="#ffd6e4"/>
+  <!-- 鼻子和 ω 嘴 -->
+  <circle cx="60" cy="66" r="2.2" fill="#d6487f"/>
+  <path d="M52 70 Q56 76 60 70 Q64 76 68 70" fill="none" stroke="#283556" stroke-width="3" stroke-linecap="round"/>
+  <!-- 胡须 -->
+  <path d="M22 60 L34 62 M24 72 L35 70" stroke="#283556" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+  <path d="M98 60 L86 62 M96 72 L85 70" stroke="#283556" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+</svg>

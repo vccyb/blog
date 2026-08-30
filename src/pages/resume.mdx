@@ -1,0 +1,51 @@
+---
+title: 简历
+subtitle: 个人简历
+description: vccyb 的个人简历
+bgType: false
+---
+
+import BaseLayout from '~/layouts/BaseLayout.astro'
+import StandardLayout from '~/layouts/StandardLayout.astro'
+
+<BaseLayout
+  title={frontmatter.title}
+  description={frontmatter.description}
+  bgType={frontmatter.bgType}
+>
+  <StandardLayout
+    class="prose"
+    title={frontmatter.title}
+    subtitle={frontmatter.subtitle}
+  >
+    <Fragment slot="article">
+      ## 基本信息
+
+      - **姓名**：陈宇博
+      - **岗位**：前端开发工程师
+      - **邮箱**：[13170906656@163.com](mailto:13170906656@163.com)
+      - **GitHub**：[vccyb](https://github.com/vccyb)
+      - **博客**：[chenyubo.vercel.app](/)
+
+      ## 教育背景
+
+      - 重庆邮电大学
+
+      ## 工作经历
+
+      - 深圳 · 华为 · 前端开发相关的设计与开发工作
+
+      ## 项目经历
+
+      - [vccyb's blog](/) — 个人博客，Astro + astro-antfustyle-theme
+      - Waline 评论服务的 Vercel 部署与维护
+
+      ## 专业技能
+
+      - HTML / CSS
+      - JavaScript
+      - Vue
+      - TypeScript
+    </Fragment>
+  </StandardLayout>
+</BaseLayout>

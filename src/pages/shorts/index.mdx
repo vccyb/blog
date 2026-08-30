@@ -1,0 +1,26 @@
+---
+title: 动态
+subtitle: 碎碎念与短记录
+description: 碎碎念与短记录
+bgType: particle
+ogImage: true
+---
+
+import BaseLayout from '~/layouts/BaseLayout.astro'
+import StandardLayout from '~/layouts/StandardLayout.astro'
+import CardView from '~/components/views/CardView.astro'
+
+<BaseLayout
+  title={frontmatter.title}
+  description={frontmatter.description}
+  bgType={frontmatter.bgType}
+  ogImage={frontmatter.ogImage}
+>
+  <StandardLayout
+    title={frontmatter.title}
+    subtitle={frontmatter.subtitle}
+    isCentered={true}
+  >
+    <CardView collectionType="shorts" mode="grid" pageTag={true} />
+  </StandardLayout>
+</BaseLayout>

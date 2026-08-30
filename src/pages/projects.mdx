@@ -1,0 +1,27 @@
+---
+title: Project
+subtitle: 我做过和正在维护的项目
+description: vccyb 的项目展示
+bgType: dot
+ogImage: true
+---
+
+import BaseLayout from '~/layouts/BaseLayout.astro'
+import StandardLayout from '~/layouts/StandardLayout.astro'
+import GroupView from '~/components/views/GroupView.astro'
+
+<BaseLayout
+  title={frontmatter.title}
+  description={frontmatter.description}
+  bgType={frontmatter.bgType}
+  ogImage={frontmatter.ogImage}
+>
+  <StandardLayout
+    class="max-w-300 group/content"
+    title={frontmatter.title}
+    subtitle={frontmatter.subtitle}
+    isCentered={true}
+  >
+    <GroupView collectionType="projects" pageToc={true} />
+  </StandardLayout>
+</BaseLayout>

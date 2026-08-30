@@ -1,13 +1,9 @@
 ---
 title: vue相关集合
-author: Chen YuBo
-date: 2024-03-11T16:04:05.712Z
-draft: false
-category: Vue
-featured: true
-description: "vue相关集合"
 tags:
-  - vue
+  - Vue
+  - Vue
+pubDate: 2024-03-11T16:04:05.712Z
 ---
 
 ## 1 `v-size-ob` 指令

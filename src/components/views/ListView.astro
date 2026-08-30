@@ -1,0 +1,276 @@
+---
+import { getCollection, render } from 'astro:content'
+
+import Categorizer from '~/components/base/Categorizer.astro'
+import ListItem from '~/components/views/ListItem.astro'
+import DesktopAside from '~/components/base/DesktopAside.astro'
+import MobileControl from '~/components/base/MobileControl.astro'
+import Warning from '~/components/base/Warning.astro'
+
+import { FEATURES } from '~/config'
+import { isSameYear, getYear } from '~/utils/datetime'
+import { getFilteredPosts, getSortedPosts, getMinutesRead } from '~/utils/data'
+
+import type { CollectionEntry, CollectionKey } from 'astro:content'
+
+interface Props {
+  collectionType: CollectionKey
+  pageToc?: boolean
+  pageTag?: boolean
+}
+
+const { collectionType, pageToc = false, pageTag = false } = Astro.props
+
+const VALID_COLLECTION_TYPE = ['blog', 'changelog', 'streams', 'feeds']
+const WARNING = `The '${collectionType}' collection type is not built-in.
+  Modify <code>ListView.astro</code> to render it.`
+
+/* Toc */
+const { toc } = FEATURES
+const tocEnabled = Array.isArray(toc) && toc[0] && pageToc
+let years: string[] = []
+
+/* Tag */
+const { tag } = FEATURES
+const tagEnabled = Array.isArray(tag) && tag[0] && pageTag
+let tags: string[][] = []
+
+/* Posts */
+const groupedBlogItems: {
+  year: string
+  items: {
+    idx: number
+    year: string
+    id: CollectionEntry<'blog' | 'changelog'>['id']
+    data: CollectionEntry<'blog' | 'changelog'>['data']
+    minutesRead: ReturnType<typeof getMinutesRead>
+  }[]
+}[] = []
+if (collectionType === 'blog' || collectionType === 'changelog') {
+  const items = await getFilteredPosts(collectionType)
+  const sorted = getSortedPosts(items)
+
+  const enriched = await Promise.all(
+    sorted.map(async (item, idx) => {
+      const { data, id } = item
+      const { remarkPluginFrontmatter } = await render(item)
+
+      const minutesRead = getMinutesRead(
+        data.minutesRead,
+        remarkPluginFrontmatter.minutesRead
+      )
+
+      return {
+        idx,
+        year: getYear(data.pubDate).toString(),
+        id,
+        data,
+        minutesRead,
+      }
+    })
+  )
+
+  for (const item of enriched) {
+    const last = groupedBlogItems[groupedBlogItems.length - 1]
+    if (!last || last.year !== item.year) {
+      groupedBlogItems.push({ year: item.year, items: [item] })
+    } else {
+      last.items.push(item)
+    }
+  }
+
+  if (tocEnabled) {
+    const yearsSet = new Set<number>()
+    enriched.forEach((item) => {
+      const year = getYear(item.data.pubDate)
+      yearsSet.add(year)
+    })
+
+    years = Array.from(yearsSet)
+      .sort((a, b) => b - a)
+      .map((year) => year.toString())
+  }
+
+  if (tagEnabled) {
+    for (const item of enriched) {
+      const tag = item.data.tags
+      if (tag.length === 0) continue
+      tags.push(tag)
+    }
+  }
+}
+
+/* Streams */
+let sortedStreamItems: CollectionEntry<'streams'>[] = []
+if (collectionType === 'streams') {
+  const streamItems = await getCollection(collectionType)
+
+  sortedStreamItems = streamItems.sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  )
+
+  if (tocEnabled) {
+    const yearsSet = new Set<number>()
+    sortedStreamItems.forEach((item) => {
+      const year = getYear(item.data.pubDate)
+      yearsSet.add(year)
+    })
+
+    years = Array.from(yearsSet)
+      .sort((a, b) => b - a)
+      .map((year) => year.toString())
+  }
+}
+
+/* Feeds */
+let sortedFeedItems: CollectionEntry<'feeds'>[] = []
+if (collectionType === 'feeds') {
+  const feedItems = await getCollection(collectionType)
+
+  sortedFeedItems = feedItems
+    .filter(
+      (
+        item
+      ): item is typeof item & {
+        data: typeof item.data & {
+          url: string
+          title: string
+          published: Date
+        }
+      } => !!item.data.url && !!item.data.title && !!item.data.published
+    )
+    .sort((a, b) => {
+      return b.data.published.valueOf() - a.data.published.valueOf()
+    })
+
+  if (tocEnabled) {
+    const yearsSet = new Set<number>()
+    sortedFeedItems.forEach((item) => {
+      const year = getYear(item.data.published!)
+      yearsSet.add(year)
+    })
+
+    years = Array.from(yearsSet)
+      .sort((a, b) => b - a)
+      .map((year) => year.toString())
+  }
+}
+---
+
+<DesktopAside anchors={years} {tags} />
+<MobileControl anchors={years} {tags} />
+
+{
+  (collectionType === 'blog' || collectionType === 'changelog') && (
+    <div aria-label="Post list">
+      {groupedBlogItems.length === 0 ? (
+        <div class="py-2 op-50">nothing here yet</div>
+      ) : (
+        groupedBlogItems.map((group) => {
+          const idx = group.items[0].idx
+
+          return (
+            <section
+              class="[&:not(:has([data-tags]:not(.hidden)))]:hidden"
+              data-year={group.year}
+            >
+              <Categorizer {idx} needId={tocEnabled} text={group.year} />
+
+              {group.items.map(({ data, id, minutesRead, idx }) => (
+                <ListItem
+                  {idx}
+                  {collectionType}
+                  postSlug={id}
+                  title={data.title}
+                  tags={data.tags}
+                  date={data.pubDate}
+                  minutesRead={minutesRead}
+                  radio={data.radio}
+                  video={data.video}
+                  platform={data.platform}
+                  redirect={data.redirect}
+                />
+              ))}
+            </section>
+          )
+        })
+      )}
+    </div>
+  )
+}
+
+{
+  collectionType === 'streams' && (
+    <div aria-label="Stream list">
+      {sortedStreamItems.length === 0 ? (
+        <div class="py-2 op-50">nothing here yet</div>
+      ) : (
+        sortedStreamItems.map((item, idx) => {
+          const { data } = item
+          return (
+            <>
+              {!isSameYear(
+                data.pubDate,
+                sortedStreamItems[idx - 1]?.data.pubDate
+              ) && (
+                <Categorizer
+                  {idx}
+                  needId={tocEnabled}
+                  text={getYear(data.pubDate).toString()}
+                />
+              )}
+              <ListItem
+                {idx}
+                {collectionType}
+                title={data.id}
+                date={data.pubDate}
+                radio={data.radio}
+                video={data.video}
+                platform={data.platform}
+                redirect={data.link}
+              />
+            </>
+          )
+        })
+      )}
+    </div>
+  )
+}
+
+{
+  collectionType === 'feeds' && (
+    <div aria-label="Feed list">
+      {sortedFeedItems.length === 0 ? (
+        <div class="py-2 op-50">nothing here yet</div>
+      ) : (
+        sortedFeedItems.map((item, idx) => {
+          const { data } = item
+
+          return (
+            <>
+              {!isSameYear(
+                data.published!,
+                sortedFeedItems[idx - 1]?.data.published as Date
+              ) && (
+                <Categorizer
+                  {idx}
+                  needId={tocEnabled}
+                  text={getYear(data.published!).toString()}
+                />
+              )}
+              <ListItem
+                {idx}
+                {collectionType}
+                title={data.title!}
+                date={data.published!}
+                redirect={data.url!}
+              />
+            </>
+          )
+        })
+      )}
+    </div>
+  )
+}
+
+{!VALID_COLLECTION_TYPE.includes(collectionType) && <Warning html={WARNING} />}

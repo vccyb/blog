@@ -1,0 +1,112 @@
+---
+import '~/styles/main.css'
+import '~/styles/prose.css'
+import '~/styles/markdown.css'
+import '~/styles/your.css'
+
+import Head from '~/components/base/Head.astro'
+import Background from '~/components/backgrounds/Background.astro'
+import Link from '~/components/base/Link.astro'
+import NavBar from '~/components/nav/NavBar.astro'
+import BackLink from '~/components/widgets/BackLink.astro'
+import Footer from '~/components/base/Footer.astro'
+import ToTopButton from '~/components/widgets/ToTopButton.astro'
+import Backdrop from '~/components/base/Backdrop.astro'
+
+import { SITE, UI, FEATURES } from '~/config'
+import { withBasePath } from '~/utils/path'
+
+import type { BgType } from '~/types'
+
+interface Props {
+  title?: string
+  description?: string
+  ogImage?: string | boolean
+  bgType?: BgType | false
+  pubDate?: string
+  lastModDate?: string
+}
+
+const { title, description, ogImage, bgType, pubDate, lastModDate } =
+  Astro.props
+
+let style: Record<string, string> = {}
+
+const { slideEnterAnim } = FEATURES
+const enableSlideEnterAnim = Array.isArray(slideEnterAnim) && slideEnterAnim[0]
+if (enableSlideEnterAnim)
+  style['--enter-step'] = `${slideEnterAnim[1].enterStep}ms`
+
+const {
+  externalLink: { newTab, cursorType },
+} = UI
+const hasCustomCursor =
+  newTab && cursorType.length > 0 && cursorType !== 'pointer'
+if (hasCustomCursor) style['--external-link-cursor'] = cursorType
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+  <head>
+    <Head {title} {description} {ogImage} {pubDate} {lastModDate} />
+  </head>
+
+  <body
+    class="relative flex flex-col min-h-screen
+      font-sans text-gray-700 dark:text-gray-200"
+    style={Object.keys(style).length !== 0 ? style : undefined}
+    data-no-sliding={enableSlideEnterAnim ? undefined : ''}
+  >
+    <!-- Background -->
+    {bgType && <Background type={bgType} />}
+
+    <!-- Skip Link -->
+    <Link
+      href="#main"
+      class="sr-only focus:(not-sr-only fixed start-1 top-1.5 op-20)"
+    >
+      Skip to content
+    </Link>
+
+    <!-- Nav Bar -->
+    <NavBar />
+
+    <!-- Main -->
+    <main id="main" class="px-7 py-10">
+      <!-- Content -->
+      <slot />
+      <!-- Share -->
+      {
+        Astro.url.pathname !== withBasePath('/') && (
+          <footer class="slide-enter animate-delay-1000! prose mx-auto mt-8 print:hidden">
+            <slot name="share" />
+            <br />
+            <BackLink />
+          </footer>
+        )
+      }
+      <!-- Comments -->
+      <slot name="comments" />
+    </main>
+
+    <!-- Footer -->
+    <Footer />
+    <ToTopButton />
+
+    <!-- Panel Backdrop (on mobile) -->
+    <Backdrop />
+
+    <!-- Progress Bar -->
+    <script>
+      import nprogress from 'nprogress'
+
+      document.addEventListener('astro:before-preparation', () => {
+        nprogress.start()
+      })
+
+      document.addEventListener('astro:page-load', () => {
+        nprogress.done()
+      })
+    </script>
+  </body>
+</html>

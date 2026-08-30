@@ -1,13 +1,9 @@
 ---
 title: 前端测试合集
-author: Chen YuBo
-date: 2024-04-27T16:04:05.712Z
-draft: false
-category: 前端测试
-featured: true
-description: "前端测试合集"
 tags:
-  - vue
+  - 前端测试
+  - Vue
+pubDate: 2024-04-27T16:04:05.712Z
 ---
 
 ## 1 Jest

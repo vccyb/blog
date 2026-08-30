@@ -1,13 +1,9 @@
 ---
 title: Element-Plus技术揭秘专栏的知识学习笔记-组件库工程化实战之 ESlint全解
-author: Chen YuBo
-date: 2024-03-12T11:49:42.677Z
-featured: false
-category: 源码分析
-draft: false
-description: "学习笔记"
 tags:
+  - 源码分析
   - 专栏学习笔记
+pubDate: 2024-03-12T11:49:42.677Z
 ---
 
 原文地址：https://juejin.cn/post/7157743898939359262#heading-31

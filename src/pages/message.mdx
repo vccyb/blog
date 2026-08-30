@@ -1,0 +1,27 @@
+---
+title: 留言板
+subtitle: 有话想说？写在这里
+description: 给 vccyb 留言，支持匿名评论
+bgType: false
+---
+
+import BaseLayout from '~/layouts/BaseLayout.astro'
+import StandardLayout from '~/layouts/StandardLayout.astro'
+import Waline from '~/components/widgets/Waline.astro'
+
+<BaseLayout
+  title={frontmatter.title}
+  description={frontmatter.description}
+  bgType={frontmatter.bgType}
+>
+  <StandardLayout
+    class="prose"
+    title={frontmatter.title}
+    subtitle={frontmatter.subtitle}
+  >
+    <Fragment slot="article">
+      欢迎在这里留下你的想法、建议或问题，我会尽快回复。填写昵称和邮箱即可评论（邮箱不会公开显示）。
+      <Waline />
+    </Fragment>
+  </StandardLayout>
+</BaseLayout>

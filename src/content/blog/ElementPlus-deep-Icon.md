@@ -1,14 +1,10 @@
 ---
-title: Element-Plus技术揭秘专栏的知识学习笔记-组件库工程化实战之 组件实现的基本流程及 Icon 组件的实现
-author: Chen YuBo
-pubDatetime: 2024-03-18T13:46:10.211Z
-date: 2024-03-18T13:46:10.211Z
-featured: false
-category: 源码分析
-draft: false
-description: "学习笔记"
+title: 组件实现的基本流程及 Icon 组件的实现
+subtitle: Element-Plus 技术揭秘 · 组件库工程化实战
 tags:
+  - 源码分析
   - 专栏学习笔记
+pubDate: 2024-03-18T13:46:10.211Z
 ---
 
 原文地址：https://juejin.cn/post/7168835045984043022

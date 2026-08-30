@@ -1,8 +1,8 @@
 ---
-title: "vitest 测试组件-基础"
-date: 2024-05-14T12:25:58.155Z
-description: "学习vitest测试组件"
-category: 前端测试
+title: vitest 测试组件-基础
+tags:
+  - 前端测试
+pubDate: 2024-05-14T12:25:58.155Z
 ---
 
 ## 1 @vue/test-utils

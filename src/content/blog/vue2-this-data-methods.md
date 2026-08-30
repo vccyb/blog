@@ -1,7 +1,8 @@
 ---
-title: "为什么 Vue2 this 能够直接获取到 data 和 methods"
-date: 2024-05-22T15:27:00.471Z
-category: 源码分析
+title: 为什么 Vue2 this 能够直接获取到 data 和 methods
+tags:
+  - 源码分析
+pubDate: 2024-05-22T15:27:00.471Z
 ---
 
 ## 问题探究

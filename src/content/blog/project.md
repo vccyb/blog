@@ -1,13 +1,9 @@
 ---
 title: 工程化相关集合
-author: Chen YuBo
-date: 2024-03-11T16:04:05.712Z
-draft: false
-category: 前端工程化
-featured: true
-description: "工程化一些"
 tags:
-  - vue
+  - 前端工程化
+  - Vue
+pubDate: 2024-03-11T16:04:05.712Z
 ---
 
 ## 1 对等依赖报错处理

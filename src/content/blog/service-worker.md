@@ -1,6 +1,6 @@
 ---
-title: "service worker"
-date: 2024-05-18T18:39:07.885Z
+title: service worker
+pubDate: 2024-05-18T18:39:07.885Z
 ---
 
 ## service worker 的 基本概念

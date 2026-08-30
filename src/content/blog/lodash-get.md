@@ -1,13 +1,9 @@
 ---
 title: lodash-get 分析
-author: Chen YuBo
-date: 2024-05-01T16:04:05.712Z
-draft: false
-category: 源码分析
-featured: false
-description: "lodash-get"
 tags:
-  - vue
+  - 源码分析
+  - Vue
+pubDate: 2024-05-01T16:04:05.712Z
 ---
 
 ## 1 lodash-get

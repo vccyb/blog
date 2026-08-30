@@ -1,12 +1,8 @@
 ---
 title: arrfy 分析
-author: Chen YuBo
-date: 2024-05-03T14:04:05.712Z
-draft: false
-category: 源码分析
-featured: false
-description: "arrfy 源码分析"
 tags:
+  - 源码分析
+pubDate: 2024-05-03T14:04:05.712Z
 ---
 
 ## arrfy 的作用

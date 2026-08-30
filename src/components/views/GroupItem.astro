@@ -1,0 +1,49 @@
+---
+import Link from '~/components/base/Link.astro'
+import { UI } from '~/config'
+
+export interface GroupItemData {
+  id: string
+  link: string
+  desc: string
+  icon: string
+}
+
+interface Props {
+  items: GroupItemData[]
+}
+
+const { items } = Astro.props
+const { maxGroupColumns, showGroupItemColorOnHover } = UI.groupView
+---
+
+<div
+  class={`grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-3
+    py-8 mx-auto lt-lgp:max-w-[712px]! lt-md:max-w-[350px]!`}
+  style={`max-width: calc(350px * ${maxGroupColumns} + ${maxGroupColumns - 1} * 0.75rem);`}
+>
+  {
+    items.map((item) => (
+      <Link
+        class={`group relative flex items-center
+          px-3.5 pt-2 pb-3.5 rounded-md
+          bg-transparent hover:bg-[#88888811]
+          text-4.4 transition-all duration-300`}
+        href={item.link}
+        aria-hidden={true}
+        external={true}
+      >
+        <div class="pt-2 pr-5">
+          <div
+            class={`group-hover:data-[show-color]:saturate-100 op-50 saturate-0 leading-9 text-7.5 ${item.icon}`}
+            data-show-color={showGroupItemColorOnHover ? '' : undefined}
+          />
+        </div>
+        <div class="flex-auto">
+          <div>{item.id}</div>
+          <div class="op-50 text-sm font-normal">{item.desc}</div>
+        </div>
+      </Link>
+    ))
+  }
+</div>

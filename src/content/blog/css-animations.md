@@ -1,14 +1,10 @@
 ---
 title: 学习CSS动画 一点点深入
-author: Chen YuBo
-date: 2024-02-18T14:08:58.680Z
-featured: false
-category: HTML-CSS-JS
-draft: false
-description: "基于 Chokcoco 深入浅出 CSS 动画 文章学习，一点点深入吧"
 tags:
+  - HTML-CSS-JS
   - CSS
   - Animation
+pubDate: 2024-02-18T14:08:58.680Z
 ---
 
 ## CSS 动画基本介绍

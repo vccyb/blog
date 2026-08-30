@@ -1,0 +1,26 @@
+---
+title: Photo
+subtitle: 个人相册（示例图，替换 src/content/photos/ 下的图片）
+description: vccyb 的个人相册
+bgType: false
+ogImage: true
+---
+
+import BaseLayout from '~/layouts/BaseLayout.astro'
+import StandardLayout from '~/layouts/StandardLayout.astro'
+import PhotoView from '~/components/views/PhotoView.astro'
+
+<BaseLayout
+  title={frontmatter.title}
+  description={frontmatter.description}
+  bgType={frontmatter.bgType}
+  ogImage={frontmatter.ogImage}
+>
+  <StandardLayout
+    title={frontmatter.title}
+    subtitle={frontmatter.subtitle}
+    isCentered={true}
+  >
+    <PhotoView />
+  </StandardLayout>
+</BaseLayout>

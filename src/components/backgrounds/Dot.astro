@@ -1,0 +1,94 @@
+---
+// inspired by: https://github.com/antfu/antfu.me/blob/main/src/components/ArtDots.vue
+---
+
+<bg-dot
+  class="z--1 fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden"
+>
+</bg-dot>
+
+<script>
+  import p5 from 'p5'
+  import type { default as P5Instance } from 'p5'
+
+  class BgDotElement extends HTMLElement {
+    p5Instance: P5Instance | null = null
+
+    connectedCallback() {
+      const sketch = (p: P5Instance) => {
+        const SCALE = 200
+        const LENGTH = 10
+        const SPACING = 15
+
+        const width = window.innerWidth
+        const height = window.innerHeight
+
+        const existingPoints = new Set()
+        const points: { x: number; y: number; opacity: number }[] = []
+
+        function getForceOnPoint(x: number, y: number, z: number) {
+          return (p.noise(x / SCALE, y / SCALE, z) - 0.5) * 2 * p.TWO_PI
+        }
+
+        function getLength(x: number, y: number, t: number) {
+          return (p.noise(x / SCALE, y / SCALE, t * 2) + 0.5) * LENGTH
+        }
+
+        function addPoints() {
+          for (let x = -SPACING / 2; x < width + SPACING; x += SPACING) {
+            for (let y = -SPACING / 2; y < height + SPACING; y += SPACING) {
+              const id = `${x}-${y}`
+              if (existingPoints.has(id)) continue
+              existingPoints.add(id)
+              points.push({ x, y, opacity: Math.random() * 0.5 + 0.5 })
+            }
+          }
+        }
+
+        p.setup = () => {
+          p.createCanvas(width, height)
+          p.frameRate(10)
+          addPoints()
+        }
+
+        p.draw = () => {
+          p.clear()
+
+          const t = +new Date() / 10000
+          for (const point of points) {
+            const { x, y } = point
+            const rad = getForceOnPoint(x, y, t)
+            const length = getLength(x, y, t)
+            const nx = x + p.cos(rad) * length
+            const ny = y + p.sin(rad) * length
+
+            const isDark = document.documentElement.classList.contains('dark')
+            const color = isDark ? 55 : 200
+            p.stroke(
+              color,
+              color,
+              color,
+              (Math.abs(p.cos(rad)) * 0.8 + 0.2) * point.opacity * 255
+            )
+            p.strokeWeight(2)
+            p.point(nx, ny)
+          }
+        }
+      }
+
+      this.p5Instance = new p5(sketch, this)
+    }
+
+    // after switching pages, stop the animation loop
+    disconnectedCallback() {
+      if (this.p5Instance) {
+        this.p5Instance.remove()
+        this.p5Instance = null
+      }
+    }
+  }
+
+  if (!customElements.get('bg-dot')) {
+    customElements.define('bg-dot', BgDotElement)
+  }
+</script>

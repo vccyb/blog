@@ -1,13 +1,10 @@
 ---
-title: Element-Plus技术揭秘专栏的知识学习笔记-组件库工程化实战之 从终端命令解析器说起谈谈 npm 包管理工具的运行原理
-author: Chen YuBo
-date: 2024-03-18T13:46:10.211Z
-featured: false
-category: 源码分析
-draft: false
-description: "学习笔记"
+title: 从终端命令解析器说起谈谈 npm 包管理工具的运行原理
+subtitle: Element-Plus 技术揭秘 · 组件库工程化实战
 tags:
+  - 源码分析
   - 专栏学习笔记
+pubDate: 2024-03-18T13:46:10.211Z
 ---
 
 原文地址：https://juejin.cn/post/7161063570594070559

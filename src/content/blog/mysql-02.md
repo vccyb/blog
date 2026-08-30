@@ -1,13 +1,9 @@
 ---
 title: Mysql express node.js 组合使用
-author: Chen YuBo
-date: 2024-03-09T13:40:07.711Z
-featured: false
-draft: false
-description: "mysql 组合 node.js 使用"
 tags:
   - mysql
   - node.js
+pubDate: 2024-03-09T13:40:07.711Z
 ---
 
 mysql2 用来连接 mysql 和编写 sq 语句

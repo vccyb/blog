@@ -1,0 +1,22 @@
+---
+title: "vccyb's blog"
+subtitle: '记录前端学习的过程，分享学习中遇到的问题和解决方案'
+description: ''
+bgType: plum
+ogImage: true
+---
+
+import BaseLayout from '~/layouts/BaseLayout.astro'
+import StandardLayout from '~/layouts/StandardLayout.astro'
+import RenderPage from '~/components/views/RenderPage.astro'
+
+<BaseLayout
+  title={frontmatter.title}
+  description={frontmatter.description}
+  bgType={frontmatter.bgType}
+  ogImage={frontmatter.ogImage}
+>
+  <StandardLayout title={frontmatter.title} subtitle={frontmatter.subtitle}>
+    <RenderPage slot="article" collectionType="home" id="index" />
+  </StandardLayout>
+</BaseLayout>

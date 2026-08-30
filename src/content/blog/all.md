@@ -1,13 +1,6 @@
 ---
 title: 前端博客整理合集
-author: Chen YuBo
-date: 2024-05-03T16:04:05.712Z
-featured: true
-draft: false
-sticky: 100
-toc: true
-description: "前端博客的归档整理"
-tags:
+pubDate: 2024-05-03T16:04:05.712Z
 ---
 
 ## 1 HTML、CSS、JS 相关

@@ -1,7 +1,6 @@
 ---
-title: "LeetCode JavaScript 30题"
-date: 2024-05-07T12:25:58.155Z
-description: "leetcode的js的30个相关小练习，地址是这个https://leetcode.cn/studyplan/30-days-of-javascript/"
+title: LeetCode JavaScript 30题
+pubDate: 2024-05-07T12:25:58.155Z
 ---
 
 地址：https://leetcode.cn/studyplan/30-days-of-javascript/

@@ -1,0 +1,92 @@
+---
+import Link from '~/components/base/Link.astro'
+
+import { withBasePath } from '~/utils/path'
+import { formatDate } from '~/utils/datetime'
+
+interface Props {
+  collectionType: string
+  idx: number
+  postSlug?: string
+  title: string
+  tags?: string[]
+  minutesRead?: number
+  date: string | Date
+  radio?: boolean
+  video?: boolean
+  platform?: string
+  redirect?: string
+}
+
+const {
+  collectionType,
+  idx,
+  postSlug,
+  title,
+  tags,
+  minutesRead,
+  date,
+  video,
+  radio,
+  platform,
+  redirect,
+} = Astro.props
+---
+
+<div class="slide-enter" style={{ '--enter-stage': idx }} data-tags={tags}>
+  <Link
+    u-flex={tags && tags.length > 0
+      ? '~ col items-start gap-2'
+      : '~ items-center lt-md:(col items-start) gap-2'}
+    class="border-b-none! mb-6 mt-2 op-transition! overflow-hidden"
+    href={redirect ? redirect : withBasePath(`/${collectionType}/${postSlug}/`)}
+    external={redirect ? true : false}
+    enableNewTabWarning={redirect ? true : false}
+  >
+    <Fragment slot="title">{title}</Fragment>
+    <span slot="end" u-flex="~ gap-2 items-center" class="max-w-full">
+      {
+        video && (
+          <span
+            u-i-ri-film-line
+            class="flex-none op-50 align-middle"
+            title="Provided in video"
+            aria-label="Provided in video"
+          />
+        )
+      }
+      {
+        radio && (
+          <span
+            u-i-ri-radio-line
+            class="flex-none op-50 align-middle"
+            title="Provided in radio"
+            aria-label="Provided in radio"
+          />
+        )
+      }
+      <time
+        class="op-50 text-sm ws-nowrap"
+        datetime={new Date(date).toISOString()}
+      >
+        {formatDate(date, false)}
+      </time>
+      {
+        !!minutesRead && (
+          <span class="op-40 text-sm ws-nowrap">· {minutesRead} min</span>
+        )
+      }
+      {platform && <span class="op-40 text-sm ws-nowrap">· {platform}</span>}
+      {
+        tags && tags.length > 0 && (
+          <>
+            <span class="op-40 text-sm">· </span>
+            <span class="op-40 text-sm ws-nowrap inner-x-scroll">
+              {tags.join(' / ')}
+            </span>
+          </>
+        )
+      }
+    </span>
+  </Link>
+</div>

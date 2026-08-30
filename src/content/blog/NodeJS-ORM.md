@@ -1,13 +1,9 @@
 ---
 title: nodejs-orm
-author: Chen YuBo
-date: 2024-03-14T15:09:35.738Z
-featured: false
-draft: false
-description: "sql学习"
 tags:
   - node.js
   - orm
+pubDate: 2024-03-14T15:09:35.738Z
 ---
 
 ## 1 knex

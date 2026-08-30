@@ -1,0 +1,52 @@
+---
+// Waline comment widget — replaces the theme's built-in Giscus.
+// Reuses the same Waline server as the previous (Astro Theme Yi) site,
+// so existing comments keep working and anonymous commenting is allowed.
+// Mount/destroy lifecycle follows the Giscus widget's View Transitions pattern.
+---
+
+<div id="waline"></div>
+
+<script>
+  import { init } from '@waline/client'
+  import '@waline/client/style'
+
+  const serverURL = 'https://blog-waline-wheat-two.vercel.app'
+
+  const options = {
+    serverURL,
+    lang: 'zh-CN',
+    pageSize: 20,
+    pageview: true,
+    reaction: true,
+    requiredMeta: ['nick', 'mail'],
+    dark: 'html.dark',
+  }
+
+  /** @type {{ destroy: () => void } | null} */
+  let waline = null
+
+  const destroyWaline = () => {
+    waline?.destroy()
+    waline = null
+  }
+
+  const mountWaline = () => {
+    const el = document.querySelector('#waline')
+    if (!el) return
+
+    destroyWaline()
+    waline = init({
+      ...options,
+      el,
+      path: location.pathname.replace(/\/$/, ''),
+      // reaction stickers stay post-only (disabled on the message board)
+      reaction: location.pathname.replace(/\/$/, '').endsWith('/message')
+        ? false
+        : options.reaction,
+    })
+  }
+
+  document.addEventListener('astro:before-swap', destroyWaline)
+  document.addEventListener('astro:page-load', mountWaline)
+</script>

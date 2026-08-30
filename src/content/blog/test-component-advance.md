@@ -1,8 +1,8 @@
 ---
-title: "vitest 测试组件-深入"
-date: 2024-05-24T12:25:58.155Z
-description: "学习vitest测试组件-深入"
-category: 前端测试
+title: vitest 测试组件-深入
+tags:
+  - 前端测试
+pubDate: 2024-05-24T12:25:58.155Z
 ---
 
 ## 前置知识

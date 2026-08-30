@@ -1,7 +1,8 @@
 ---
-title: "axios-utils"
-date: 2024-05-24T12:25:58.155Z
-category: 源码分析
+title: axios-utils
+tags:
+  - 源码分析
+pubDate: 2024-05-24T12:25:58.155Z
 ---
 
 ## kindof 获取当前数据类型

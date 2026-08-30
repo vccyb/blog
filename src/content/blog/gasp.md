@@ -1,7 +1,6 @@
 ---
-title: "GSAP学习"
-date: 2024-05-11T12:25:58.155Z
-description: "学习GSAP，加强前端技能"
+title: GSAP学习
+pubDate: 2024-05-11T12:25:58.155Z
 ---
 
 这里我们以油管博主的一个教程来看

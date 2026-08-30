@@ -1,0 +1,18 @@
+[
+  {
+    "id": "01",
+    "desc": "示例图片（替换 src/content/photos/ 下的图片，并在 data.json 登记）"
+  },
+  {
+    "id": "02",
+    "desc": "示例图片"
+  },
+  {
+    "id": "category/01",
+    "desc": "子目录示例"
+  },
+  {
+    "id": "category/02",
+    "desc": "子目录示例"
+  }
+]

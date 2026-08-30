@@ -1,16 +1,11 @@
 ---
 title: 动手学前端测试 - 基础概念篇
-author: Chen YuBo
-date: 2024-02-18T14:08:58.680Z
-featured: false
-category: 前端测试
-draft: false
-description: "前端测试是什么？什么是单元测试，继承测试又是啥"
 tags:
   - 前端测试
   - 单元测试
   - 集成测试
   - E2E测试
+pubDate: 2024-02-18T14:08:58.680Z
 ---
 
 ## 什么是前端测试

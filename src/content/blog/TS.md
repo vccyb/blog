@@ -1,13 +1,8 @@
 ---
 title: Typescript 知识小集合
-author: Chen YuBo
-date: 2024-03-09T16:38:03.129Z
-draft: false
-category: Typescript
-featured: true
-description: "ts的一些知识点和收集"
 tags:
-  - typescript
+  - Typescript
+pubDate: 2024-03-09T16:38:03.129Z
 ---
 
 ## 1 TS 中的模块化

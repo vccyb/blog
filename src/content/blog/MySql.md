@@ -1,12 +1,8 @@
 ---
 title: Mysql语法集
-author: Chen YuBo
-date: 2024-03-03T09:32:43.593Z
-featured: false
-draft: false
-description: "sql学习"
 tags:
   - sql
+pubDate: 2024-03-03T09:32:43.593Z
 ---
 
 ## 数据库

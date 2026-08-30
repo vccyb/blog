@@ -1,13 +1,9 @@
 ---
 title: js相关技巧集合，也包含html和css
-author: Chen YuBo
-date: 2024-03-11T16:04:05.712Z
-featured: true
-draft: false
-category: HTML-CSS-JS
-description: "js相关技巧集合"
 tags:
+  - HTML-CSS-JS
   - JS
+pubDate: 2024-03-11T16:04:05.712Z
 ---
 
 ## 1 请求的取消

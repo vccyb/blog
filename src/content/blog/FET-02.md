@@ -1,15 +1,11 @@
 ---
 title: 动手学前端测试 - 工具介绍篇
-author: Chen YuBo
-date: 2024-02-21T13:05:19.475Z
-featured: false
-category: 前端测试
-draft: false
-description: "前端常用的测试工具有哪些，有啥特点，我们咋学习，什么场景用啥呢"
 tags:
+  - 前端测试
   - jest
   - cypress
   - vitest
+pubDate: 2024-02-21T13:05:19.475Z
 ---
 
 上一篇文章介绍了一些测试的基本概念，本文我们来看我们前端的几大类测试工具，和我们经常碰到的场景，最后做一个个人的使用分享
