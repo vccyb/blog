@@ -332,3 +332,84 @@ describe("edit_handler", () => {
 ```
 
 UT 同样按三种情况铺满：找不到、多处、唯一命中各一条，外加围栏和参数守卫——契约写死，实现随便重构。
+
+### 6. 优化：try 的管辖范围
+
+用了一阵发现上面这版还有个 bug：**契约校验的错误抛在 try 里面，会被 catch 再包一层**。锚没对上时，模型看到的不是干净的 `old_content does not match...`，而是化妆后的：
+
+```text
+Failed to edit file ...: old_content does not match the original content of the file ...
+```
+
+读文件失败的 IO 错误，和"锚没对上"的契约错误，性质完全不同：前者是环境事故，后者是模型该看到的、下一轮能自我修正的观察。混在同一个 catch 里化妆，反而给模型添了误导。
+
+改法：**try 只包真正的 IO，契约校验移出 try**，让错误原样上抛给 agent loop 的 catch：
+
+```ts title="tools.ts"
+export const edit_handler = (args: Record<string, unknown>) => {
+  // ① 守卫区 + 围栏，同前
+  const file = args?.file;
+  const old_content = args?.old_content;
+  const new_content = args?.new_content;
+
+  const isArgsError =
+    file === undefined ||
+    typeof file !== "string" ||
+    old_content === undefined ||
+    typeof old_content !== "string" ||
+    new_content === undefined ||
+    typeof new_content !== "string";
+
+  if (isArgsError) {
+    throw new ToolArgsError(`args error ${JSON.stringify(args)}`);
+  }
+
+  const safeFilePath = resolve(Root, file);
+  if (!safeFilePath.startsWith(Root)) {
+    throw new Error(
+      `file ${safeFilePath} is outside of the allowed directory, your input path: ${file}, resolved safe path: ${safeFilePath}`,
+    );
+  }
+
+  // ② try 只包 IO：读原文
+  let originalContent: string;
+  try {
+    originalContent = readFileSync(safeFilePath, { encoding: "utf-8" });
+  } catch (error) {
+    throw new Error(
+      `Failed to edit file ${file}: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+  }
+
+  // ③ 契约校验在 try 外面，错误原样上抛
+  if (!originalContent.includes(old_content as string)) {
+    throw new Error(
+      `old_content does not match the original content of the file ${file}`,
+    );
+  }
+  // 出现次数必须恰好 1
+  const occurrences = originalContent.split(old_content as string).length - 1;
+  if (occurrences > 1) {
+    throw new Error(
+      `old_content matches multiple times in the original content of the file ${file}`,
+    );
+  }
+
+  // ④ 校验全过，才替换落盘
+  const newContent = originalContent.replace(
+    old_content as string,
+    new_content as string,
+  );
+  writeFileSync(safeFilePath, newContent, { encoding: "utf-8" });
+  return `Successfully edited file ${file}`;
+};
+```
+
+这里还藏着一个容易顺手写反的顺序坑：**校验必须发生在写盘之前**。我第一版就排成了"先 replace + writeFileSync，再 includes/occurrences 校验"——UT 照样全绿，但代码是错的：
+
+- 多处匹配时，`replace` 传字符串参数只替换**第一处**，半成品先被写进磁盘，然后才 throw——文件已经被改坏了；
+- 更隐蔽的是，每个 UT 结尾的 cleanup 会把现场 `rmSync` 掉，磁盘上的尸体没人看见，红灯永远不会亮。
+
+所以顺序必须是：**读（try 兜 IO）→ 校验（原样上抛）→ 替换 → 写盘**。UT 绿了不代表代码对，cleanup 擦得太干净也是一种掩护。
